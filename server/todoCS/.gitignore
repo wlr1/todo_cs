@@ -1,0 +1,99 @@
+# VS izveidotie faili un mapes
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build izvades
+bin/
+obj/
+out/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# User-specific failus
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Assembly failus
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.log
+
+# Konfigurācijas faili
+appsettings.*.json
+
+# MacOS specifiskie faili
+.DS_Store
+
+# Windows specifiskie faili
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux specifiskie faili
+*~
+
+# Rider IDE specifiskie faili
+.idea/
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/**/contentModel.xml
+
+# Resharper
+*.DotSettings.user
+
+# Logs un izvades faili
+*.log
+*.tlog
+*.pid
+*.gcov
+*.lst
+*.pcap
+*.nvuser
+*.nlog
+*.log.json
+*.sql
+
+# JetBrains Rider specifiskie faili
+.idea/
+*.dotCover
+*.dotTrace
+*.dotMemory
+*.dotPeek
+
+# Paket sources
+.paket/
+paket-files/
+paket-files/**
+
+# Paket Packages
+paket.lock
+paket.references
+
+# Azure Web App logs
+LogFiles/
+
+# EFCore Migrations
+Migrations/
+
+# Publish izvades
+wwwroot/
+publish/
