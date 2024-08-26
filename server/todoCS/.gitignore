@@ -25,6 +25,7 @@ artifacts/
 *.user
 *.userosscache
 *.sln.docstates
+*.sln
 
 # Assembly failus
 *.dll
