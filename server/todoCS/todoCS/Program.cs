@@ -1,5 +1,6 @@
 using Microsoft.OpenApi.Models;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -31,6 +32,8 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
+
 
 var app = builder.Build();
 
