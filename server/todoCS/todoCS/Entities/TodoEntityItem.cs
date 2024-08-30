@@ -2,7 +2,7 @@
 
 namespace todoCS.Entities;
 
-public class TodoEntity
+public class TodoEntityItem
 {
     public int Id { get; set; }
     public string Title { get; set; }
