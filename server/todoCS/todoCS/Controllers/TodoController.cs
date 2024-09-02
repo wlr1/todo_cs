@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using todoCS.Data;
 
 using todoCS.Entities;
+using todoCS.Interfaces;
+using todoCS.Mappers;
 
 namespace todoCS.Controllers;
 
@@ -12,10 +14,12 @@ namespace todoCS.Controllers;
     public class TodoController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
+        private readonly ITodoRepository _todoRepo;
 
-        public TodoController(ApplicationDBContext context)
+        public TodoController(ApplicationDBContext context, ITodoRepository todoRepo)
         {
             _context = context;
+            _todoRepo = todoRepo;
         }
 
 
@@ -26,13 +30,19 @@ namespace todoCS.Controllers;
             {
                 return BadRequest(ModelState);
             }
-            
-            return await _context.TodoItems.ToListAsync();
+
+            var todoItems = await _todoRepo.GetTodoAsync();
+
+            var todoDto = todoItems.Select(x => x.ToTodoDto());
+
+            return Ok(todoDto);
+
+         
         }
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoEntityItem>> GetByIdTodo(long id)
+        public async Task<ActionResult<TodoEntityItem>> GetByIdTodo([FromRoute] long id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);
 
@@ -57,7 +67,7 @@ namespace todoCS.Controllers;
 
         [HttpPut]
         [Route("update/{id}")]
-        public async Task<IActionResult> UpdateTodo(long id, TodoEntityItem todoItem)
+        public async Task<IActionResult> UpdateTodo([FromRoute] long id, TodoEntityItem todoItem)
         {
             if (id != todoItem.Id)
             {
