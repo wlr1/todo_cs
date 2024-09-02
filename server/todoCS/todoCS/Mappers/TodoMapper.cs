@@ -16,4 +16,15 @@ public static class TodoMapper
             IsCompleted = todoModel.IsCompleted
         };
     }
+
+    public static TodoEntityItem ToTodoCreate(this CreateTodoDto todoDto)
+    {
+        return new TodoEntityItem
+        {
+            Title = todoDto.Title,
+            Description = todoDto.Description,
+            CreatedAt = todoDto.CreatedAt,
+            IsCompleted = todoDto.IsCompleted
+        };
+    }
 }
