@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using todoCS.Data;
-using todoCS.Dtos;
+
 using todoCS.Entities;
 
 namespace todoCS.Controllers;
@@ -42,6 +42,64 @@ namespace todoCS.Controllers;
             }
 
             return todoItem;
+        }
+
+        [HttpPost]
+        [Route("create")]
+
+        public async Task<ActionResult<TodoEntityItem>> CreateTodo(TodoEntityItem todoItem)
+        {
+            _context.TodoItems.Add(todoItem);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetTodo), new { id = todoItem.Id }, todoItem);
+        }
+
+        [HttpPut]
+        [Route("update/{id}")]
+        public async Task<IActionResult> UpdateTodo(long id, TodoEntityItem todoItem)
+        {
+            if (id != todoItem.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(todoItem).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.TodoItems.Any(e => e.Id == id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> DeleteTodo(long id)
+        {
+            var todoItem = await _context.TodoItems.FindAsync(id);
+
+            if (todoItem == null)
+            {
+                return NotFound();
+            }
+
+            _context.TodoItems.Remove(todoItem);
+            await _context.SaveChangesAsync();
+            
+            return NoContent();
         }
 
     }
