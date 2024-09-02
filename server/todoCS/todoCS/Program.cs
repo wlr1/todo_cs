@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using todoCS.Data;
+using todoCS.Interfaces;
+using todoCS.Repository;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +41,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 
 var app = builder.Build();
 
