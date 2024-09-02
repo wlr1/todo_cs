@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using todoCS.Data;
-
+using todoCS.Dtos;
 using todoCS.Entities;
 using todoCS.Interfaces;
 using todoCS.Mappers;
@@ -24,7 +24,7 @@ namespace todoCS.Controllers;
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoEntityItem>>> GetTodo()
+        public async Task<IActionResult> GetTodo()
         {
             if (!ModelState.IsValid)
             {
@@ -41,32 +41,37 @@ namespace todoCS.Controllers;
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TodoEntityItem>> GetByIdTodo([FromRoute] long id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetByIdTodo([FromRoute] long id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var todoItem = await _todoRepo.GetByIdAsync(id);
 
             if (todoItem == null)
             {
                 return NotFound();
             }
 
-            return todoItem;
+            return Ok(todoItem.ToTodoDto());
         }
 
         [HttpPost]
         [Route("create")]
 
-        public async Task<ActionResult<TodoEntityItem>> CreateTodo(TodoEntityItem todoItem)
+        public async Task<IActionResult> CreateTodo(CreateTodoDto todoDto)
         {
-            _context.TodoItems.Add(todoItem);
-            await _context.SaveChangesAsync();
+            // _context.TodoItems.Add(todoItem);
+            // await _context.SaveChangesAsync();
+            //
+            // return CreatedAtAction(nameof(GetTodo), new { id = todoItem.Id }, todoItem);
 
-            return CreatedAtAction(nameof(GetTodo), new { id = todoItem.Id }, todoItem);
+            var todoModel = todoDto.ToTodoCreate();
+            await _todoRepo.CreateTodoAsync(todoModel);
+
+            return CreatedAtAction(nameof(GetByIdTodo), new { id = todoModel.Id }, todoModel.ToTodoDto());
         }
 
         [HttpPut]
-        [Route("update/{id}")]
+        [Route("update/{id:int}")]
         public async Task<IActionResult> UpdateTodo([FromRoute] long id, TodoEntityItem todoItem)
         {
             if (id != todoItem.Id)
@@ -96,7 +101,7 @@ namespace todoCS.Controllers;
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete/{id:int}")]
         public async Task<IActionResult> DeleteTodo(long id)
         {
             var todoItem = await _context.TodoItems.FindAsync(id);

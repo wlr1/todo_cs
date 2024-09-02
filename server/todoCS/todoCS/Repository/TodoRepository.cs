@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using todoCS.Data;
 using todoCS.Entities;
 using todoCS.Interfaces;
@@ -19,14 +20,18 @@ public class TodoRepository : ITodoRepository
         return await _context.TodoItems.ToListAsync();
     }
 
-    public Task<TodoEntityItem?> GetByIdAsync(long id)
+    public async Task<TodoEntityItem?> GetByIdAsync(long id)
     {
-        throw new NotImplementedException();
+        var todoItems = await _context.TodoItems.FindAsync(id);
+
+        return todoItems;
     }
 
-    public Task<TodoEntityItem?> CreateTodoAsync(TodoEntityItem todoModel)
+    public async Task<TodoEntityItem?> CreateTodoAsync(TodoEntityItem todoModel)
     {
-        throw new NotImplementedException();
+        await _context.TodoItems.AddAsync(todoModel);
+        await _context.SaveChangesAsync();
+        return todoModel;
     }
 
     public Task<TodoEntityItem?> UpdateTodoAsync(long id, TodoEntityItem todoModel)
