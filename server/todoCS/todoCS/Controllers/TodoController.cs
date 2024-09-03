@@ -59,11 +59,7 @@ namespace todoCS.Controllers;
 
         public async Task<IActionResult> CreateTodo(CreateTodoDto todoDto)
         {
-            // _context.TodoItems.Add(todoItem);
-            // await _context.SaveChangesAsync();
-            //
-            // return CreatedAtAction(nameof(GetTodo), new { id = todoItem.Id }, todoItem);
-
+            
             var todoModel = todoDto.ToTodoCreate();
             await _todoRepo.CreateTodoAsync(todoModel);
 
@@ -72,49 +68,32 @@ namespace todoCS.Controllers;
 
         [HttpPut]
         [Route("update/{id:int}")]
-        public async Task<IActionResult> UpdateTodo([FromRoute] long id, TodoEntityItem todoItem)
+        public async Task<IActionResult> UpdateTodo([FromRoute] long id, [FromBody] UpdateTodoDto todoDto)
         {
-            if (id != todoItem.Id)
+
+            var todo = await _todoRepo.UpdateTodoAsync(id, todoDto.ToTodoUpdate());
+
+            if (todo == null)
             {
-                return BadRequest();
+                return NotFound("Todo not found");
             }
 
-            _context.Entry(todoItem).State = EntityState.Modified;
+            return Ok(todo.ToTodoDto());
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.TodoItems.Any(e => e.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
         [HttpDelete]
         [Route("delete/{id:int}")]
-        public async Task<IActionResult> DeleteTodo(long id)
+        public async Task<IActionResult> DeleteTodo([FromRoute] long id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var todoModel = await _todoRepo.DeleteTodoAsync(id);
 
-            if (todoItem == null)
+            if (todoModel == null)
             {
-                return NotFound();
+                return NotFound("Todo does not exist!");
             }
 
-            _context.TodoItems.Remove(todoItem);
-            await _context.SaveChangesAsync();
-            
-            return NoContent();
+            return Ok(todoModel);
         }
 
     }
