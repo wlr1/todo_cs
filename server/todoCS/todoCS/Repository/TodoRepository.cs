@@ -51,8 +51,17 @@ public class TodoRepository : ITodoRepository
         return existingTodo;
 
     }
-    public Task<TodoEntityItem> DeleteTodoAsync(long id)
+    public async Task<TodoEntityItem?> DeleteTodoAsync(long id)
     {
-        throw new NotImplementedException();
+        var todoModel = await _context.TodoItems.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (todoModel == null)
+        {
+            return null;
+        }
+
+        _context.TodoItems.Remove(todoModel);
+        await _context.SaveChangesAsync();
+        return todoModel;
     }
 }

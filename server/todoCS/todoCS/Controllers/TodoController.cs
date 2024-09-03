@@ -84,19 +84,16 @@ namespace todoCS.Controllers;
 
         [HttpDelete]
         [Route("delete/{id:int}")]
-        public async Task<IActionResult> DeleteTodo(long id)
+        public async Task<IActionResult> DeleteTodo([FromRoute] long id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var todoModel = await _todoRepo.DeleteTodoAsync(id);
 
-            if (todoItem == null)
+            if (todoModel == null)
             {
-                return NotFound();
+                return NotFound("Todo does not exist!");
             }
 
-            _context.TodoItems.Remove(todoItem);
-            await _context.SaveChangesAsync();
-            
-            return NoContent();
+            return Ok(todoModel);
         }
 
     }
