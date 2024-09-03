@@ -27,4 +27,14 @@ public static class TodoMapper
             IsCompleted = todoDto.IsCompleted
         };
     }
+
+    public static TodoEntityItem ToTodoUpdate(this UpdateTodoDto todoDto)
+    {
+        return new TodoEntityItem
+        {
+            Title = todoDto.Title,
+            Description = todoDto.Description,
+            IsCompleted = todoDto.IsCompleted
+        };
+    }
 }

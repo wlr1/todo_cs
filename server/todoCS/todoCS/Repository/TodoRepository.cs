@@ -34,11 +34,23 @@ public class TodoRepository : ITodoRepository
         return todoModel;
     }
 
-    public Task<TodoEntityItem?> UpdateTodoAsync(long id, TodoEntityItem todoModel)
+    public async Task<TodoEntityItem?> UpdateTodoAsync(long id, TodoEntityItem todoModel)
     {
-        throw new NotImplementedException();
-    }
+        var existingTodo = await _context.TodoItems.FindAsync(id);
 
+        if (existingTodo == null)
+        {
+            return null;
+        }
+
+        existingTodo.Title = todoModel.Title;
+        existingTodo.Description = todoModel.Description;
+        existingTodo.IsCompleted = todoModel.IsCompleted;
+
+        await _context.SaveChangesAsync();
+        return existingTodo;
+
+    }
     public Task<TodoEntityItem> DeleteTodoAsync(long id)
     {
         throw new NotImplementedException();
