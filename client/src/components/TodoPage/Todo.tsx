@@ -1,12 +1,12 @@
 import React from "react";
-import TodoContent from "./TodoContent/TodoContent";
+import MainContent from "./MainContent/MainContent";
 
 const Todo = () => {
   return (
     <>
       <div className="bg-bgMain h-screen bg-cover bg-center">
         <div className="">
-          <TodoContent />
+          <MainContent />
         </div>
       </div>
     </>
