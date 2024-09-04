@@ -1,7 +1,9 @@
+import Todo from "./components/TodoPage/Todo";
+
 function App() {
   return (
     <>
-      <div className="font-bold">test</div>
+      <Todo />
     </>
   );
 }
