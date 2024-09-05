@@ -1,14 +1,19 @@
 import React from "react";
 import "animate.css";
 interface SidebarProps {
+  isVisible: boolean;
   show: boolean;
 }
 
-const SideMenu: React.FC<SidebarProps> = ({ show }) => {
+const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
   return (
     <>
-      {show && (
-        <div className="w-64 h-full bg-gradient-to-b from-gray-900 to-gray-700 text-white flex flex-col items-center py-8 shadow-lg rounded-l-lg relative animate__animated  animate__zoomInLeft">
+      {isVisible && (
+        <div
+          className={`w-64 h-full bg-gradient-to-b from-gray-900 to-gray-700 text-white flex flex-col items-center py-8 shadow-lg rounded-l-lg relative animate__animated transition-all  ${
+            show ? "animate__zoomInLeft" : "animate__zoomOutLeft"
+          }`}
+        >
           {/* User Avatar */}
           <div className="mb-8 text-center">
             <img
