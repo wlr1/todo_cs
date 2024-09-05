@@ -17,7 +17,7 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
           {/* User Avatar */}
           <div className="mb-8 text-center">
             <img
-              src="https://via.placeholder.com/100"
+              src="https://i.pinimg.com/236x/86/3c/48/863c488b8c2f8add74213aa888a2eeb2.jpg"
               alt="User Avatar"
               className="rounded-full w-24 h-24 border-4 border-gray-500 shadow-md"
             />
@@ -32,7 +32,7 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
                   href="#"
                   className="block px-4 py-2 text-lg font-medium hover:bg-gray-600 hover:text-gray-200 transition duration-300 "
                 >
-                  Dashboard
+                  Todo
                 </a>
               </li>
               <li>
