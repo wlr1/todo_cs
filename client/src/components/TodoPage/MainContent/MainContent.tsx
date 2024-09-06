@@ -1,11 +1,11 @@
-import { FaAngleLeft } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import SideMenu from "../SideMenu/SideMenu";
 import TodoContent from "../TodoContent/TodoContent";
 import { useEffect, useState } from "react";
 
 const MainContent = () => {
-  const [show, setIsShow] = useState(true);
-  const [isVisible, setIsVisible] = useState(true);
+  const [show, setIsShow] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const showSidebar = () => {
     setIsShow(!show);
@@ -23,20 +23,28 @@ const MainContent = () => {
   }, [show]);
 
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <div className=" w-[1700px] h-[800px]  flex rounded-lg shadow-2xl shadow-black ">
-        <div className="absolute left-14 top-1/2  cursor-pointer">
-          <FaAngleLeft
-            className="text-2xl text-gray-400 hover:text-gray-200 transition duration-300"
-            onClick={showSidebar}
-          />
+    <div className="flex justify-center items-center h-screen relative">
+      <div>
+        <SideMenu isVisible={isVisible} show={show} />
+      </div>
+
+      <div className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black">
+        {/* Arrow Button for Sidebar */}
+        <div
+          className="absolute -left-4 top-1/2 transform -translate-y-1/2 cursor-pointer z-50 transition-transform duration-300"
+          onClick={showSidebar}
+        >
+          <div className="p-3 bg-gray-800/60 backdrop-blur-md rounded-full shadow-lg hover:bg-gray-700/80 transition-colors duration-300">
+            {show ? (
+              <FaAngleLeft className="text-white text-3xl" />
+            ) : (
+              <FaAngleRight className="text-white text-3xl" />
+            )}
+          </div>
         </div>
-        {/* Side menu */}
-        <div className="h-full">
-          <SideMenu isVisible={isVisible} show={show} />
-        </div>
+
         {/* Main content */}
-        <div className="h-full w-full ">
+        <div className="h-full w-full">
           <TodoContent />
         </div>
       </div>
@@ -45,3 +53,30 @@ const MainContent = () => {
 };
 
 export default MainContent;
+
+// return (
+//   <div className="flex justify-center items-center h-screen relative">
+//     <SideMenu isVisible={isVisible} show={show} />
+
+//     <div className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black">
+//       {/* Arrow Button for Sidebar */}
+//       <div
+//         className="absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer z-50 transition-transform duration-300"
+//         onClick={showSidebar}
+//       >
+//         <div className="p-3 bg-gray-800/60 backdrop-blur-md rounded-full shadow-lg hover:bg-gray-700/80 transition-colors duration-300">
+//           {show ? (
+//             <FaAngleLeft className="text-white text-3xl" />
+//           ) : (
+//             <FaAngleRight className="text-white text-3xl" />
+//           )}
+//         </div>
+//       </div>
+
+//       {/* Main content */}
+//       <div className="h-full w-full">
+//         <TodoContent />
+//       </div>
+//     </div>
+//   </div>
+// );
