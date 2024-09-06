@@ -2,9 +2,9 @@
 
 namespace todoCS.Controllers;
 
-[Route("")]
+[Route("[controller]")]
 [ApiController]
-public class AuthController : Controller
+public class AccountController : ControllerBase
 {
  
 }

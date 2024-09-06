@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using todoCS.Data;
 using todoCS.Dtos;
-using todoCS.Entities;
 using todoCS.Interfaces;
 using todoCS.Mappers;
 
@@ -13,16 +10,15 @@ namespace todoCS.Controllers;
     [ApiController]
     public class TodoController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+       
         private readonly ITodoRepository _todoRepo;
 
-        public TodoController(ApplicationDBContext context, ITodoRepository todoRepo)
+        public TodoController(ITodoRepository todoRepo)
         {
-            _context = context;
             _todoRepo = todoRepo;
         }
 
-
+        //FETCH ALL api/Todo
         [HttpGet]
         public async Task<IActionResult> GetTodo()
         {
@@ -40,7 +36,7 @@ namespace todoCS.Controllers;
          
         }
 
-
+        //GET BY ID api/Todo/id
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdTodo([FromRoute] long id)
         {
@@ -54,6 +50,7 @@ namespace todoCS.Controllers;
             return Ok(todoItem.ToTodoDto());
         }
 
+        //CREATE api/Todo/create
         [HttpPost]
         [Route("create")]
 
@@ -66,6 +63,7 @@ namespace todoCS.Controllers;
             return CreatedAtAction(nameof(GetByIdTodo), new { id = todoModel.Id }, todoModel.ToTodoDto());
         }
 
+        //UPDATE api/Todo/update/id
         [HttpPut]
         [Route("update/{id:int}")]
         public async Task<IActionResult> UpdateTodo([FromRoute] long id, [FromBody] UpdateTodoDto todoDto)
@@ -82,6 +80,7 @@ namespace todoCS.Controllers;
 
         }
 
+        //DELETE api/Todo/delete/id
         [HttpDelete]
         [Route("delete/{id:int}")]
         public async Task<IActionResult> DeleteTodo([FromRoute] long id)
