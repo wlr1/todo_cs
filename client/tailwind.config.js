@@ -10,7 +10,7 @@ export default {
           'url("https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
       },
       boxShadow: {
-        custom: "inset 0 2px 110px 3px rgba(0, 0, 0, 0.05)",
+        custom: "inset 0 2px 33px 3px rgba(0, 0, 0, 0.05)",
       },
     },
   },

@@ -6,8 +6,8 @@ import { MdDeleteForever } from "react-icons/md";
 
 const TodoContent = () => {
   return (
-    <div className="flex h-full relative">
-      <div className="bg-bgTodoBlock bg-no-repeat bg-cover  w-full rounded-r-lg shadow-custom shadow-gray-700 overflow-hidden">
+    <div className="flex h-full relative  ">
+      <div className="bg-bgTodoBlock bg-no-repeat bg-cover   w-full rounded-r-lg shadow-custom shadow-gray-950 overflow-hidden">
         <div
           className="absolute inset-0 bg-opacity-50 backdrop-blur-md rounded-r-lg "
           style={{ backdropFilter: "blur(11px)" }}
@@ -44,6 +44,58 @@ const TodoContent = () => {
             </div>
 
             {/* <!-- Todo Card 2 --> */}
+            <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 ">
+              {/* <!-- Todo Title and Edit Button --> */}
+              <div className="flex justify-between items-center">
+                <span className="text-white text-xl font-semibold">
+                  Todo Title 2
+                </span>
+                <div className="flex space-x-3">
+                  <button className="text-white hover:text-red-400 transition">
+                    <MdDeleteForever size={16} />
+                  </button>
+                  <button className="text-white hover:text-green-600 transition">
+                    <FaEdit size={15} />
+                  </button>
+                </div>
+              </div>
+              {/* <!-- Todo Description --> */}
+              <p className="text-gray-300 text-sm drop-shadow-lg">
+                This is another description of a todo item. It gives a bit more
+                detail. This is another description of a todo item. It gives a
+                bit more detail. This is another description of a todo item. It
+                gives a bit more detail. This is another description of a todo
+                item. It gives a bit more detail. This is another description of
+                a todo item. It gives a bit more detail.
+              </p>
+            </div>
+
+            <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 ">
+              {/* <!-- Todo Title and Edit Button --> */}
+              <div className="flex justify-between items-center">
+                <span className="text-white text-xl font-semibold">
+                  Todo Title 2
+                </span>
+                <div className="flex space-x-3">
+                  <button className="text-white hover:text-red-400 transition">
+                    <MdDeleteForever size={16} />
+                  </button>
+                  <button className="text-white hover:text-green-600 transition">
+                    <FaEdit size={15} />
+                  </button>
+                </div>
+              </div>
+              {/* <!-- Todo Description --> */}
+              <p className="text-gray-300 text-sm drop-shadow-lg">
+                This is another description of a todo item. It gives a bit more
+                detail. This is another description of a todo item. It gives a
+                bit more detail. This is another description of a todo item. It
+                gives a bit more detail. This is another description of a todo
+                item. It gives a bit more detail. This is another description of
+                a todo item. It gives a bit more detail.
+              </p>
+            </div>
+
             <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 ">
               {/* <!-- Todo Title and Edit Button --> */}
               <div className="flex justify-between items-center">
