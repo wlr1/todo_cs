@@ -12,7 +12,7 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
     <>
       {isVisible && (
         <div
-          className={`bg-white/10 backdrop-blur-lg p-6 w-64 h-1/2 flex flex-col space-y-6 animate__animated transition-all rounded-xl shadow-xl shadow-gray-950 mr-2 ${
+          className={`bg-white/10 backdrop-blur-lg p-6 w-64 flex flex-col space-y-6 animate__animated transition-all rounded-xl shadow-xl shadow-gray-950 mr-2 ${
             show ? "animate__zoomInLeft" : "animate__zoomOutLeft"
           }`}
         >

@@ -7,7 +7,7 @@ import { MdDeleteForever } from "react-icons/md";
 const TodoContent = () => {
   return (
     <div className="flex h-full relative  ">
-      <div className="bg-bgTodoBlock bg-no-repeat bg-cover   w-full rounded-r-lg shadow-custom shadow-gray-950 overflow-hidden">
+      <div className="bg-bgTodoBlock bg-no-repeat bg-cover w-full rounded-r-lg shadow-custom shadow-gray-950 overflow-hidden">
         <div
           className="absolute inset-0 bg-opacity-50 backdrop-blur-md rounded-r-lg "
           style={{ backdropFilter: "blur(11px)" }}
@@ -34,6 +34,8 @@ const TodoContent = () => {
                   <button className="text-white hover:text-green-600 transition">
                     <FaEdit size={15} />
                   </button>
+                  {/* Todo Card ID */}
+                  <span className="text-sm text-gray-500">#2</span>
                 </div>
               </div>
               {/* <!-- Todo Description --> */}
@@ -57,6 +59,8 @@ const TodoContent = () => {
                   <button className="text-white hover:text-green-600 transition">
                     <FaEdit size={15} />
                   </button>
+                  {/* Todo Card ID */}
+                  <span className="text-sm text-gray-500">#2</span>
                 </div>
               </div>
               {/* <!-- Todo Description --> */}
@@ -83,6 +87,8 @@ const TodoContent = () => {
                   <button className="text-white hover:text-green-600 transition">
                     <FaEdit size={15} />
                   </button>
+                  {/* Todo Card ID */}
+                  <span className="text-sm text-gray-500">#2</span>
                 </div>
               </div>
               {/* <!-- Todo Description --> */}
@@ -109,6 +115,8 @@ const TodoContent = () => {
                   <button className="text-white hover:text-green-600 transition">
                     <FaEdit size={15} />
                   </button>
+                  {/* Todo Card ID */}
+                  <span className="text-sm text-gray-500">#2</span>
                 </div>
               </div>
               {/* <!-- Todo Description --> */}
