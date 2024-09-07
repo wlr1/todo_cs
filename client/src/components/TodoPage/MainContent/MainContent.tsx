@@ -28,24 +28,29 @@ const MainContent = () => {
         <SideMenu isVisible={isVisible} show={show} />
       </div>
 
-      <div className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black">
-        {/* Arrow Button for Sidebar */}
+      <div className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black bg-bgTodoBlock bg-no-repeat bg-cover">
         <div
-          className="absolute -left-4 top-1/2 transform -translate-y-1/2 cursor-pointer z-50 transition-transform duration-300"
-          onClick={showSidebar}
+          className="absolute inset-0 bg-opacity-50 backdrop-blur-md rounded-r-lg "
+          style={{ backdropFilter: "blur(11px)" }}
         >
-          <div className="p-3 bg-gray-800/60 backdrop-blur-md rounded-full shadow-lg hover:bg-gray-700/80 transition-colors duration-300">
-            {show ? (
-              <FaAngleLeft className="text-white text-3xl" />
-            ) : (
-              <FaAngleRight className="text-white text-3xl" />
-            )}
+          {/* Arrow Button for Sidebar */}
+          <div
+            className="absolute -left-4 top-1/2 transform -translate-y-1/2 cursor-pointer z-50 transition-transform duration-300"
+            onClick={showSidebar}
+          >
+            <div className="p-3 bg-gray-800/60 backdrop-blur-md rounded-full shadow-lg hover:bg-gray-700/80 transition-colors duration-300">
+              {show ? (
+                <FaAngleLeft className="text-white text-3xl" />
+              ) : (
+                <FaAngleRight className="text-white text-3xl" />
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Main content */}
-        <div className="h-full w-full">
-          <TodoContent />
+          {/* Main content */}
+          <div className="h-full w-full">
+            <TodoContent />
+          </div>
         </div>
       </div>
     </div>
