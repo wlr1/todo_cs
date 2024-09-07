@@ -39,13 +39,16 @@ const TodoContent = () => {
               </div>
             </div>
             <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 flex-grow shadow-lg shadow-todoPal">
-              {/* <!-- Todo Title and Edit Button --> */}
+              {/* <!-- Todo Title and Info --> */}
               <div className="flex justify-between items-center">
                 <span className="text-white text-xl font-semibold">
-                  Todo Title 1
+                  YMTnUMFasvRkeaSe1OkrW3E8Jp16SonQd5oFTX1uxHvrcK8NuDxY4xXrg9MTyWtwBrXHFeWTN4bOZ
                 </span>
                 <div className="flex space-x-3">
                   {/* Todo Card ID */}
+                  <span className="text-sm text-gray-500">
+                    2024.06.06 19:33
+                  </span>
                   <span className="text-sm text-gray-500">#1</span>
                 </div>
               </div>
@@ -81,13 +84,16 @@ const TodoContent = () => {
             </div>
 
             <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 flex-grow shadow-lg shadow-todoPal">
-              {/* <!-- Todo Title and Edit Button --> */}
+              {/* <!-- Todo Title and Info --> */}
               <div className="flex justify-between items-center">
                 <span className="text-white text-xl font-semibold">
                   Todo Title 1
                 </span>
                 <div className="flex space-x-3">
                   {/* Todo Card ID */}
+                  <span className="text-sm text-gray-500">
+                    2024.06.06 19:33
+                  </span>
                   <span className="text-sm text-gray-500">#1</span>
                 </div>
               </div>
@@ -132,13 +138,16 @@ const TodoContent = () => {
               </div>
             </div>
             <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 flex-grow shadow-lg shadow-todoPal">
-              {/* <!-- Todo Title and Edit Button --> */}
+              {/* <!-- Todo Title and Info --> */}
               <div className="flex justify-between items-center">
                 <span className="text-white text-xl font-semibold">
                   Todo Title 1
                 </span>
                 <div className="flex space-x-3">
                   {/* Todo Card ID */}
+                  <span className="text-sm text-gray-500">
+                    2024.06.06 19:33
+                  </span>
                   <span className="text-sm text-gray-500">#1</span>
                 </div>
               </div>
@@ -177,14 +186,17 @@ const TodoContent = () => {
               </div>
             </div>
             <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 flex-grow shadow-lg shadow-todoPal">
-              {/* <!-- Todo Title and Edit Button --> */}
+              {/* <!-- Todo Title and Info --> */}
               <div className="flex justify-between items-center">
                 <span className="text-white text-xl font-semibold">
                   Todo Title 1
                 </span>
                 <div className="flex space-x-3">
                   {/* Todo Card ID */}
-                  <span className="text-sm text-gray-500">#1</span>
+                  <span className="text-sm text-gray-500">
+                    2024.06.06 19:33
+                  </span>
+                  <span className="text-sm text-gray-500">#4</span>
                 </div>
               </div>
               {/* <!-- Todo Description --> */}
