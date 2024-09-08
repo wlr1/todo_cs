@@ -8,6 +8,7 @@ using todoCS.Data;
 using todoCS.Entities;
 using todoCS.Interfaces;
 using todoCS.Repository;
+using todoCS.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -88,6 +89,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+builder.Services.AddScoped<JwtService>();
 
 var app = builder.Build();
 
