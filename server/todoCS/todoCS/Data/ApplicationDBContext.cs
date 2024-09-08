@@ -5,7 +5,7 @@ using todoCS.Entities;
 
 namespace todoCS.Data;
 
-public class ApplicationDBContext : IdentityDbContext
+public class ApplicationDBContext : IdentityDbContext<UserEntity, IdentityRole<int>, int>
 {
     public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
     {

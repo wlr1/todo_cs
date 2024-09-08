@@ -20,7 +20,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 });
 
 //add identity
-builder.Services.AddIdentity<UserEntity, IdentityRole>(options =>
+builder.Services.AddIdentity<UserEntity, IdentityRole<int>>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
