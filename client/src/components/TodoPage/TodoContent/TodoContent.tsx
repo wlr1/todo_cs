@@ -1,14 +1,15 @@
 import React from "react";
 
-import AddTodoBtn from "./AddTodoButton/AddTodoBtn";
+import AddTodoBtn from "./TodoToolbar/AddTodoButton/AddTodoBtn";
 import TodoList from "./TodoList/TodoList";
+import TodoToolbar from "./TodoToolbar/TodoToolbar";
 
 const TodoContent = () => {
   return (
     <div className="flex h-full relative  ">
       <div className=" w-full rounded-r-lg shadow-custom shadow-gray-950 overflow-hidden">
-        {/* <!-- Add Todo Button --> */}
-        <AddTodoBtn />
+        {/* Todo add btn and search bar */}
+        <TodoToolbar />
 
         {/* Todo list */}
         <TodoList />
