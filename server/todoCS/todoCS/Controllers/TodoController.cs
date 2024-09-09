@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using todoCS.Dtos;
 using todoCS.Interfaces;
 using todoCS.Mappers;
@@ -19,6 +20,7 @@ namespace todoCS.Controllers;
         }
 
         //FETCH ALL api/Todo
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetTodo()
         {
@@ -37,6 +39,7 @@ namespace todoCS.Controllers;
         }
 
         //GET BY ID api/Todo/id
+        [Authorize]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdTodo([FromRoute] long id)
         {
@@ -51,6 +54,7 @@ namespace todoCS.Controllers;
         }
 
         //CREATE api/Todo/create
+        [Authorize]
         [HttpPost]
         [Route("create")]
 
@@ -64,6 +68,7 @@ namespace todoCS.Controllers;
         }
 
         //UPDATE api/Todo/update/id
+        [Authorize]
         [HttpPut]
         [Route("update/{id:int}")]
         public async Task<IActionResult> UpdateTodo([FromRoute] long id, [FromBody] UpdateTodoDto todoDto)
@@ -81,6 +86,7 @@ namespace todoCS.Controllers;
         }
 
         //DELETE api/Todo/delete/id
+        [Authorize]
         [HttpDelete]
         [Route("delete/{id:int}")]
         public async Task<IActionResult> DeleteTodo([FromRoute] long id)
