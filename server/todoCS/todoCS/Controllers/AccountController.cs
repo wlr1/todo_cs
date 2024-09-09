@@ -80,6 +80,7 @@ public class AccountController : ControllerBase
         return Ok(new { Token = token });
     }
 
+    //delete user
     [Authorize]
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteUser()
@@ -101,5 +102,52 @@ public class AccountController : ControllerBase
             return BadRequest(ModelState);
         }
         return Ok("Your account has been deleted successfully.");
+    }
+
+    //upload avatar
+    [Authorize]
+    [HttpPost("upload-avatar")]
+    [Consumes("multipart/form-data")] 
+    public async Task<IActionResult> UploadAvatar([FromForm] IFormFile avatarFile)
+    {
+        
+        if (avatarFile == null || avatarFile.Length == 0)
+        {
+            return BadRequest("No file uploaded.");
+        }
+        
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound("User not Found!");
+        }
+
+        using (var memoryStream = new MemoryStream())
+        {
+            await avatarFile.CopyToAsync(memoryStream);
+            user.UserAvatar = memoryStream.ToArray();
+        }
+
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            return BadRequest("Could not upload avatar!");
+        }
+
+        return Ok("Avatar uploaded successfully!");
+    }
+    
+    //get avatar
+    [Authorize]
+    [HttpGet("download-avatar")]
+    public async Task<IActionResult> DownloadAvatar()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null || user.UserAvatar == null)
+        {
+            return NotFound("User or Avatar not found!");
+        }
+
+        return File(user.UserAvatar, "image/jpeg");
     }
 }

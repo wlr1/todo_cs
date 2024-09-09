@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using todoCS.Data;
 using todoCS.Entities;
 using todoCS.Interfaces;
@@ -63,6 +64,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo() {Title = "Demo API", Version = "v1"});
+   
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -108,3 +110,38 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+//File upload Test swagger
+
+// option.OperationFilter<FileUploadOperation>();
+
+// public class FileUploadOperation : IOperationFilter
+// {
+//     public void Apply(OpenApiOperation operation, OperationFilterContext context)
+//     {
+//         if (operation.RequestBody != null)
+//         {
+//             foreach (var mediaType in operation.RequestBody.Content)
+//             {
+//                 if (mediaType.Key == "multipart/form-data")
+//                 {
+//                     mediaType.Value.Schema = new OpenApiSchema
+//                     {
+//                         Type = "object",
+//                         Properties = new Dictionary<string, OpenApiSchema>
+//                         {
+//                             { "file", new OpenApiSchema { Type = "string", Format = "binary" } }
+//                         }
+//                     };
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// curl -X POST ^
+//     More?   "http://localhost:8000/Account/upload-avatar" ^
+//             More?   -H "accept: */*" ^
+//     More?   -H "Authorization: Bearer token" ^
+//     More?   -H "Content-Type: multipart/form-data" ^
+//     More?   -F "avatarFile=@C:\Users\User\Downloads\Reverend insanity.jpg;type=image/jpeg"
