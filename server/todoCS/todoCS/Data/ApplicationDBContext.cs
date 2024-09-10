@@ -13,4 +13,12 @@ public class ApplicationDBContext : IdentityDbContext<UserEntity, IdentityRole<i
     }
 
     public DbSet<TodoEntityItem> TodoItems { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<TodoEntityItem>().HasOne<UserEntity>(todo => todo.User).WithMany(user => user.Todos)
+            .HasForeignKey(todo => todo.UserId);
+    }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using todoCS.Dtos;
+using todoCS.Entities;
 using todoCS.Interfaces;
 using todoCS.Mappers;
 
@@ -13,10 +15,12 @@ namespace todoCS.Controllers;
     {
        
         private readonly ITodoRepository _todoRepo;
+        private readonly UserManager<UserEntity> _userManager;
 
-        public TodoController(ITodoRepository todoRepo)
+        public TodoController(ITodoRepository todoRepo, UserManager<UserEntity> userManager)
         {
             _todoRepo = todoRepo;
+            _userManager = userManager;
         }
 
         //FETCH ALL api/Todo
@@ -29,7 +33,10 @@ namespace todoCS.Controllers;
                 return BadRequest(ModelState);
             }
 
-            var todoItems = await _todoRepo.GetTodoAsync();
+            var user = await _userManager.GetUserAsync(User); //get current user
+            if (user == null) return Unauthorized("User not found!");
+
+            var todoItems = await _todoRepo.GetTodoByUserAsync(user.Id); //get only this users todo
 
             var todoDto = todoItems.Select(x => x.ToTodoDto());
 
@@ -43,11 +50,15 @@ namespace todoCS.Controllers;
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdTodo([FromRoute] long id)
         {
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized("User not found!");
+            
             var todoItem = await _todoRepo.GetByIdAsync(id);
 
-            if (todoItem == null)
+            if (todoItem == null || todoItem.UserId != user.Id)
             {
-                return NotFound();
+                return NotFound("Todo not found or you do not have access");
             }
 
             return Ok(todoItem.ToTodoDto());
@@ -60,8 +71,12 @@ namespace todoCS.Controllers;
 
         public async Task<IActionResult> CreateTodo(CreateTodoDto todoDto)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized("User not found!");
+            
             
             var todoModel = todoDto.ToTodoCreate();
+            todoModel.UserId = user.Id;
             await _todoRepo.CreateTodoAsync(todoModel);
 
             return CreatedAtAction(nameof(GetByIdTodo), new { id = todoModel.Id }, todoModel.ToTodoDto());
@@ -73,15 +88,24 @@ namespace todoCS.Controllers;
         [Route("update/{id:int}")]
         public async Task<IActionResult> UpdateTodo([FromRoute] long id, [FromBody] UpdateTodoDto todoDto)
         {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized("User not found!");
 
-            var todo = await _todoRepo.UpdateTodoAsync(id, todoDto.ToTodoUpdate());
+            var todo = await _todoRepo.GetByIdAsync(id);
 
-            if (todo == null)
+            if (todo == null || todo.UserId != user.Id)
             {
-                return NotFound("Todo not found");
+                return NotFound("Todo not found or you do not have access");
             }
 
-            return Ok(todo.ToTodoDto());
+            todo.Title = todoDto.Title;
+            todo.Description = todoDto.Description;
+            todo.IsCompleted = todoDto.IsCompleted;
+
+            var updatedTodo = await _todoRepo.UpdateTodoAsync(id, todo); 
+        
+
+            return Ok(updatedTodo.ToTodoDto());
 
         }
 
@@ -91,13 +115,18 @@ namespace todoCS.Controllers;
         [Route("delete/{id:int}")]
         public async Task<IActionResult> DeleteTodo([FromRoute] long id)
         {
-            var todoModel = await _todoRepo.DeleteTodoAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized("User not found!");
 
-            if (todoModel == null)
+            var todoModel = await _todoRepo.GetByIdAsync(id);
+
+            if (todoModel == null || todoModel.UserId != user.Id)
             {
-                return NotFound("Todo does not exist!");
+                return NotFound("Todo not found or you do not have access");
             }
 
+            await _todoRepo.DeleteTodoAsync(id);
+            
             return Ok(todoModel);
         }
         

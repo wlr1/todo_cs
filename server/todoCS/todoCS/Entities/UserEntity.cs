@@ -10,5 +10,7 @@ public class UserEntity : IdentityUser<int>
     public string? LastName { get; set; }
     
     public byte[]? UserAvatar { get; set; }
-    
+
+    public ICollection<TodoEntityItem> Todos { get; set; } = new List<TodoEntityItem>();
+
 }

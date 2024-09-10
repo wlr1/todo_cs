@@ -11,4 +11,7 @@ public class TodoEntityItem
     public DateTime CreatedAt { get; set; }
     
     public string? Secret { get; set; }
+    
+    public int UserId { get; set; }
+    public UserEntity User { get; set; }
 }
