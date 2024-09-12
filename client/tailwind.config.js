@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         todoPal: "#293737",
+        btnTodo: "#91d2cd",
       },
       backgroundImage: {
         bgMain:

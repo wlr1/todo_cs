@@ -3,7 +3,7 @@ import TodoActions from "../TodoActions/TodoActions";
 
 const TodoItem = () => {
   return (
-    <div className="flex items-center space-x-3 ">
+    <div className="flex items-center space-x-2 ">
       {/* <!-- Block on the left side --> */}
 
       <TodoActions />

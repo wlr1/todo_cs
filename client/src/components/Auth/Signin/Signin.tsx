@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "animate.css";
+import { useDispatch, useSelector } from "react-redux";
+
+import { loginUser } from "../../../redux/slices/authSlice";
+import { AppDispatch, RootState } from "../../../redux/store";
 
 const Signin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch: AppDispatch = useDispatch();
+  const { isLoading, error } = useSelector((state: RootState) => state.auth);
+
   const [isFormAnimation, setIsFormAnimation] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(loginUser({ email, password }));
+  };
 
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);
@@ -24,7 +38,7 @@ const Signin = () => {
           Sign In
         </h1>
 
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
             <label
@@ -35,7 +49,8 @@ const Signin = () => {
             </label>
             <input
               type="email"
-              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your email"
             />
@@ -51,7 +66,8 @@ const Signin = () => {
             </label>
             <input
               type="password"
-              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your password"
             />
@@ -78,18 +94,20 @@ const Signin = () => {
           {/* Sign In Button */}
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md transition-all duration-300"
           >
             Sign In
           </button>
         </form>
+        {error && <p>{error}</p>}
 
         {/* Sign Up Option */}
         <p className="text-center text-gray-300 mt-6 text-sm">
           Don't have an account?{" "}
-          <a className="text-indigo-400 hover:underline">
-            <Link to="/register">SignUp</Link>
-          </a>
+          <Link to="/register" className="text-indigo-400 hover:underline">
+            SignUp
+          </Link>
         </p>
       </div>
     </div>
