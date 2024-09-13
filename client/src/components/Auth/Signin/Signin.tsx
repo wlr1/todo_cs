@@ -9,7 +9,9 @@ import { AppDispatch, RootState } from "../../../redux/store";
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const dispatch: AppDispatch = useDispatch();
+
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
 
   const [isFormAnimation, setIsFormAnimation] = useState(false);

@@ -1,8 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "animate.css";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../../redux/slices/authSlice";
+import { AppDispatch, RootState } from "../../../redux/store";
 
 const Signup = () => {
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [firstname, setFirstname] = useState("");
+
+  const { isLoading, error } = useSelector((state: RootState) => state.auth);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(registerUser({ email, password, username, lastname, firstname }));
+  };
+
   const [isFormAnimation, setIsFormAnimation] = useState(false);
 
   useEffect(() => {
@@ -24,7 +42,7 @@ const Signup = () => {
           Register
         </h1>
 
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           {/* First Name */}
           <div>
             <label
@@ -35,7 +53,8 @@ const Signup = () => {
             </label>
             <input
               type="text"
-              id="firstName"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your first name"
             />
@@ -51,7 +70,8 @@ const Signup = () => {
             </label>
             <input
               type="text"
-              id="lastName"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your last name"
             />
@@ -67,7 +87,8 @@ const Signup = () => {
             </label>
             <input
               type="text"
-              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your username"
             />
@@ -83,7 +104,8 @@ const Signup = () => {
             </label>
             <input
               type="email"
-              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your email"
             />
@@ -99,7 +121,8 @@ const Signup = () => {
             </label>
             <input
               type="password"
-              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="Enter your password"
             />
@@ -109,17 +132,19 @@ const Signup = () => {
           <button
             type="submit"
             className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-md transition-all duration-300"
+            disabled={isLoading}
           >
             Register
           </button>
+          {error && <p>{error}</p>}
         </form>
 
         {/* Already have an account? */}
         <p className="text-center text-gray-300 mt-6 text-sm">
           Already have an account?{" "}
-          <a className="text-indigo-400 hover:underline">
-            <Link to="/login">Sign In</Link>
-          </a>
+          <Link to="/login" className="text-indigo-400 hover:underline">
+            Sign In
+          </Link>
         </p>
       </div>
     </div>

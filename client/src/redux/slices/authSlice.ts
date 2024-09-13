@@ -1,11 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api";
-import { FaWineGlassEmpty } from "react-icons/fa6";
-
-interface LoginData {
-  email: string;
-  password: string;
-}
 
 interface AuthState {
   error: string | null;
