@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "animate.css";
 import { FaCheckCircle, FaUserAlt, FaCog, FaSignOutAlt } from "react-icons/fa";
-
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 interface SidebarProps {
   isVisible: boolean;
   show: boolean;
 }
 
+interface DecodedToken {
+  username: string;
+}
+
 const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
+  const [username, setUsername] = useState<string>("");
+
+  useEffect(() => {
+    const token = Cookies.get("jwt");
+    if (token) {
+      const decodedToken: DecodedToken = jwtDecode(token);
+      setUsername(decodedToken.username);
+    }
+  }, []);
+
   return (
     <>
       {isVisible && (
@@ -23,7 +38,7 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
               alt="User Avatar"
               className="rounded-full w-20 h-20 border-2 border-gray-200"
             />
-            <h2 className="text-white text-xl font-bold">Username</h2>
+            <h2 className="text-white text-xl font-bold">{username}</h2>
           </div>
 
           {/* Menu Items */}
