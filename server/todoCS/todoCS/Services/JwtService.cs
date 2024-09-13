@@ -25,9 +25,9 @@ public class JwtService
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email ?? ""),
-                new Claim(ClaimTypes.Name, user.UserName ?? ""),
-                new Claim(ClaimTypes.GivenName, user.FirstName ?? ""),
-                new Claim(ClaimTypes.Surname, user.LastName ?? "")
+                new Claim("username", user.UserName ?? ""),
+                new Claim("firstname", user.FirstName ?? ""),
+                new Claim("lastname", user.LastName ?? "")
             }),
             Expires = DateTime.UtcNow.AddMinutes(double.Parse(_configuration["Jwt:ExpireMinutes"])),
             Issuer = _configuration["Jwt:Issuer"],
