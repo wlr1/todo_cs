@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,9 +16,12 @@ const Signin = () => {
 
   const [isFormAnimation, setIsFormAnimation] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(loginUser({ email, password }));
+    navigate("/");
   };
 
   useEffect(() => {

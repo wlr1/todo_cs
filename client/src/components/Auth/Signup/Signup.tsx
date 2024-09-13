@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../../redux/slices/authSlice";
@@ -16,9 +16,12 @@ const Signup = () => {
 
   const dispatch: AppDispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(registerUser({ email, password, username, lastname, firstname }));
+    navigate("/login");
   };
 
   const [isFormAnimation, setIsFormAnimation] = useState(false);
