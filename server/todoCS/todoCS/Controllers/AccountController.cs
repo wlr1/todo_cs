@@ -80,6 +80,15 @@ public class AccountController : ControllerBase
         var token = _jwtService.GenerateToken(user);
         return Ok(new { Token = token });
     }
+    
+    //logout
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return Ok("You have been logged out successfully");
+    }
 
     //delete user
     [Authorize]
