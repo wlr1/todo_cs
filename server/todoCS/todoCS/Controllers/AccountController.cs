@@ -23,6 +23,25 @@ public class AccountController : ControllerBase
         _jwtService = jwtService;
         
     }
+
+    [HttpGet("validate-token")]
+    public IActionResult ValidateToken()
+    {
+        var jwt = Request.Cookies["jwt"];
+        if (string.IsNullOrEmpty(jwt))
+        {
+            return Unauthorized(new { message = "No JWT token found" });
+        }
+
+        var validateToken = _jwtService.ValidateToken(jwt);
+
+        if (!validateToken)
+        {
+            return Unauthorized(new { message = "Invalid or expired token" });
+        }
+
+        return Ok(new { message = "Token is valid" });
+    }
     
     //register new user
     [HttpPost("register")]
