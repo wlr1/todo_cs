@@ -18,10 +18,15 @@ const Signin = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
-    navigate("/todo");
+
+    try {
+      dispatch(loginUser({ email, password })).unwrap();
+      navigate("/todo");
+    } catch (error) {
+      console.error("Login failed: ", error);
+    }
   };
 
   useEffect(() => {

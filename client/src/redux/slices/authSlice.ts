@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api";
 
@@ -6,14 +5,12 @@ interface AuthState {
   error: string | null;
   user: any | null;
   isLoading: boolean;
-  token: string | null;
 }
 
 const initialState: AuthState = {
   error: null,
   user: null,
   isLoading: false,
-  token: null,
 };
 
 export const loginUser = createAsyncThunk(
@@ -58,20 +55,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, thunkAPI) => {
     try {
-      const token = Cookies.get("jwt");
-      if (!token) {
-        return thunkAPI.rejectWithValue("No token found");
-      }
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      };
-      await api.post("/Account/logout", {}, config);
-
-      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      await api.post("/Account/logout");
 
       return;
     } catch (error: any) {
@@ -87,8 +71,6 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.token = null;
-      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     },
   },
   extraReducers: (builder) => {
@@ -98,8 +80,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.token = action.payload.token;
-        document.cookie = `jwt=${action.payload.token}; path=/;`;
+        state.user = action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -121,7 +102,6 @@ const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
-        state.token = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
