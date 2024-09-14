@@ -78,6 +78,13 @@ public class AccountController : ControllerBase
         }
 
         var token = _jwtService.GenerateToken(user);
+        
+        Response.Cookies.Append("jwt", token, new CookieOptions
+        {
+            HttpOnly = true,
+            SameSite = SameSiteMode.Strict
+        });
+        
         return Ok(new { Token = token });
     }
     
