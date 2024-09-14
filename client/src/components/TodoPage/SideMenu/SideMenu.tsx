@@ -3,6 +3,9 @@ import "animate.css";
 import { FaCheckCircle, FaUserAlt, FaCog, FaSignOutAlt } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { logoutUser } from "../../../redux/slices/authSlice";
 interface SidebarProps {
   isVisible: boolean;
   show: boolean;
@@ -15,6 +18,17 @@ interface DecodedToken {
 const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
   const [username, setUsername] = useState<string>("");
 
+  const dispatch: AppDispatch = useDispatch();
+
+  const isLoading = useSelector((state: RootState) => state.auth.isLoading);
+  const error = useSelector((state: RootState) => state.auth.error);
+
+  //logout
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+  };
+
+  //get user info from jwt cookie
   useEffect(() => {
     const token = Cookies.get("jwt");
     if (token) {
@@ -72,16 +86,21 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
+                <button
+                  onClick={handleLogout}
                   className="flex items-center text-gray-300 text-sm hover:text-white transition"
                 >
                   <FaSignOutAlt className="mr-3" />
                   Logout
-                </a>
+                </button>
               </li>
             </ul>
           </nav>
+          {/* check for loading */}
+          {isLoading && <p className="text-sm text-blue-500">Logging out...</p>}
+
+          {/* check for error */}
+          {error && <p className="text-sm text-red-500">{error}</p>}
         </div>
       )}
     </>

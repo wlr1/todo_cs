@@ -21,7 +21,7 @@ const Signin = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(loginUser({ email, password }));
-    navigate("/");
+    navigate("/todo");
   };
 
   useEffect(() => {

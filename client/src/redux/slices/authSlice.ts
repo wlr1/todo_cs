@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api";
 
@@ -43,10 +44,39 @@ export const registerUser = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const res = await api.post("Account/register", userData);
+      const res = await api.post("/Account/register", userData);
       return res.data;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.res.data);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Register failed"
+      );
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, thunkAPI) => {
+    try {
+      const token = Cookies.get("jwt");
+      if (!token) {
+        return thunkAPI.rejectWithValue("No token found");
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      };
+      await api.post("/Account/logout", {}, config);
+
+      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+      return;
+    } catch (error: any) {
+      console.log("Logout error: ", error);
+      return thunkAPI.rejectWithValue(error.response?.data || "Logout failed");
     }
   }
 );
@@ -82,6 +112,18 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.token = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });
