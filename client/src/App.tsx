@@ -4,6 +4,7 @@ import Signin from "./components/Auth/Signin/Signin";
 import Signup from "./components/Auth/Signup/Signup";
 import TodoCS from "./components/TodoPage/Todo";
 import ProtectedRoute from "./components/Auth/ProtectedRoute/ProtectedRoute";
+import NotFound from "./components/NotFound/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -14,8 +15,18 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-  { path: "/login", element: <Signin /> },
-  { path: "/register", element: <Signup /> },
+  {
+    path: "/login",
+    element: <Signin />,
+  },
+  {
+    path: "/register",
+    element: <Signup />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
 ]);
 
 function App() {

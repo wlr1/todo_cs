@@ -56,6 +56,7 @@ const Signup = () => {
             </label>
             <input
               type="text"
+              id="firstname"
               value={firstname}
               onChange={(e) => setFirstname(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -73,6 +74,7 @@ const Signup = () => {
             </label>
             <input
               type="text"
+              id="lastname"
               value={lastname}
               onChange={(e) => setLastname(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -90,6 +92,7 @@ const Signup = () => {
             </label>
             <input
               type="text"
+              id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -107,6 +110,7 @@ const Signup = () => {
             </label>
             <input
               type="email"
+              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -124,6 +128,7 @@ const Signup = () => {
             </label>
             <input
               type="password"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
