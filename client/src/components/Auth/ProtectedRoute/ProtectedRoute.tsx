@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import api from "../../../redux/api";
+import Spinner from "../../Spinner/Spinner";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         } catch (error: any) {
           setIsValid(false);
         }
-      }, 1000);
+      }, 2000);
     };
     validateToken();
   }, []);
@@ -33,7 +34,11 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }, [isValid, navigate]);
 
   if (isValid === null) {
-    return <div className="font-bold text-black text-2xl">Loading...</div>;
+    return (
+      <>
+        <Spinner />
+      </>
+    );
   }
 
   if (!isValid) {
