@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using todoCS.Dtos;
@@ -101,7 +103,9 @@ public class AccountController : ControllerBase
         Response.Cookies.Append("jwt", token, new CookieOptions
         {
             HttpOnly = true,
-            SameSite = SameSiteMode.Strict
+            SameSite = SameSiteMode.Strict,
+            Secure = false,
+            Expires = DateTime.UtcNow.AddMinutes(60)
         });
         
         return Ok(new { Token = token });
@@ -113,6 +117,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
+        Response.Cookies.Delete("jwt");
         return Ok("You have been logged out successfully");
     }
 
@@ -138,6 +143,51 @@ public class AccountController : ControllerBase
             return BadRequest(ModelState);
         }
         return Ok("Your account has been deleted successfully.");
+    }
+
+    //get user info
+    [HttpGet("user-info")]
+    public async Task<IActionResult> GetUserInfo()
+    {
+        var jwt = Request.Cookies["jwt"];
+        if (string.IsNullOrEmpty(jwt))
+        {
+            return Unauthorized(new { message = "No JWT token found" });
+        }
+
+        if (!_jwtService.ValidateToken(jwt))
+        {
+            return Unauthorized(new { message = "Invalid or expired token" });
+        }
+        
+        //user id from jwt
+        var jwtHandler = new JwtSecurityTokenHandler();
+        var token = jwtHandler.ReadJwtToken(jwt);
+        var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == "nameid");
+        
+        if (userIdClaim == null)
+        {
+            return Unauthorized(new { message = "User ID not found in token" });
+        }
+        
+        var userId = int.Parse(userIdClaim.Value);
+        
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found" });
+        }
+
+        var userInfo = new
+        {
+            user.FirstName,
+            user.LastName,
+            user.Email,
+            user.UserName,
+            user.Id
+        };
+        return Ok(userInfo);
     }
 
     //upload avatar
