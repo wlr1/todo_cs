@@ -28,7 +28,7 @@ const NotFound = () => {
         <div className="flex justify-center mt-4">
           <h2 className="font-semibold text-xl text-btnTodo text-wrap text-center">
             This page is does not exist! Please go back to the{" "}
-            <span className="font-bold underline text-red-600">
+            <span className="font-bold underline text-red-600 hover:text-red-900">
               <Link to="/login">Login</Link>
             </span>{" "}
             screen.

@@ -1,27 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "animate.css";
 import { FaCheckCircle, FaUserAlt, FaCog, FaSignOutAlt } from "react-icons/fa";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { logoutUser } from "../../../redux/slices/authSlice";
+import { fetchUserInfo } from "../../../redux/slices/userSlice";
 interface SidebarProps {
   isVisible: boolean;
   show: boolean;
 }
 
-interface DecodedToken {
-  username: string;
-}
-
 const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
-  const [username, setUsername] = useState<string>("");
-
   const dispatch: AppDispatch = useDispatch();
-
-  const isLoading = useSelector((state: RootState) => state.auth.isLoading);
-  const error = useSelector((state: RootState) => state.auth.error);
+  const { user } = useSelector((state: RootState) => state.user);
 
   //logout
   const handleLogout = async () => {
@@ -30,11 +21,8 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
 
   //get user info from jwt cookie
   useEffect(() => {
-    const token = Cookies.get("jwt");
-    if (token) {
-      const decodedToken: DecodedToken = jwtDecode(token);
-      setUsername(decodedToken.username);
-    }
+    dispatch(fetchUserInfo());
+    console.log({ user });
   }, []);
 
   return (
@@ -52,7 +40,7 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
               alt="User Avatar"
               className="rounded-full w-20 h-20 border-2 border-gray-200"
             />
-            <h2 className="text-white text-xl font-bold">{username}</h2>
+            <h2 className="text-white text-xl font-bold">{user.userName}</h2>
           </div>
 
           {/* Menu Items */}
@@ -96,11 +84,11 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
               </li>
             </ul>
           </nav>
-          {/* check for loading */}
+          {/* check for loading
           {isLoading && <p className="text-sm text-blue-500">Logging out...</p>}
 
           {/* check for error */}
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {/* {error && <p className="text-sm text-red-500">{error}</p>} */}
         </div>
       )}
     </>
