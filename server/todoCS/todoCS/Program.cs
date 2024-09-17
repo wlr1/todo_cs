@@ -57,6 +57,7 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+    //Atļaut JWT no HTTP pieprasījumu sīkdatnes
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
