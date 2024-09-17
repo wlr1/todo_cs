@@ -57,6 +57,19 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var jwt = context.Request.Cookies["jwt"];
+            if (!string.IsNullOrEmpty(jwt))
+            {
+                context.Token = jwt;
+            }
+
+            return Task.CompletedTask;
+        }
+    };
 });
 
 //add cookie auth
