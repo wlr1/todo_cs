@@ -55,7 +55,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, thunkAPI) => {
     try {
-      await api.post("/Account/logout");
+      await api.post("/Account/logout", {}, { withCredentials: true });
 
       return;
     } catch (error: any) {

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { logoutUser } from "../../../redux/slices/authSlice";
 import { fetchUserInfo } from "../../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 interface SidebarProps {
   isVisible: boolean;
   show: boolean;
@@ -14,15 +15,17 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
   const dispatch: AppDispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.user);
 
+  const navigate = useNavigate();
+
   //logout
   const handleLogout = async () => {
     await dispatch(logoutUser());
+    navigate("/login");
   };
 
   //get user info from jwt cookie
   useEffect(() => {
     dispatch(fetchUserInfo());
-    console.log({ user });
   }, []);
 
   return (
@@ -84,11 +87,6 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
               </li>
             </ul>
           </nav>
-          {/* check for loading
-          {isLoading && <p className="text-sm text-blue-500">Logging out...</p>}
-
-          {/* check for error */}
-          {/* {error && <p className="text-sm text-red-500">{error}</p>} */}
         </div>
       )}
     </>
