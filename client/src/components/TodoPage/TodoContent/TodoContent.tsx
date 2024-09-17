@@ -1,6 +1,4 @@
 import React from "react";
-
-import AddTodoBtn from "./TodoToolbar/AddTodoButton/AddTodoBtn";
 import TodoList from "./TodoList/TodoList";
 import TodoToolbar from "./TodoToolbar/TodoToolbar";
 

@@ -2,10 +2,18 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import SideMenu from "../SideMenu/SideMenu";
 import TodoContent from "../TodoContent/TodoContent";
 import { useEffect, useState } from "react";
+import ProfileMenu from "../ProfileMenu/ProfileMenu";
+import SettingsMenu from "../SettingsMenu/SettingsMenu";
 
 const MainContent = () => {
   const [show, setIsShow] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+
+  const [currentContent, setCurrentContent] = useState("todo");
+
+  const handleContentChange = (content: string) => {
+    setCurrentContent(content);
+  };
 
   const showSidebar = () => {
     setIsShow(!show);
@@ -25,7 +33,11 @@ const MainContent = () => {
   return (
     <div className="flex justify-center items-center h-screen relative">
       <div className="">
-        <SideMenu isVisible={isVisible} show={show} />
+        <SideMenu
+          isVisible={isVisible}
+          show={show}
+          handleContentChange={handleContentChange}
+        />
       </div>
 
       <div className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black bg-bgTodoBlock bg-no-repeat bg-cover">
@@ -49,7 +61,9 @@ const MainContent = () => {
 
           {/* Main content */}
           <div className="h-full w-full">
-            <TodoContent />
+            {currentContent == "todo" && <TodoContent />}
+            {currentContent == "profile" && <ProfileMenu />}
+            {currentContent == "settings" && <SettingsMenu />}
           </div>
         </div>
       </div>

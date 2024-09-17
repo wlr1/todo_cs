@@ -1,12 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api";
-
-interface UserState {
-  error: string | null;
-  user: any | null;
-  isLoading: boolean;
-  avatar: string | undefined;
-}
+import { UserState } from "../../utility/types/types";
 
 const initialState: UserState = {
   error: null,

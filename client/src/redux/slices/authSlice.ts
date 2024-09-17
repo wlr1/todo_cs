@@ -1,11 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api";
-
-interface AuthState {
-  error: string | null;
-  user: any | null;
-  isLoading: boolean;
-}
+import { AuthState } from "../../utility/types/types";
 
 const initialState: AuthState = {
   error: null,

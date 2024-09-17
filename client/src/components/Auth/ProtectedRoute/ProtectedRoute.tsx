@@ -3,10 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../redux/api";
 import Spinner from "../../Spinner/Spinner";
-
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
+import { ProtectedRouteProps } from "../../../utility/types/types";
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isValid, setIsValid] = useState<boolean | null>(null);

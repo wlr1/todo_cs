@@ -6,12 +6,13 @@ import { AppDispatch, RootState } from "../../../redux/store";
 import { logoutUser } from "../../../redux/slices/authSlice";
 import { fetchUserInfo, getAvatar } from "../../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-interface SidebarProps {
-  isVisible: boolean;
-  show: boolean;
-}
+import { SidebarProps } from "../../../utility/types/types";
 
-const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
+const SideMenu: React.FC<SidebarProps> = ({
+  isVisible,
+  show,
+  handleContentChange,
+}) => {
   const dispatch: AppDispatch = useDispatch();
   const { user, avatar } = useSelector((state: RootState) => state.user);
 
@@ -54,31 +55,31 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
           <nav className="flex flex-col space-y-4">
             <ul className="flex flex-col space-y-3">
               <li>
-                <a
-                  href="#"
+                <button
+                  onClick={() => handleContentChange("todo")}
                   className="flex items-center text-gray-300 text-sm hover:text-white transition "
                 >
                   <FaCheckCircle className="mr-3" />
                   Todo
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="#"
+                <button
+                  onClick={() => handleContentChange("profile")}
                   className="flex items-center text-gray-300 text-sm hover:text-white transition"
                 >
                   <FaUserAlt className="mr-3" />
                   Profile
-                </a>
+                </button>
               </li>
               <li>
-                <a
-                  href="#"
+                <button
+                  onClick={() => handleContentChange("settings")}
                   className="flex items-center text-gray-300 text-sm hover:text-white transition"
                 >
                   <FaCog className="mr-3" />
                   Settings
-                </a>
+                </button>
               </li>
               <li>
                 <button
