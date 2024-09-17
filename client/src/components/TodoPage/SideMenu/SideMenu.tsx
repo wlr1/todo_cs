@@ -4,7 +4,7 @@ import { FaCheckCircle, FaUserAlt, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { logoutUser } from "../../../redux/slices/authSlice";
-import { fetchUserInfo } from "../../../redux/slices/userSlice";
+import { fetchUserInfo, getAvatar } from "../../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 interface SidebarProps {
   isVisible: boolean;
@@ -13,7 +13,7 @@ interface SidebarProps {
 
 const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
   const dispatch: AppDispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user, avatar } = useSelector((state: RootState) => state.user);
 
   const navigate = useNavigate();
 
@@ -28,6 +28,10 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
     dispatch(fetchUserInfo());
   }, []);
 
+  useEffect(() => {
+    dispatch(getAvatar());
+  }, []);
+
   return (
     <>
       {isVisible && (
@@ -39,7 +43,7 @@ const SideMenu: React.FC<SidebarProps> = ({ isVisible, show }) => {
           {/* User Avatar */}
           <div className="flex items-center space-x-4">
             <img
-              src="https://i.pinimg.com/236x/86/3c/48/863c488b8c2f8add74213aa888a2eeb2.jpg"
+              src={avatar}
               alt="User Avatar"
               className="rounded-full w-20 h-20 border-2 border-gray-200"
             />
