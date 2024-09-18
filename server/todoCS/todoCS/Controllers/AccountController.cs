@@ -134,6 +134,7 @@ public class AccountController : ControllerBase
         }
 
         var result = await _userManager.DeleteAsync(user);
+        
         if (!result.Succeeded)
         {
             foreach (var error in result.Errors)
@@ -142,6 +143,9 @@ public class AccountController : ControllerBase
             }
             return BadRequest(ModelState);
         }
+        
+        Response.Cookies.Delete("jwt");
+        
         return Ok("Your account has been deleted successfully.");
     }
 
