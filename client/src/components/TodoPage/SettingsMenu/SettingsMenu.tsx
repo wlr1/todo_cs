@@ -1,7 +1,7 @@
 import React from "react";
 
 const SettingsMenu = () => {
-  return <div>fsdfsdfsd</div>;
+  return <div className="text-2xl font-bold text-white">settings menu</div>;
 };
 
 export default SettingsMenu;

@@ -57,7 +57,7 @@ const SideMenu: React.FC<SidebarProps> = ({
               <li>
                 <button
                   onClick={() => handleContentChange("todo")}
-                  className="flex items-center text-gray-300 text-sm hover:text-white transition "
+                  className="flex items-center text-gray-300 text-sm hover:text-white transition  "
                 >
                   <FaCheckCircle className="mr-3" />
                   Todo
