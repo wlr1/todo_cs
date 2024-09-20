@@ -1,3 +1,4 @@
+import { TodoState } from "./types";
 //SideMenu
 export interface SidebarProps {
   isVisible: boolean;
@@ -18,6 +19,32 @@ export interface UserState {
   user: any | null;
   isLoading: boolean;
   avatar: string | undefined;
+}
+
+//todo redux slice
+//single todo
+export interface Todo {
+  id: number;
+  title: string;
+  description: string;
+  isCompleted: boolean;
+  createdAt: string;
+}
+export interface TodoState {
+  todos: Todo[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+//todoitem props
+export interface TodoItemProps {
+  todo: {
+    id: number;
+    title: string;
+    description: string;
+    isCompleted: boolean;
+    createdAt: string;
+  };
 }
 
 //protectedRoute

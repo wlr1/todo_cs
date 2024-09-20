@@ -23,6 +23,7 @@ const Signin = () => {
 
     try {
       dispatch(loginUser({ email, password })).unwrap();
+
       navigate("/todo");
     } catch (error) {
       console.error("Login failed: ", error);
