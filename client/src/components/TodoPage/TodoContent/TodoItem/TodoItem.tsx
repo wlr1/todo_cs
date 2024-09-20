@@ -30,7 +30,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
         </div>
 
         {/* Todo Description */}
-        <p className="text-gray-300 text-sm drop-shadow-lg break-words">
+        <p className="text-gray-300 text-sm drop-shadow-lg z-10 break-words">
           {todo.description}
         </p>
       </div>

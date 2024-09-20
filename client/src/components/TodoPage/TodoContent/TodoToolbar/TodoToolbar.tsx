@@ -6,6 +6,7 @@ const TodoToolbar = () => {
   return (
     <div className="flex relative justify-center items-center mt-6 mb-6 w-full">
       <AddTodoBtn />
+
       <SearchTodo />
     </div>
   );
