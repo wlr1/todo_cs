@@ -15,7 +15,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
     <div className="flex items-center space-x-2 ">
       {/* <!-- Block on the left side --> */}
 
-      <TodoActions />
+      <TodoActions todoId={todo.id} />
 
       <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 flex-grow shadow-lg shadow-todoPal">
         {/* <!-- Todo Title and Info --> */}
@@ -29,9 +29,11 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
           </div>
         </div>
         {/* <!-- Todo Description --> */}
-        <p className="text-gray-300 text-sm drop-shadow-lg">
-          {todo.description}
-        </p>
+        <div className="">
+          <p className="text-gray-300 text-sm drop-shadow-lg">
+            {todo.description}
+          </p>
+        </div>
       </div>
     </div>
   );

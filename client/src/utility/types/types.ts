@@ -47,6 +47,11 @@ export interface TodoItemProps {
   };
 }
 
+//todoActions props
+export interface TodoActionsProps {
+  todoId: number;
+}
+
 //protectedRoute
 export interface ProtectedRouteProps {
   children: React.ReactNode;
