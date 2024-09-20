@@ -13,13 +13,13 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
 
   return (
     <div className="flex items-center space-x-2 ">
-      {/* <!-- Block on the left side --> */}
-
+      {/* Block on the left side */}
       <TodoActions todoId={todo.id} />
 
-      <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition space-y-2 flex-grow shadow-lg shadow-todoPal">
-        {/* <!-- Todo Title and Info --> */}
-        <div className="flex justify-between items-center">
+      {/* Main Todo Card */}
+      <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition flex-grow shadow-lg shadow-todoPal w-[88%]">
+        {/* Todo Title and Info */}
+        <div className="flex justify-between items-center mb-2">
           <span className="text-white text-xl font-semibold">{todo.title}</span>
           <div className="flex space-x-3">
             {/* CreatedAt */}
@@ -28,12 +28,11 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
             <span className="text-sm text-gray-500">#{todo.id}</span>
           </div>
         </div>
-        {/* <!-- Todo Description --> */}
-        <div className="">
-          <p className="text-gray-300 text-sm drop-shadow-lg">
-            {todo.description}
-          </p>
-        </div>
+
+        {/* Todo Description */}
+        <p className="text-gray-300 text-sm drop-shadow-lg break-words">
+          {todo.description}
+        </p>
       </div>
     </div>
   );
