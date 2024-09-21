@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { TodoState, Todo } from "../../utility/types/types";
+import { TodoState, CreateUpdateTodoPayload } from "../../utility/types/types";
 import api from "../api";
 
 const initialState: TodoState = {
@@ -19,6 +19,27 @@ export const fetchTodos = createAsyncThunk(
       console.error("Failed to fetch todo: ", error);
       return thunkAPI.rejectWithValue(
         error.response?.data || "failed to fetch todo"
+      );
+    }
+  }
+);
+
+//create
+export const createTodo = createAsyncThunk(
+  "todos/createTodo",
+  async (
+    { title, description, createdAt, isCompleted }: CreateUpdateTodoPayload,
+    thunkAPI
+  ) => {
+    try {
+      const todoData = { title, description, createdAt, isCompleted };
+
+      const res = await api.post("/api/Todo/create", todoData);
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to create todo: ", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to create Todo"
       );
     }
   }
@@ -56,6 +77,19 @@ const todoSlice = createSlice({
         state.todos = action.payload;
       })
       .addCase(fetchTodos.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //create todo
+      .addCase(createTodo.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createTodo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.todos.push(action.payload);
+      })
+      .addCase(createTodo.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })

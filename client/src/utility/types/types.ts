@@ -30,10 +30,19 @@ export interface Todo {
   isCompleted: boolean;
   createdAt: string;
 }
+//todos
 export interface TodoState {
   todos: Todo[];
   isLoading: boolean;
   error: string | null;
+}
+
+//create/update todo payload
+export interface CreateUpdateTodoPayload {
+  title: string;
+  description: string;
+  isCompleted?: boolean;
+  createdAt: string;
 }
 
 //todoitem props
