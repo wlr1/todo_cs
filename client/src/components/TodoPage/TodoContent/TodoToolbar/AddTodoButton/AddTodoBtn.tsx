@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { LuPlus } from "react-icons/lu";
 import { AppDispatch } from "../../../../../redux/store";
 import { useDispatch } from "react-redux";
@@ -40,10 +40,10 @@ const AddTodoBtn = () => {
     dispatch(createTodo(newTodo));
 
     //after submission, clearing fields
-    setTitle("");
-    setDescription("");
-    setIsCompleted("no");
-    setCreatedAt("");
+    // setTitle("");
+    // setDescription("");
+    // setIsCompleted("no");
+    // setCreatedAt("");
   };
 
   return (

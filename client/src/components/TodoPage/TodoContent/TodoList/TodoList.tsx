@@ -13,7 +13,7 @@ const TodoList = () => {
   }, [dispatch]);
 
   return (
-    <div className="space-y-4 w-[88%] mx-auto  ">
+    <div className="space-y-4 w-[88%] mx-auto ">
       {todos.map((todo) => (
         <TodoItem key={todo.id} todo={todo} />
       ))}

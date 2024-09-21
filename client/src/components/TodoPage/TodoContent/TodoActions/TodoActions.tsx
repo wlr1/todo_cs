@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever, MdOutlineDoneAll } from "react-icons/md";
 import { TodoActionsProps } from "../../../../utility/types/types";
@@ -6,11 +6,20 @@ import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
 import { deleteTodo } from "../../../../redux/slices/todoSlice";
 
-const TodoActions: React.FC<TodoActionsProps> = ({ todoId }) => {
+const TodoActions: React.FC<TodoActionsProps> = ({ todoId, onDelete }) => {
+  const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
+
   const dispatch: AppDispatch = useDispatch();
 
   const handleDelete = () => {
-    dispatch(deleteTodo(todoId));
+    //animation for delete
+    const newValue = !isChildFormAnimation;
+    setIsChildFormAnimation(newValue);
+    onDelete(newValue);
+
+    setTimeout(() => {
+      dispatch(deleteTodo(todoId));
+    }, 900);
   };
 
   return (
