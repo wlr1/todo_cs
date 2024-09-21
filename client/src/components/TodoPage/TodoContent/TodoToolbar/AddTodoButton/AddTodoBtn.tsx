@@ -46,7 +46,7 @@ const AddTodoBtn = () => {
         </button>
       </div>
       {isModalOpen && (
-        <div className="absolute -top-28 flex items-center justify-center bg-black bg-opacity-50 z-50 w-screen min-h-screen">
+        <div className="absolute -top-6 flex items-center justify-center bg-black bg-opacity-50 z-50 w-full h-[800px] ">
           <div className="bg-white rounded-lg shadow-lg w-1/3 p-6">
             <h2 className="text-xl font-bold mb-4">Add New Todo</h2>
             <form onSubmit={handleSubmit}>

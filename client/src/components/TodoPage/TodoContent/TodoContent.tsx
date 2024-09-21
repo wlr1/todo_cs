@@ -18,10 +18,14 @@ const TodoContent = () => {
           }`}
         >
           {/* Todo add btn and search bar */}
-          <TodoToolbar />
+          <div className="">
+            <TodoToolbar />
+          </div>
 
           {/* Todo list */}
-          <TodoList />
+          <div className="overflow-y-scroll max-h-[75vh] custom-scrollbar">
+            <TodoList />
+          </div>
         </div>
       </div>
     </div>
