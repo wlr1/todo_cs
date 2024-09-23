@@ -51,7 +51,7 @@ const AddTodoBtn = () => {
       <div className="absolute right-0">
         <button
           onClick={OpenModal}
-          className="mr-3 bg-white/10 text-white p-3 rounded-full hover:bg-white/20 transition "
+          className="mr-3 bg-white/10 text-white p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-200 "
         >
           <LuPlus size={21} className="text-btnTodo" />
         </button>

@@ -1,17 +1,12 @@
 import React, { useState } from "react";
 import TodoActions from "../TodoActions/TodoActions";
 import { TodoItemProps } from "../../../../utility/types/types";
-import { AppDispatch } from "../../../../redux/store";
-import { useDispatch } from "react-redux";
-import { updateTodo } from "../../../../redux/slices/todoSlice";
+
+import EditForm from "../EditForm/EditForm";
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(todo.title);
-  const [description, setDescription] = useState(todo.description);
   const [isFormAnimation, setIsFormAnimation] = useState(false); //delete anim
-
-  const dispatch: AppDispatch = useDispatch();
 
   const deleteAnimationTodo = (value: boolean) => {
     setIsFormAnimation(value);
@@ -21,11 +16,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
-    dispatch(updateTodo({ id: todo.id, todoData: { title, description } }));
-    setIsEditing(false);
-  };
-
+  //#FIXME
   const formattedDate = new Date(todo.createdAt).toLocaleString("lv-LV", {
     year: "numeric",
     month: "2-digit",
@@ -50,26 +41,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
       {/* Main Todo Card */}
       <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition flex-grow shadow-lg shadow-todoPal w-[88%]">
         {isEditing ? (
-          <>
-            {/* Form for editing Todo */}
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="bg-gray-800 text-white p-2 rounded mb-2 w-full"
-            />
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="bg-gray-800 text-white p-2 rounded w-full"
-            />
-            <button
-              onClick={handleSave}
-              className="mt-2 bg-green-600 p-2 text-white rounded"
-            >
-              Saglabāt
-            </button>
-          </>
+          <EditForm todo={todo} setIsEditing={setIsEditing} />
         ) : (
           <>
             {/* Todo Title and Info */}
@@ -86,7 +58,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
             </div>
 
             {/* Todo Description */}
-            <p className="text-gray-300 text-sm drop-shadow-lg z-10 break-words">
+            <p className="text-gray-300 text-sm drop-shadow-lg z-10 break-words leading-relaxed">
               {todo.description}
             </p>
           </>

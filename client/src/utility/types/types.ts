@@ -67,3 +67,15 @@ export interface TodoActionsProps {
 export interface ProtectedRouteProps {
   children: React.ReactNode;
 }
+
+//EditFormProps
+export interface EditFormProps {
+  todo: {
+    id: number;
+    title: string;
+    description: string;
+    isCompleted: boolean;
+    createdAt: string;
+  };
+  setIsEditing: (value: boolean) => void;
+}
