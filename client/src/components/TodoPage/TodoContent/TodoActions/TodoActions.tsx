@@ -6,7 +6,11 @@ import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
 import { deleteTodo } from "../../../../redux/slices/todoSlice";
 
-const TodoActions: React.FC<TodoActionsProps> = ({ todoId, onDelete }) => {
+const TodoActions: React.FC<TodoActionsProps> = ({
+  todoId,
+  onDelete,
+  onEdit,
+}) => {
   const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
 
   const dispatch: AppDispatch = useDispatch();
@@ -31,7 +35,10 @@ const TodoActions: React.FC<TodoActionsProps> = ({ todoId, onDelete }) => {
       </div>
 
       <div className="hover:bg-white/20 flex w-8 h-8 items-center justify-center">
-        <button className="text-white hover:text-yellow-400 transition p-1">
+        <button
+          onClick={onEdit}
+          className="text-white hover:text-yellow-400 transition p-1"
+        >
           <FaEdit size={14} />
         </button>
       </div>

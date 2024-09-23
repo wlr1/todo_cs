@@ -40,10 +40,10 @@ const AddTodoBtn = () => {
     dispatch(createTodo(newTodo));
 
     //after submission, clearing fields
-    // setTitle("");
-    // setDescription("");
-    // setIsCompleted("no");
-    // setCreatedAt("");
+    setTitle("");
+    setDescription("");
+    setIsCompleted("no");
+    setCreatedAt("");
   };
 
   return (

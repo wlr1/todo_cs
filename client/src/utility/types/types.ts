@@ -60,6 +60,7 @@ export interface TodoItemProps {
 export interface TodoActionsProps {
   todoId: number;
   onDelete: (value: boolean) => void;
+  onEdit: () => void;
 }
 
 //protectedRoute

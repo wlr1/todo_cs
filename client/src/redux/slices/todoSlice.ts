@@ -45,6 +45,26 @@ export const createTodo = createAsyncThunk(
   }
 );
 
+//update
+export const updateTodo = createAsyncThunk(
+  "todos/updateTodo",
+  async (
+    {
+      id,
+      todoData,
+    }: { id: number; todoData: { title: string; description: string } },
+    thunkAPI
+  ) => {
+    try {
+      const res = await api.put(`/api/Todo/update/${id}`, todoData);
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to update todo: ", error);
+      thunkAPI.rejectWithValue(error.response?.data || "Failed to update todo");
+    }
+  }
+);
+
 //delete
 export const deleteTodo = createAsyncThunk(
   "todos/deleteTodo",
@@ -90,6 +110,24 @@ const todoSlice = createSlice({
         state.todos.push(action.payload);
       })
       .addCase(createTodo.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //update todo
+      .addCase(updateTodo.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateTodo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const index = state.todos.findIndex(
+          (todo) => todo.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.todos[index] = action.payload;
+        }
+      })
+      .addCase(updateTodo.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
