@@ -100,7 +100,7 @@ namespace todoCS.Controllers;
 
             todo.Title = todoDto.Title;
             todo.Description = todoDto.Description;
-            todo.IsCompleted = todoDto.IsCompleted;
+       
 
             var updatedTodo = await _todoRepo.UpdateTodoAsync(id, todo); 
         

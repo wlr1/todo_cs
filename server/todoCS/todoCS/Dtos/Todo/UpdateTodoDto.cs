@@ -16,6 +16,5 @@ public class UpdateTodoDto
 
     public string Description { get; set; } = string.Empty;
 
-    [Required]
-    public bool IsCompleted { get; set; } = false;
+    
 }

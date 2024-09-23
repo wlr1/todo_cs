@@ -34,7 +34,7 @@ public static class TodoMapper
         {
             Title = todoDto.Title,
             Description = todoDto.Description,
-            IsCompleted = todoDto.IsCompleted
+            
         };
     }
 }

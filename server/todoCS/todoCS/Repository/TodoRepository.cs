@@ -45,7 +45,7 @@ public class TodoRepository : ITodoRepository
 
         existingTodo.Title = todoModel.Title;
         existingTodo.Description = todoModel.Description;
-        existingTodo.IsCompleted = todoModel.IsCompleted;
+     
 
         await _context.SaveChangesAsync();
         return existingTodo;

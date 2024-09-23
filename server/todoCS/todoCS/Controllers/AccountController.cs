@@ -104,7 +104,7 @@ public class AccountController : ControllerBase
         {
             HttpOnly = true,
             SameSite = SameSiteMode.Strict,
-            Secure = false,
+            Secure = true,
             Expires = DateTime.UtcNow.AddMinutes(60)
         });
         
