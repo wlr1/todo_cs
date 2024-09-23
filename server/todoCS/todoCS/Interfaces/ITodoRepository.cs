@@ -15,4 +15,6 @@ public interface ITodoRepository
     Task<TodoEntityItem> DeleteTodoAsync(long id);
 
     Task<List<TodoEntityItem>> GetTodoByUserAsync(int userId);
+
+    Task<TodoEntityItem?> isCompletedTodo(long id, TodoEntityItem todoModel);
 }

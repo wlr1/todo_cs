@@ -130,6 +130,28 @@ namespace todoCS.Controllers;
             return Ok(todoModel);
         }
         
+        //isCompleted /api/Todo/isCompleted/id
+        [Authorize]
+        [HttpPut]
+        [Route("isCompleted/{id:int}")]
+        public async Task<IActionResult> isCompletedTodo([FromRoute] long id, [FromBody] isCompletedTodoDto todoDto)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized("User not found!");
+
+            var todoModel = await _todoRepo.GetByIdAsync(id);
+
+            if (todoModel == null || todoModel.UserId != user.Id)
+            {
+                return NotFound("Todo not found or you do not have access");
+            }
+
+            todoModel.IsCompleted = todoDto.isCompleted;
+
+            var updatedTodo = await _todoRepo.isCompletedTodo(id, todoModel);
+            
+            return Ok(updatedTodo.ToTodoDto());
+        }
         
 
     }

@@ -51,6 +51,23 @@ public class TodoRepository : ITodoRepository
         return existingTodo;
 
     }
+    
+    public async Task<TodoEntityItem?> isCompletedTodo(long id, TodoEntityItem todoModel)
+    {
+
+        var existingTodo = await _context.TodoItems.FindAsync(id);
+        
+        if (existingTodo == null)
+        {
+            return null;
+        }
+
+        existingTodo.IsCompleted = todoModel.IsCompleted;
+
+        await _context.SaveChangesAsync();
+        return existingTodo;
+    }
+    
     public async Task<TodoEntityItem?> DeleteTodoAsync(long id)
     {
         var todoModel = await _context.TodoItems.FirstOrDefaultAsync(x => x.Id == id);
