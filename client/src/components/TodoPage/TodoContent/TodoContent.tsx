@@ -23,8 +23,8 @@ const TodoContent = () => {
     <div className="flex h-full w-full relative  ">
       <div className="rounded-r-lg shadow-custom shadow-gray-950 overflow-hidden">
         <div
-          className={`animate__animated  ${
-            isFormAnimation ? "animate__zoomIn" : ""
+          className={`animate__animated animate__slow ${
+            isFormAnimation ? "animate__fadeIn" : ""
           }`}
         >
           {/* Todo add btn and search bar */}
