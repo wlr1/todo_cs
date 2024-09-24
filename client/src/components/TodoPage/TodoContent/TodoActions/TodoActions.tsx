@@ -4,7 +4,10 @@ import { MdDeleteForever, MdOutlineDoneAll } from "react-icons/md";
 import { TodoActionsProps } from "../../../../utility/types/types";
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import { deleteTodo } from "../../../../redux/slices/todoSlice";
+import {
+  deleteTodo,
+  isCompletedTodo,
+} from "../../../../redux/slices/todoSlice";
 
 const TodoActions: React.FC<TodoActionsProps> = ({
   todoId,
@@ -15,6 +18,12 @@ const TodoActions: React.FC<TodoActionsProps> = ({
 
   const dispatch: AppDispatch = useDispatch();
 
+  //complete todo
+  const handleMarkComplete = () => {
+    dispatch(isCompletedTodo({ id: todoId, todoData: { isCompleted: true } }));
+  };
+
+  //delete todo
   const handleDelete = () => {
     //animation for delete
     const newValue = !isChildFormAnimation;
@@ -29,7 +38,10 @@ const TodoActions: React.FC<TodoActionsProps> = ({
   return (
     <div className="w-8 h-[88px] bg-white/10  rounded-lg  flex justify-center items-center flex-col">
       <div className="hover:bg-white/20 flex w-8 h-8 rounded-t-lg items-center justify-center">
-        <button className="text-white hover:text-green-600 transition p-1 ">
+        <button
+          onClick={handleMarkComplete}
+          className="text-white hover:text-green-600 transition p-1 "
+        >
           <MdOutlineDoneAll size={16} />
         </button>
       </div>

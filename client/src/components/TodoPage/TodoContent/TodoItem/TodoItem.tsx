@@ -39,7 +39,11 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
       />
 
       {/* Main Todo Card */}
-      <div className="bg-white/10 p-4 rounded-lg hover:bg-white/20 transition flex-grow shadow-lg shadow-todoPal w-[88%]">
+      <div
+        className={`bg-white/10 p-4 rounded-lg hover:bg-white/20 transition flex-grow shadow-lg shadow-todoPal w-[88%] ${
+          todo.isCompleted ? "line-through opacity-50" : ""
+        }`}
+      >
         {isEditing ? (
           <EditForm todo={todo} setIsEditing={setIsEditing} />
         ) : (

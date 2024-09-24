@@ -65,6 +65,30 @@ export const updateTodo = createAsyncThunk(
   }
 );
 
+export const isCompletedTodo = createAsyncThunk(
+  "todos/isCompletedTodo",
+  async (
+    {
+      id,
+      todoData,
+    }: {
+      id: number;
+      todoData: { isCompleted: boolean };
+    },
+    thunkAPI
+  ) => {
+    try {
+      const res = await api.put(`/api/Todo/isCompleted/${id}`, todoData);
+      return res.data;
+    } catch (error: any) {
+      console.error("failed to complete todo: ", error);
+      thunkAPI.rejectWithValue(
+        error.response?.data || "failed to complete todo"
+      );
+    }
+  }
+);
+
 //delete
 export const deleteTodo = createAsyncThunk(
   "todos/deleteTodo",
@@ -128,6 +152,24 @@ const todoSlice = createSlice({
         }
       })
       .addCase(updateTodo.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //isCompleted todo
+      .addCase(isCompletedTodo.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(isCompletedTodo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const index = state.todos.findIndex(
+          (todo) => todo.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.todos[index] = action.payload;
+        }
+      })
+      .addCase(isCompletedTodo.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
