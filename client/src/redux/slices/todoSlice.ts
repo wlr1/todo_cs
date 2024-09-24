@@ -6,6 +6,7 @@ const initialState: TodoState = {
   error: null,
   isLoading: false,
   todos: [],
+  selectedTodo: null,
 };
 
 //get
@@ -65,6 +66,7 @@ export const updateTodo = createAsyncThunk(
   }
 );
 
+//complete todo
 export const isCompletedTodo = createAsyncThunk(
   "todos/isCompletedTodo",
   async (
@@ -84,6 +86,22 @@ export const isCompletedTodo = createAsyncThunk(
       console.error("failed to complete todo: ", error);
       thunkAPI.rejectWithValue(
         error.response?.data || "failed to complete todo"
+      );
+    }
+  }
+);
+
+//find by id
+export const findByIdTodo = createAsyncThunk(
+  "todos/findByIdTodo",
+  async (id: number, thunkAPI) => {
+    try {
+      const res = await api.get(`/api/Todo/${id}`, { withCredentials: true });
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to find todo by id: ", error);
+      thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to find todo by id"
       );
     }
   }
@@ -170,6 +188,25 @@ const todoSlice = createSlice({
         }
       })
       .addCase(isCompletedTodo.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //find by id
+      .addCase(findByIdTodo.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(findByIdTodo.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const todo = state.todos.find((todo) => todo.id === action.payload.id);
+
+        if (todo) {
+          state.selectedTodo = todo;
+        } else {
+          state.selectedTodo = null;
+        }
+      })
+      .addCase(findByIdTodo.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })

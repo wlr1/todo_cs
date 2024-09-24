@@ -35,6 +35,7 @@ export interface TodoState {
   todos: Todo[];
   isLoading: boolean;
   error: string | null;
+  selectedTodo: null | Todo;
 }
 
 //create/update todo payload
@@ -78,4 +79,15 @@ export interface EditFormProps {
     createdAt: string;
   };
   setIsEditing: (value: boolean) => void;
+}
+
+//search by id props
+export interface SearchByIdProps {
+  setSearchId: (id: number | null) => void;
+  fetchAllTodos: () => void;
+}
+
+//SearchByIdTodoListProps
+export interface SearchByIdTodoListProps {
+  searchId: number | null;
 }

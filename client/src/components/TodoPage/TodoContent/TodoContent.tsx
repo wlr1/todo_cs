@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
 import TodoList from "./TodoList/TodoList";
 import TodoToolbar from "./TodoToolbar/TodoToolbar";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch } from "react-redux";
+import { fetchTodos } from "../../../redux/slices/todoSlice";
 
 const TodoContent = () => {
   const [isFormAnimation, setIsFormAnimation] = useState(false);
+  const [searchId, setSearchId] = useState<number | null>(null);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const fetchAllTodos = () => {
+    dispatch(fetchTodos());
+  };
 
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);
@@ -19,12 +29,15 @@ const TodoContent = () => {
         >
           {/* Todo add btn and search bar */}
           <div className="">
-            <TodoToolbar />
+            <TodoToolbar
+              setSearchId={setSearchId}
+              fetchAllTodos={fetchAllTodos}
+            />
           </div>
 
           {/* Todo list */}
           <div className="overflow-y-scroll max-h-[75vh] custom-scrollbar">
-            <TodoList />
+            <TodoList searchId={searchId} />
           </div>
         </div>
       </div>
