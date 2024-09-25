@@ -12,6 +12,7 @@ const SideMenu: React.FC<SidebarProps> = ({
   isVisible,
   show,
   handleContentChange,
+  isUsernameHide,
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const { user, avatar } = useSelector((state: RootState) => state.user);
@@ -38,17 +39,26 @@ const SideMenu: React.FC<SidebarProps> = ({
       {isVisible && (
         <div
           className={`bg-white/10 backdrop-blur-lg p-6 w-64 flex flex-col space-y-6 animate__animated transition-all rounded-xl shadow-xl shadow-gray-950 mr-2 ${
-            show ? "animate__zoomInLeft" : "animate__zoomOutLeft"
+            show ? "animate__fadeInLeft" : "animate__fadeOutLeft"
           }`}
         >
           {/* User Avatar */}
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col items-center space-y-1 text-center">
             <img
               src={avatar}
               alt="User Avatar"
-              className="rounded-full w-20 h-20 border-2 border-gray-200"
+              className="rounded-full w-20 h-20 border-2 border-gray-300 shadow-sm "
             />
-            <h2 className="text-white text-xl font-bold">{user.userName}</h2>
+            <div className="text-white text-lg">
+              {isUsernameHide === "yes" ? (
+                <div>
+                  <h2 className="font-semibold text-xl">{user.firstName}</h2>
+                  <p className="text-gray-400 text-sm">{user.lastName}</p>
+                </div>
+              ) : (
+                <h2 className="font-semibold text-xl">{user.userName}</h2>
+              )}
+            </div>
           </div>
 
           {/* Menu Items */}

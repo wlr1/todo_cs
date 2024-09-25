@@ -1,9 +1,9 @@
-import { TodoState } from "./types";
 //SideMenu
 export interface SidebarProps {
   isVisible: boolean;
   show: boolean;
   handleContentChange: (content: string) => void;
+  isUsernameHide: string;
 }
 
 //redux auth slice
@@ -96,4 +96,6 @@ export interface SearchByIdTodoListProps {
 export interface SettingsMenuProps {
   setCurrentBlur: (opacity: number) => void;
   currentBlur: number;
+  setIsUsernameHide: (choice: string) => void;
+  isUsernameHide: string;
 }

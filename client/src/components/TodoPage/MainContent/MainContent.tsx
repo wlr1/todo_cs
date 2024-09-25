@@ -9,6 +9,7 @@ const MainContent = () => {
   const [show, setIsShow] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [currentBlur, setCurrentBlur] = useState<number>(11);
+  const [isUsernameHide, setIsUsernameHide] = useState("no");
 
   const [currentContent, setCurrentContent] = useState("todo");
 
@@ -38,6 +39,7 @@ const MainContent = () => {
           isVisible={isVisible}
           show={show}
           handleContentChange={handleContentChange}
+          isUsernameHide={isUsernameHide}
         />
       </div>
 
@@ -68,6 +70,8 @@ const MainContent = () => {
               <SettingsMenu
                 currentBlur={currentBlur}
                 setCurrentBlur={setCurrentBlur}
+                setIsUsernameHide={setIsUsernameHide}
+                isUsernameHide={isUsernameHide}
               />
             )}
           </div>

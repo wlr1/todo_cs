@@ -4,6 +4,8 @@ import { SettingsMenuProps } from "../../../utility/types/types";
 const SettingsMenu: React.FC<SettingsMenuProps> = ({
   currentBlur,
   setCurrentBlur,
+  isUsernameHide,
+  setIsUsernameHide,
 }) => {
   const [isFormAnimation, setIsFormAnimation] = useState(false);
 
@@ -52,6 +54,20 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
             accept="image/*"
             className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600 transition-all duration-200 ease-in-out file:cursor-pointer"
           />
+        </div>
+
+        <div className="">
+          <label className="block text-lg my-4">
+            Show Fullname instead of Username?
+          </label>
+          <select
+            value={isUsernameHide}
+            onChange={(e) => setIsUsernameHide(e.target.value)}
+            className="w-full p-3 text-white bg-[#1c1e22] border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+          >
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
         </div>
       </div>
     </div>
