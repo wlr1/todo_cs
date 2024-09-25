@@ -91,3 +91,9 @@ export interface SearchByIdProps {
 export interface SearchByIdTodoListProps {
   searchId: number | null;
 }
+
+//settings menu props
+export interface SettingsMenuProps {
+  setCurrentBlur: (opacity: number) => void;
+  currentBlur: number;
+}

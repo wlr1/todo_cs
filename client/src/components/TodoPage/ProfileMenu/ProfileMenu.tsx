@@ -29,7 +29,7 @@ const ProfileMenu = () => {
   return (
     <div className="flex justify-center items-center min-h-full  shadow-custom shadow-gray-950">
       <div
-        className={`bg-gray-800/70 backdrop-blur-lg rounded-lg shadow-xl shadow-btnTodo p-6 w-full max-w-md animate__animated ${
+        className={`bg-gray-800 bg-opacity-40 backdrop-blur-md p-10 rounded-lg  text-white shadow-lg shadow-gray-900  w-full max-w-md animate__animated ${
           isFormAnimation ? "animate__zoomIn" : ""
         }`}
       >

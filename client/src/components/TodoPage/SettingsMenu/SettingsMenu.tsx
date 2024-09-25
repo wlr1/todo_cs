@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { SettingsMenuProps } from "../../../utility/types/types";
 
-const SettingsMenu = () => {
+const SettingsMenu: React.FC<SettingsMenuProps> = ({
+  currentBlur,
+  setCurrentBlur,
+}) => {
   const [isFormAnimation, setIsFormAnimation] = useState(false);
 
   useEffect(() => {
@@ -10,7 +14,7 @@ const SettingsMenu = () => {
   return (
     <div className="flex justify-center items-center min-h-full shadow-custom shadow-gray-950">
       <div
-        className={`bg-gray-800 bg-opacity-40 backdrop-blur-md p-10 rounded-lg w-96 text-white shadow-lg shadow-gray-900 transition-all transform hover:scale-105 animate__animated ${
+        className={`bg-gray-800 bg-opacity-40 backdrop-blur-md p-10 rounded-lg w-96 text-white shadow-lg shadow-gray-900 animate__animated ${
           isFormAnimation ? "animate__zoomIn" : ""
         }`}
       >
@@ -21,12 +25,14 @@ const SettingsMenu = () => {
           <label className="block text-lg mb-4">Adjust Blur</label>
           <input
             type="range"
+            value={currentBlur}
             min="0"
-            max="20"
+            max="25"
+            onChange={(e) => setCurrentBlur(Number(e.target.value))}
             className="w-full appearance-none h-2 bg-gray-600 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-400"
           />
           <span className="block text-sm mt-3 text-gray-300">
-            Current Blur: 5px
+            Current Blur: {currentBlur}px
           </span>
         </div>
 
@@ -44,7 +50,7 @@ const SettingsMenu = () => {
           <input
             type="file"
             accept="image/*"
-            className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600 transition-all duration-200 ease-in-out"
+            className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600 transition-all duration-200 ease-in-out file:cursor-pointer"
           />
         </div>
       </div>

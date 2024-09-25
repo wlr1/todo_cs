@@ -8,6 +8,7 @@ import SettingsMenu from "../SettingsMenu/SettingsMenu";
 const MainContent = () => {
   const [show, setIsShow] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [currentBlur, setCurrentBlur] = useState<number>(11);
 
   const [currentContent, setCurrentContent] = useState("todo");
 
@@ -43,7 +44,7 @@ const MainContent = () => {
       <div className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black bg-bgTodoBlock bg-no-repeat bg-cover">
         <div
           className="absolute inset-0 bg-opacity-50 backdrop-blur-md rounded-r-lg "
-          style={{ backdropFilter: "blur(11px)" }}
+          style={{ backdropFilter: `blur(${currentBlur}px)` }}
         >
           {/* Arrow Button for Sidebar */}
           <div
@@ -63,7 +64,12 @@ const MainContent = () => {
           <div className="h-full w-full">
             {currentContent == "todo" && <TodoContent />}
             {currentContent == "profile" && <ProfileMenu />}
-            {currentContent == "settings" && <SettingsMenu />}
+            {currentContent == "settings" && (
+              <SettingsMenu
+                currentBlur={currentBlur}
+                setCurrentBlur={setCurrentBlur}
+              />
+            )}
           </div>
         </div>
       </div>
