@@ -9,6 +9,19 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
 }) => {
   const [isFormAnimation, setIsFormAnimation] = useState(false);
 
+  //reading blur value from storage and set it as the init value
+  useEffect(() => {
+    const savedBlur = localStorage.getItem("blurValue");
+    if (savedBlur) {
+      setCurrentBlur(Number(savedBlur));
+    }
+  }, [setCurrentBlur]);
+
+  //saving blur value to the storage, when its changes
+  useEffect(() => {
+    localStorage.setItem("blurValue", currentBlur.toString());
+  }, [currentBlur]);
+
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);
   }, []);

@@ -8,7 +8,10 @@ import SettingsMenu from "../SettingsMenu/SettingsMenu";
 const MainContent = () => {
   const [show, setIsShow] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [currentBlur, setCurrentBlur] = useState<number>(11);
+  const [currentBlur, setCurrentBlur] = useState<number>(() => {
+    const savedBlur = localStorage.getItem("blurValue");
+    return savedBlur ? Number(savedBlur) : 11;
+  });
   const [isUsernameHide, setIsUsernameHide] = useState("no");
 
   const [currentContent, setCurrentContent] = useState("todo");
