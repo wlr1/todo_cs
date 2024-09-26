@@ -193,6 +193,48 @@ public class AccountController : ControllerBase
         };
         return Ok(userInfo);
     }
+    
+    //change username
+    [Authorize]
+    [HttpPut("username/change")]
+   public async Task<IActionResult> ChangeUsername([FromBody] ChangeUsernameDto changeUsernameDto)
+   {
+       if (!ModelState.IsValid)
+       {
+           return BadRequest(ModelState);
+       }
+       
+       //find logged user
+       var user = await _userManager.GetUserAsync(User);
+
+       if (user == null)
+       {
+           return NotFound("User not found!");
+       }
+       
+       //check if new username already taken
+       var existingUser = await _userManager.FindByNameAsync(changeUsernameDto.NewUsername);
+       if (existingUser != null)
+       {
+           return BadRequest("Username already taken");
+       }
+
+       // replace username
+       user.UserName = changeUsernameDto.NewUsername;
+       
+       //refresh username in db
+       var result = await _userManager.UpdateAsync(user);
+
+       if (!result.Succeeded)
+       {
+           foreach (var error in result.Errors)
+           {
+               ModelState.AddModelError(string.Empty, error.Description);
+           }
+           return BadRequest(ModelState);
+       }
+       return Ok("Username changed successfully!");
+   }
 
     //upload avatar
     [Authorize]
