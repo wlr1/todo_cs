@@ -45,12 +45,32 @@ export const getAvatar = createAsyncThunk(
   }
 );
 
+export const changeUsername = createAsyncThunk(
+  "user/changeUsername",
+  async (newUsername: string, thunkAPI) => {
+    try {
+      const res = await api.put(
+        "/Account/username/change",
+        { NewUsername: newUsername },
+        { withCredentials: true }
+      );
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to update username: ", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to update username"
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      //get user
       .addCase(fetchUserInfo.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -63,6 +83,7 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
+      //get user avatar
       .addCase(getAvatar.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -72,6 +93,19 @@ const userSlice = createSlice({
         state.avatar = action.payload;
       })
       .addCase(getAvatar.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //change username
+      .addCase(changeUsername.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(changeUsername.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(changeUsername.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });

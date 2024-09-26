@@ -27,12 +27,13 @@ const SideMenu: React.FC<SidebarProps> = ({
 
   //get user info from jwt cookie
   useEffect(() => {
-    dispatch(fetchUserInfo());
-  }, []);
+    const fetchData = async () => {
+      await dispatch(fetchUserInfo());
+      await dispatch(getAvatar());
+    };
 
-  useEffect(() => {
-    dispatch(getAvatar());
-  }, []);
+    fetchData();
+  }, [dispatch]);
 
   return (
     <>
