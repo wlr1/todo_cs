@@ -4,20 +4,26 @@ import { EditFormProps } from "../../../../utility/types/types";
 import { updateTodo } from "../../../../redux/slices/todoSlice";
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
+import chooseSfx from "../../../../sounds/choose.mp3";
+import useSound from "use-sound";
 
 const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
+
+  const [playChoose] = useSound(chooseSfx);
 
   const dispatch: AppDispatch = useDispatch();
 
   const handleSave = () => {
     dispatch(updateTodo({ id: todo.id, todoData: { title, description } }));
     setIsEditing(false);
+    playChoose();
   };
 
   const handleClose = () => {
     setIsEditing(false);
+    playChoose();
   };
 
   return (

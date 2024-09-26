@@ -40,10 +40,10 @@ const AddTodoBtn = () => {
     dispatch(createTodo(newTodo));
 
     //after submission, clearing fields
-    setTitle("");
-    setDescription("");
-    setIsCompleted("no");
-    setCreatedAt("");
+    // setTitle("");
+    // setDescription("");
+    // setIsCompleted("no");
+    // setCreatedAt("");
   };
 
   return (
@@ -58,7 +58,7 @@ const AddTodoBtn = () => {
       </div>
       {isModalOpen && (
         <div
-          className={`fixed -top-6 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-lg z-50 w-full h-[800px] transition-opacity duration-300 ease-in-out animate__animated animate__faster ${
+          className={`fixed top-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-lg z-50 w-full h-[800px] transition-opacity duration-300 ease-in-out animate__animated animate__faster ${
             isFormAnimation ? "animate__fadeOut" : "animate__fadeIn"
           } `}
         >

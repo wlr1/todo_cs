@@ -8,7 +8,7 @@ const TodoToolbar: React.FC<SearchByIdProps> = ({
   fetchAllTodos,
 }) => {
   return (
-    <div className="flex relative justify-center items-center mt-6 mb-6 w-full">
+    <div className="flex relative justify-center items-center mt-6 mb-6 w-full ">
       <AddTodoBtn />
 
       <SearchTodo setSearchId={setSearchId} fetchAllTodos={fetchAllTodos} />

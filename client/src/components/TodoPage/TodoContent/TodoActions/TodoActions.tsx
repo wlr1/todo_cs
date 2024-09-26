@@ -8,6 +8,9 @@ import {
   deleteTodo,
   isCompletedTodo,
 } from "../../../../redux/slices/todoSlice";
+import deleteSfx from "../../../../sounds/delete.mp3";
+import completeSfx from "../../../../sounds/complete.mp3";
+import useSound from "use-sound";
 
 const TodoActions: React.FC<TodoActionsProps> = ({
   todoId,
@@ -16,11 +19,15 @@ const TodoActions: React.FC<TodoActionsProps> = ({
 }) => {
   const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
 
+  const [playDelete] = useSound(deleteSfx);
+  const [playComplete] = useSound(completeSfx);
+
   const dispatch: AppDispatch = useDispatch();
 
   //complete todo
   const handleMarkComplete = () => {
     dispatch(isCompletedTodo({ id: todoId, todoData: { isCompleted: true } }));
+    playComplete();
   };
 
   //delete todo
@@ -29,6 +36,8 @@ const TodoActions: React.FC<TodoActionsProps> = ({
     const newValue = !isChildFormAnimation;
     setIsChildFormAnimation(newValue);
     onDelete(newValue);
+
+    playDelete();
 
     setTimeout(() => {
       dispatch(deleteTodo(todoId));
