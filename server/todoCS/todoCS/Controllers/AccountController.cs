@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -234,6 +233,40 @@ public class AccountController : ControllerBase
            return BadRequest(ModelState);
        }
        return Ok("Username changed successfully!");
+   }
+   
+   //change fullname
+   [Authorize]
+   [HttpPut("fullname/change")]
+   public async Task<IActionResult> ChangeFullname([FromBody] ChangeFullnameDto changeFullnameDto)
+   {
+       if (!ModelState.IsValid)
+       {
+           return BadRequest(ModelState);
+       }
+
+       var user = await _userManager.GetUserAsync(User);
+
+       if (user == null)
+       {
+           return NotFound("User not found!");
+       }
+
+       user.FirstName = changeFullnameDto.NewFirstName;
+       user.LastName = changeFullnameDto.NewLastName;
+
+       var result = await _userManager.UpdateAsync(user);
+       
+       if (!result.Succeeded)
+       {
+           foreach (var error in result.Errors)
+           {
+               ModelState.AddModelError(string.Empty, error.Description);
+           }
+           return BadRequest(ModelState);
+       }
+       
+       return Ok("Fullname changed successfully!");
    }
 
     //upload avatar
