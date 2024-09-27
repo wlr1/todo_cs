@@ -10,6 +10,7 @@ import {
 } from "../../../../redux/slices/todoSlice";
 import deleteSfx from "../../../../sounds/delete.mp3";
 import completeSfx from "../../../../sounds/complete.mp3";
+
 import useSound from "use-sound";
 
 const TodoActions: React.FC<TodoActionsProps> = ({
@@ -18,6 +19,7 @@ const TodoActions: React.FC<TodoActionsProps> = ({
   onEdit,
 }) => {
   const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
+  
 
   const [playDelete] = useSound(deleteSfx);
   const [playComplete] = useSound(completeSfx);

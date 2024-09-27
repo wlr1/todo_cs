@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import TodoActions from "../TodoActions/TodoActions";
 import { TodoItemProps } from "../../../../utility/types/types";
-
+import uiClickSfx from "../../../../sounds/click.mp3";
 import EditForm from "../EditForm/EditForm";
+import useSound from "use-sound";
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isFormAnimation, setIsFormAnimation] = useState(false); //delete anim
+  const [playbackRate, setPlaybackRate] = React.useState(1.75);
+
+  const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
 
   const deleteAnimationTodo = (value: boolean) => {
     setIsFormAnimation(value);
@@ -14,6 +18,8 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setPlaybackRate(playbackRate);
+    playUI();
   };
 
   //#FIXME

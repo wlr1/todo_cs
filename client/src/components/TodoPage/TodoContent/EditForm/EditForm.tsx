@@ -4,26 +4,29 @@ import { EditFormProps } from "../../../../utility/types/types";
 import { updateTodo } from "../../../../redux/slices/todoSlice";
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import chooseSfx from "../../../../sounds/choose.mp3";
+import uiClickSfx from "../../../../sounds/click.mp3";
 import useSound from "use-sound";
 
 const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
+  const [playbackRate, setPlaybackRate] = React.useState(1.75);
 
-  const [playChoose] = useSound(chooseSfx);
+  const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
 
   const dispatch: AppDispatch = useDispatch();
 
   const handleSave = () => {
     dispatch(updateTodo({ id: todo.id, todoData: { title, description } }));
+    setPlaybackRate(playbackRate);
+    playUI();
     setIsEditing(false);
-    playChoose();
   };
 
   const handleClose = () => {
+    setPlaybackRate(playbackRate);
+    playUI();
     setIsEditing(false);
-    playChoose();
   };
 
   return (
