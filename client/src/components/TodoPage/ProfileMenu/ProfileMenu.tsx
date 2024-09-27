@@ -3,12 +3,18 @@ import { AppDispatch } from "../../../redux/store";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import { changeUsername, fetchUserInfo } from "../../../redux/slices/userSlice";
+import {
+  changeFullname,
+  changeUsername,
+  fetchUserInfo,
+} from "../../../redux/slices/userSlice";
 
 const ProfileMenu = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isFormAnimation, setIsFormAnimation] = useState(false);
   const [newUsername, setNewUsername] = useState("");
+  const [newFirstName, setNewFirstName] = useState("");
+  const [newLastName, setNewLastName] = useState("");
 
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,6 +29,13 @@ const ProfileMenu = () => {
     if (newUsername.trim()) {
       await dispatch(changeUsername(newUsername));
       await dispatch(fetchUserInfo()); // show updated username without refreshing
+    }
+  };
+
+  const updateFullname = async () => {
+    if (newFirstName && newLastName) {
+      await dispatch(changeFullname({ newFirstName, newLastName }));
+      await dispatch(fetchUserInfo()); // show updatederInfo());
     }
   };
 
@@ -117,16 +130,23 @@ const ProfileMenu = () => {
           </label>
           <div className="flex space-x-2">
             <input
+              value={newFirstName}
               type="text"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+              onChange={(e) => setNewFirstName(e.target.value)}
               placeholder="First name"
             />
             <input
+              value={newLastName}
               type="text"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+              onChange={(e) => setNewLastName(e.target.value)}
               placeholder="Last name"
             />
-            <button className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900">
+            <button
+              onClick={updateFullname}
+              className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900"
+            >
               Update
             </button>
           </div>

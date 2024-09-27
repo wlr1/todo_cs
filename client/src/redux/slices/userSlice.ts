@@ -64,6 +64,34 @@ export const changeUsername = createAsyncThunk(
   }
 );
 
+export const changeFullname = createAsyncThunk(
+  "user/changeFullname",
+  async (
+    {
+      newFirstName,
+      newLastName,
+    }: { newFirstName: string; newLastName: string },
+    thunkAPI
+  ) => {
+    try {
+      const res = await api.put(
+        "/Account/fullname/change",
+        {
+          NewFirstName: newFirstName,
+          NewLastName: newLastName,
+        },
+        { withCredentials: true }
+      );
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to update fullname: ", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to update fullname"
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -106,6 +134,19 @@ const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(changeUsername.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //change fullname
+      .addCase(changeFullname.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(changeFullname.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(changeFullname.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });
