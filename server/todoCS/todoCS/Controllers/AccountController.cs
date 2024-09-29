@@ -269,6 +269,40 @@ public class AccountController : ControllerBase
        return Ok("Fullname changed successfully!");
    }
 
+   //change email
+   [Authorize]
+   [HttpPut("email/change")]
+
+   public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDto changeEmailDto)
+   {
+       if (!ModelState.IsValid)
+       {
+           return BadRequest(ModelState);
+       }
+
+       var user = await _userManager.GetUserAsync(User);
+
+       if (user == null)
+       {
+           return NotFound("User not found!");
+       }
+
+       user.Email = changeEmailDto.NewEmail;
+       
+       var result = await _userManager.UpdateAsync(user);
+       
+       if (!result.Succeeded)
+       {
+           foreach (var error in result.Errors)
+           {
+               ModelState.AddModelError(string.Empty, error.Description);
+           }
+           return BadRequest(ModelState);
+       }
+       
+       return Ok("Email changed successfully!");
+   }
+
     //upload avatar
     [Authorize]
     [HttpPost("upload-avatar")]
