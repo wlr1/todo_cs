@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import {
+  changeEmail,
   changeFullname,
   changeUsername,
   fetchUserInfo,
@@ -15,6 +16,7 @@ const ProfileMenu = () => {
   const [newUsername, setNewUsername] = useState("");
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
 
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,7 +37,14 @@ const ProfileMenu = () => {
   const updateFullname = async () => {
     if (newFirstName && newLastName) {
       await dispatch(changeFullname({ newFirstName, newLastName }));
-      await dispatch(fetchUserInfo()); // show updatederInfo());
+      await dispatch(fetchUserInfo()); // show updated info
+    }
+  };
+
+  const updateEmail = async () => {
+    if (newEmail) {
+      await dispatch(changeEmail(newEmail));
+      await dispatch(fetchUserInfo()); // show updated info
     }
   };
 
@@ -113,11 +122,16 @@ const ProfileMenu = () => {
           </label>
           <div className="flex">
             <input
+              value={newEmail}
               type="email"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+              onChange={(e) => setNewEmail(e.target.value)}
               placeholder="Enter new email"
             />
-            <button className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900">
+            <button
+              onClick={updateEmail}
+              className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900"
+            >
               Update
             </button>
           </div>

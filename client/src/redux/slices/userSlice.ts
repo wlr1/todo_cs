@@ -92,6 +92,27 @@ export const changeFullname = createAsyncThunk(
   }
 );
 
+export const changeEmail = createAsyncThunk(
+  "user/changeEmail",
+  async (newEmail: string, thunkAPI) => {
+    try {
+      const res = await api.put(
+        "/Account/email/change",
+        {
+          NewEmail: newEmail,
+        },
+        { withCredentials: true }
+      );
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to change email: ", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to change email"
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -147,6 +168,19 @@ const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(changeFullname.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //change email
+      .addCase(changeEmail.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(changeEmail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(changeEmail.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });
