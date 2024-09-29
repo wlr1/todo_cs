@@ -113,6 +113,34 @@ export const changeEmail = createAsyncThunk(
   }
 );
 
+export const changePassword = createAsyncThunk(
+  "user/changePasswod",
+  async (
+    {
+      currentPassword,
+      newPassword,
+    }: { currentPassword: string; newPassword: string },
+    thunkAPI
+  ) => {
+    try {
+      const res = await api.put(
+        "Account/password/change",
+        {
+          NewPassword: newPassword,
+          CurrentPassword: currentPassword,
+        },
+        { withCredentials: true }
+      );
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to change password: ", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to change password"
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -181,6 +209,19 @@ const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(changeEmail.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //change password
+      .addCase(changePassword.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });

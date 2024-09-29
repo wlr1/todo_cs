@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {
   changeEmail,
   changeFullname,
+  changePassword,
   changeUsername,
   fetchUserInfo,
 } from "../../../redux/slices/userSlice";
@@ -17,6 +18,8 @@ const ProfileMenu = () => {
   const [newFirstName, setNewFirstName] = useState("");
   const [newLastName, setNewLastName] = useState("");
   const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
 
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,6 +30,7 @@ const ProfileMenu = () => {
     }
   };
 
+  //username
   const updateUsername = async () => {
     if (newUsername.trim()) {
       await dispatch(changeUsername(newUsername));
@@ -34,6 +38,7 @@ const ProfileMenu = () => {
     }
   };
 
+  //fullname
   const updateFullname = async () => {
     if (newFirstName && newLastName) {
       await dispatch(changeFullname({ newFirstName, newLastName }));
@@ -41,6 +46,7 @@ const ProfileMenu = () => {
     }
   };
 
+  //email
   const updateEmail = async () => {
     if (newEmail) {
       await dispatch(changeEmail(newEmail));
@@ -48,6 +54,14 @@ const ProfileMenu = () => {
     }
   };
 
+  //password
+  const updatePassword = async () => {
+    if (newPassword && currentPassword !== newPassword) {
+      await dispatch(changePassword({ newPassword, currentPassword }));
+      await dispatch(fetchUserInfo()); // show updated info
+    }
+  };
+  //delete user
   const handleDeleteClick = () => {
     dispatch(deleteUser());
     navigate("/login");
@@ -171,13 +185,25 @@ const ProfileMenu = () => {
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Password
           </label>
-          <div className="flex">
+          <div className="flex space-x-2">
             <input
+              value={currentPassword}
               type="password"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Enter current password"
+            />
+            <input
+              value={newPassword}
+              type="password"
+              className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
+              onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Enter new password"
             />
-            <button className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900">
+            <button
+              onClick={updatePassword}
+              className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900"
+            >
               Update
             </button>
           </div>
