@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using todoCS.Dtos;
 using todoCS.Entities;
 using todoCS.Services;
@@ -301,6 +302,39 @@ public class AccountController : ControllerBase
        }
        
        return Ok("Email changed successfully!");
+   }
+   
+   //change password
+   [Authorize]
+   [HttpPut("password/change")]
+   public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+   {
+       if (!ModelState.IsValid)
+       {
+           return BadRequest(ModelState);
+       }
+
+       var user = await _userManager.GetUserAsync(User);
+       if (user == null)
+       {
+           return NotFound("User not found!");
+       }
+
+       var result =
+           await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword,
+               changePasswordDto.NewPassword);
+       
+       if (!result.Succeeded)
+       {
+           foreach (var error in result.Errors)
+           {
+               ModelState.AddModelError(string.Empty, error.Description);
+           }
+           return BadRequest(ModelState);
+       }
+
+       return Ok("Password changed successfully!");
+       
    }
 
     //upload avatar
