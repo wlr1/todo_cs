@@ -18,15 +18,26 @@ const ProfileMenu = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isFormAnimation, setIsFormAnimation] = useState(false);
-  const [newUsername, setNewUsername] = useState("");
-  const [newFirstName, setNewFirstName] = useState("");
-  const [newLastName, setNewLastName] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [formData, setFormData] = useState({
+    newUsername: "",
+    newFirstName: "",
+    newLastName: "",
+    newEmail: "",
+    newPassword: "",
+    currentPassword: "",
+  });
 
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+
+  //onChange
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   //avatar input
   const handleAvatarClick = () => {
@@ -51,6 +62,11 @@ const ProfileMenu = () => {
     if (avatarFile) {
       await dispatch(uploadAvatar(avatarFile));
       await dispatch(getAvatar()); //update avatar without reload
+      setAvatarFile(null);
+      setAvatarPreview(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -65,33 +81,65 @@ const ProfileMenu = () => {
 
   //username
   const updateUsername = async () => {
-    if (newUsername.trim()) {
-      await dispatch(changeUsername(newUsername));
+    if (formData.newUsername.trim()) {
+      await dispatch(changeUsername(formData.newUsername));
       await dispatch(fetchUserInfo()); // show updated username without refreshing
+      setFormData((prevData) => ({
+        //clear input after update
+        ...prevData,
+        newUsername: "",
+      }));
     }
   };
 
   //fullname
   const updateFullname = async () => {
-    if (newFirstName && newLastName) {
-      await dispatch(changeFullname({ newFirstName, newLastName }));
+    if (formData.newFirstName && formData.newLastName) {
+      await dispatch(
+        changeFullname({
+          newFirstName: formData.newFirstName,
+          newLastName: formData.newLastName,
+        })
+      );
       await dispatch(fetchUserInfo()); // show updated info
+      setFormData((prevData) => ({
+        ...prevData,
+        newFirstName: "",
+        newLastName: "",
+      }));
     }
   };
 
   //email
   const updateEmail = async () => {
-    if (newEmail) {
-      await dispatch(changeEmail(newEmail));
+    if (formData.newEmail) {
+      await dispatch(changeEmail(formData.newEmail));
       await dispatch(fetchUserInfo()); // show updated info
+      setFormData((prevData) => ({
+        ...prevData,
+        newEmail: "",
+      }));
     }
   };
 
   //password
   const updatePassword = async () => {
-    if (newPassword && currentPassword !== newPassword) {
-      await dispatch(changePassword({ newPassword, currentPassword }));
+    if (
+      formData.newPassword &&
+      formData.currentPassword !== formData.newPassword
+    ) {
+      await dispatch(
+        changePassword({
+          newPassword: formData.newPassword,
+          currentPassword: formData.currentPassword,
+        })
+      );
       await dispatch(fetchUserInfo()); // show updated info
+      setFormData((prevData) => ({
+        ...prevData,
+        newPassword: "",
+        currentPassword: "",
+      }));
     }
   };
   //delete user
@@ -178,10 +226,11 @@ const ProfileMenu = () => {
           </label>
           <div className="flex">
             <input
-              value={newUsername}
+              name="newUsername"
+              value={formData.newUsername}
               type="text"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
-              onChange={(e) => setNewUsername(e.target.value)}
+              onChange={handleInputChange}
               placeholder="Enter new username"
             />
             <button
@@ -200,10 +249,11 @@ const ProfileMenu = () => {
           </label>
           <div className="flex">
             <input
-              value={newEmail}
+              name="newEmail"
+              value={formData.newEmail}
               type="email"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
-              onChange={(e) => setNewEmail(e.target.value)}
+              onChange={handleInputChange}
               placeholder="Enter new email"
             />
             <button
@@ -222,17 +272,19 @@ const ProfileMenu = () => {
           </label>
           <div className="flex space-x-2">
             <input
-              value={newFirstName}
+              name="newFirstName"
+              value={formData.newFirstName}
               type="text"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
-              onChange={(e) => setNewFirstName(e.target.value)}
+              onChange={handleInputChange}
               placeholder="First name"
             />
             <input
-              value={newLastName}
+              name="newLastName"
+              value={formData.newLastName}
               type="text"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
-              onChange={(e) => setNewLastName(e.target.value)}
+              onChange={handleInputChange}
               placeholder="Last name"
             />
             <button
@@ -251,18 +303,20 @@ const ProfileMenu = () => {
           </label>
           <div className="flex space-x-2">
             <input
-              value={currentPassword}
+              name="currentPassword"
+              value={formData.currentPassword}
               type="password"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter current password"
+              onChange={handleInputChange}
+              placeholder="Current password"
             />
             <input
-              value={newPassword}
+              name="newPassword"
+              value={formData.newPassword}
               type="password"
               className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring focus:border-blue-500"
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Enter new password"
+              onChange={handleInputChange}
+              placeholder="New password"
             />
             <button
               onClick={updatePassword}
