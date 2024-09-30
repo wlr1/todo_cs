@@ -9,6 +9,7 @@ import {
   changePassword,
   changeUsername,
   fetchUserInfo,
+  getAvatar,
   uploadAvatar,
 } from "../../../redux/slices/userSlice";
 
@@ -27,35 +28,38 @@ const ProfileMenu = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
+  //avatar input
   const handleAvatarClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
 
+  //choose avatar
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    console.log("Selected FIle : ", selectedFile);
     if (selectedFile) {
       setAvatarFile(selectedFile);
+
       const previewUrl = URL.createObjectURL(selectedFile);
       setAvatarPreview(previewUrl);
-      console.log(previewUrl);
     }
   };
 
+  //upload avatar
   const handleAvatarUpload = async () => {
     if (avatarFile) {
       await dispatch(uploadAvatar(avatarFile));
-      await dispatch(fetchUserInfo());
+      await dispatch(getAvatar()); //update avatar without reload
     }
   };
 
+  //cancel avatar upload
   const handleCancelClick = () => {
     setAvatarFile(null);
     setAvatarPreview(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Atiestata input vērtību
+      fileInputRef.current.value = "";
     }
   };
 

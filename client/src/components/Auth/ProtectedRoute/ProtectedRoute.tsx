@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         } catch (error: any) {
           setIsValid(false);
         }
-      }, 2000);
+      }, 3000);
     };
     validateToken();
   }, []);
