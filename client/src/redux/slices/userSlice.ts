@@ -141,6 +141,27 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+//upload avatar
+export const uploadAvatar = createAsyncThunk(
+  "user/uploadAvatar",
+  async (avatarFile: File, thunkAPI) => {
+    const formData = new FormData();
+    formData.append("avatarFile", avatarFile);
+    try {
+      const res = await api.post("Account/upload-avatar", formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to upload avatar: ", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to upload avatar"
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -222,6 +243,19 @@ const userSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(changePassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      //upload avatar
+      .addCase(uploadAvatar.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(uploadAvatar.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.avatar = action.payload;
+      })
+      .addCase(uploadAvatar.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });

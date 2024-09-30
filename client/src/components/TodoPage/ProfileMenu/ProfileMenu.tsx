@@ -9,10 +9,13 @@ import {
   changePassword,
   changeUsername,
   fetchUserInfo,
+  uploadAvatar,
 } from "../../../redux/slices/userSlice";
 
 const ProfileMenu = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isFormAnimation, setIsFormAnimation] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [newFirstName, setNewFirstName] = useState("");
@@ -27,6 +30,32 @@ const ProfileMenu = () => {
   const handleAvatarClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    console.log("Selected FIle : ", selectedFile);
+    if (selectedFile) {
+      setAvatarFile(selectedFile);
+      const previewUrl = URL.createObjectURL(selectedFile);
+      setAvatarPreview(previewUrl);
+      console.log(previewUrl);
+    }
+  };
+
+  const handleAvatarUpload = async () => {
+    if (avatarFile) {
+      await dispatch(uploadAvatar(avatarFile));
+      await dispatch(fetchUserInfo());
+    }
+  };
+
+  const handleCancelClick = () => {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Atiestata input vērtību
     }
   };
 
@@ -92,18 +121,49 @@ const ProfileMenu = () => {
               onClick={handleAvatarClick}
               className="h-16 w-16 rounded-full cursor-pointer bg-gray-600 flex items-center justify-center"
             >
-              <span className="text-gray-400">Avatar</span>
+              {avatarFile ? (
+                <img
+                  src={avatarPreview ?? undefined}
+                  alt="Avatar preview"
+                  className="h-full w-full rounded-full object-cover"
+                />
+              ) : (
+                <span className="text-gray-400">Avatar</span>
+              )}
             </div>
             <input
               type="file"
               accept="image/*"
               id="fileInput"
               ref={fileInputRef}
+              onChange={handleFileChange}
               className="hidden"
             />
-            <button className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900">
-              Upload
-            </button>
+            {avatarFile ? (
+              <div>
+                <button
+                  onClick={handleCancelClick}
+                  className="ml-4 px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-900"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAvatarUpload}
+                  className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900"
+                >
+                  Upload
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  onClick={handleAvatarUpload}
+                  className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900"
+                >
+                  Upload
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
