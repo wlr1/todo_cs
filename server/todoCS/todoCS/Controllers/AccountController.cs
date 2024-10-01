@@ -428,4 +428,50 @@ public class AccountController : ControllerBase
 
         return File(user.UserBgImage, "image/jpeg");
     }
+    
+    //upload content bg image
+    [Authorize]
+    [HttpPost("upload-image/content/background")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadContentBackgroundImage([FromForm] IFormFile contentFile)
+    {
+        if (contentFile == null || contentFile.Length == 0)
+        {
+            return BadRequest("No file uploaded");
+        }
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound("User not found!");
+        }
+
+        using (var memoryStream = new MemoryStream())
+        {
+            await contentFile.CopyToAsync(memoryStream);
+            user.UserContentBgImage = memoryStream.ToArray();
+        }
+
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            return BadRequest("Could not upload image");
+        }
+        
+        return Ok("Content image uploaded successfully!");
+    }
+    
+    //get content image
+    [Authorize]
+    [HttpGet("download-image/content/background")]
+    public async Task<IActionResult> DownloadContentBackgroundImage()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null || user.UserContentBgImage == null)
+        {
+            return NotFound("User or Content image not found!");
+        }
+
+        return File(user.UserContentBgImage, "image/jpeg");
+    }
 }
