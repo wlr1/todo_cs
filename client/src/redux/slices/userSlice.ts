@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import api from "../api";
 import { UserState } from "../../utility/types/types";
 
@@ -7,6 +7,8 @@ const initialState: UserState = {
   user: null,
   isLoading: false,
   avatar: undefined,
+  bgImage: undefined,
+  contentBgImage: undefined,
 };
 
 export const fetchUserInfo = createAsyncThunk(
@@ -25,6 +27,7 @@ export const fetchUserInfo = createAsyncThunk(
   }
 );
 
+//get avatar
 export const getAvatar = createAsyncThunk(
   "user/getAvatar",
   async (_, thunkAPI) => {
@@ -40,6 +43,27 @@ export const getAvatar = createAsyncThunk(
       console.error("Failed to fetch avatar: ", error.message);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to get avatar"
+      );
+    }
+  }
+);
+
+//upload avatar
+export const uploadAvatar = createAsyncThunk(
+  "user/uploadAvatar",
+  async (avatarFile: File, thunkAPI) => {
+    const formData = new FormData();
+    formData.append("avatarFile", avatarFile);
+    try {
+      const res = await api.post("Account/upload-avatar", formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return res.data;
+    } catch (error: any) {
+      console.error("Failed to upload avatar: ", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to upload avatar"
       );
     }
   }
@@ -141,22 +165,47 @@ export const changePassword = createAsyncThunk(
   }
 );
 
-//upload avatar
-export const uploadAvatar = createAsyncThunk(
-  "user/uploadAvatar",
-  async (avatarFile: File, thunkAPI) => {
-    const formData = new FormData();
-    formData.append("avatarFile", avatarFile);
+//get bg image
+export const getBgImage = createAsyncThunk(
+  "user/getBgImage",
+  async (_, thunkAPI) => {
     try {
-      const res = await api.post("Account/upload-avatar", formData, {
+      const res = await api.get("Account/download-image/main/background", {
         withCredentials: true,
-        headers: { "Content-Type": "multipart/form-data" },
+        responseType: "blob",
       });
+
+      const bgImageUrl = URL.createObjectURL(res.data);
+      return bgImageUrl;
+    } catch (error: any) {
+      console.error("Failed to fetch bg image: ", error.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to get bg image"
+      );
+    }
+  }
+);
+
+//upload bg image
+export const uploadBgImage = createAsyncThunk(
+  "user/uploadBgImage",
+  async (backgroundFile: File, thunkAPI) => {
+    const formData = new FormData();
+    formData.append("backgroundFile", backgroundFile);
+    try {
+      const res = await api.post(
+        "Account/upload-image/main/background",
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       return res.data;
     } catch (error: any) {
-      console.error("Failed to upload avatar: ", error);
+      // console.error("Failed to upload bg image: ", error);
       return thunkAPI.rejectWithValue(
-        error.response?.data || "Failed to upload avatar"
+        error.response?.data || "Failed to upload bg image"
       );
     }
   }
@@ -169,96 +218,66 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       //get user
-      .addCase(fetchUserInfo.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(fetchUserInfo.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
       })
-      .addCase(fetchUserInfo.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
       //get user avatar
-      .addCase(getAvatar.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(getAvatar.fulfilled, (state, action) => {
         state.isLoading = false;
         state.avatar = action.payload;
       })
-      .addCase(getAvatar.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      //change username
-      .addCase(changeUsername.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(changeUsername.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-      })
-      .addCase(changeUsername.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      //change fullname
-      .addCase(changeFullname.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(changeFullname.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-      })
-      .addCase(changeFullname.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      //change email
-      .addCase(changeEmail.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(changeEmail.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-      })
-      .addCase(changeEmail.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      //change password
-      .addCase(changePassword.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(changePassword.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-      })
-      .addCase(changePassword.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
       //upload avatar
-      .addCase(uploadAvatar.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
       .addCase(uploadAvatar.fulfilled, (state, action) => {
         state.isLoading = false;
         state.avatar = action.payload;
       })
-      .addCase(uploadAvatar.rejected, (state, action) => {
+      //change username
+      .addCase(changeUsername.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
-      });
+        state.user = action.payload;
+      })
+      //change fullname
+      .addCase(changeFullname.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      //change email
+      .addCase(changeEmail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      //change password
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      //get bg image
+      .addCase(getBgImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.bgImage = action.payload;
+      })
+      //upload bg image
+      .addCase(uploadBgImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.bgImage = action.payload;
+      })
+      //handle all pending cases
+      .addMatcher(
+        (action) => action.type.endsWith("/pending"),
+        (state) => {
+          state.isLoading = true;
+          state.error = null;
+        }
+      )
+      //handle all rejected cases
+      .addMatcher(
+        (action) => action.type.endsWith("/rejected"),
+        (state, action: PayloadAction<string>) => {
+          state.isLoading = false;
+          state.error = action.payload as string;
+        }
+      );
   },
 });
 
