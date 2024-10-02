@@ -4,8 +4,11 @@ import { AppDispatch } from "../../../redux/store";
 import { useDispatch } from "react-redux";
 import {
   getBgImage,
+  getContentBgImage,
   resetBgImage,
+  resetContentBgImage,
   uploadBgImage,
+  uploadContentBgImage,
 } from "../../../redux/slices/userSlice";
 import { RxReset } from "react-icons/rx";
 
@@ -17,6 +20,7 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
+  const [contentFile, setContentFile] = useState<File | null>(null);
   const [isFormAnimation, setIsFormAnimation] = useState(false);
 
   const dispatch: AppDispatch = useDispatch();
@@ -43,6 +47,33 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
   const handleResetBgImage = async () => {
     await dispatch(resetBgImage());
     await dispatch(getBgImage());
+  };
+
+  const handleChangeContentBgImage = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setContentFile(selectedFile);
+    }
+  };
+
+  const handleUploadContentBgImage = async () => {
+    if (contentFile) {
+      await dispatch(uploadContentBgImage(contentFile));
+      await dispatch(getContentBgImage());
+
+      setContentFile(null);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleResetContentBgImage = async () => {
+    await dispatch(resetContentBgImage());
+    await dispatch(getContentBgImage());
   };
 
   //reading blur value from storage and set it as the init value
@@ -126,14 +157,20 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
           </label>
           <div className="flex items-center">
             <input
+              ref={fileInputRef}
+              id="fileInput"
               type="file"
               accept="image/*"
               className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600 transition-all duration-200 ease-in-out file:cursor-pointer"
+              onChange={handleChangeContentBgImage}
             />
-            <button className="ml-4 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
+            <button
+              onClick={handleUploadContentBgImage}
+              className="ml-4 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
+            >
               Upload
             </button>
-            <button className="ml-2">
+            <button onClick={handleResetContentBgImage} className="ml-2">
               <RxReset size={20} />
             </button>
           </div>

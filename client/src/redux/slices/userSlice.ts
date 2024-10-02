@@ -220,6 +220,67 @@ export const resetBgImage = createAsyncThunk(
   }
 );
 
+//get content bg image
+export const getContentBgImage = createAsyncThunk(
+  "user/getContentBgImage",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.get("Account/download-image/content/background", {
+        withCredentials: true,
+        responseType: "blob",
+      });
+
+      const bgContentImageUrl = URL.createObjectURL(res.data);
+      return bgContentImageUrl;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to fetch content bg image"
+      );
+    }
+  }
+);
+
+//upload content bg image
+export const uploadContentBgImage = createAsyncThunk(
+  "user/uploadContentBgImage",
+  async (contentFile: File, thunkAPI) => {
+    const formData = new FormData();
+    formData.append("contentFile", contentFile);
+    try {
+      const res = await api.post(
+        "Account/upload-image/content/background",
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to upload content bg image"
+      );
+    }
+  }
+);
+
+//reset to default content bg image
+export const resetContentBgImage = createAsyncThunk(
+  "user/resetContentBgImage",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.put("Account/reset-image/content/background", {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to reset content bg image"
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -271,9 +332,25 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.bgImage = action.payload;
       })
+      //reset bg image
       .addCase(resetBgImage.fulfilled, (state, action) => {
         state.isLoading = false;
         state.bgImage = action.payload;
+      })
+      //get content bg image
+      .addCase(getContentBgImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.contentBgImage = action.payload;
+      })
+      //upload content bg image
+      .addCase(uploadContentBgImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.contentBgImage = action.payload;
+      })
+      //reset content bg image
+      .addCase(resetContentBgImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.contentBgImage = action.payload;
       })
       //handle all pending cases
       .addMatcher(

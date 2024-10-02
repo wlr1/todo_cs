@@ -4,6 +4,9 @@ import TodoContent from "../TodoContent/TodoContent";
 import { useEffect, useState } from "react";
 import ProfileMenu from "../ProfileMenu/ProfileMenu";
 import SettingsMenu from "../SettingsMenu/SettingsMenu";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getContentBgImage } from "../../../redux/slices/userSlice";
 
 const MainContent = () => {
   const [show, setIsShow] = useState(false);
@@ -13,8 +16,10 @@ const MainContent = () => {
     return savedBlur ? Number(savedBlur) : 11;
   });
   const [isUsernameHide, setIsUsernameHide] = useState("no");
-
   const [currentContent, setCurrentContent] = useState("todo");
+
+  const { contentBgImage } = useSelector((state: RootState) => state.user);
+  const dispatch: AppDispatch = useDispatch();
 
   const handleContentChange = (content: string) => {
     setCurrentContent(content);
@@ -23,6 +28,13 @@ const MainContent = () => {
   const showSidebar = () => {
     setIsShow(!show);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(getContentBgImage());
+    };
+    fetchData();
+  }, [dispatch]);
 
   //fix for hide sidebar animation
   useEffect(() => {
@@ -46,7 +58,10 @@ const MainContent = () => {
         />
       </div>
 
-      <div className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black bg-bgTodoBlock bg-no-repeat bg-cover">
+      <div
+        className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black  bg-no-repeat bg-cover"
+        style={{ backgroundImage: `url(${contentBgImage})` }}
+      >
         <div
           className="absolute inset-0 bg-opacity-50 backdrop-blur-md rounded-r-lg "
           style={{ backdropFilter: `blur(${currentBlur}px)` }}
