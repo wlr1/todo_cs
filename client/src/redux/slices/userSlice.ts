@@ -40,7 +40,6 @@ export const getAvatar = createAsyncThunk(
       const avatarUrl = URL.createObjectURL(res.data);
       return avatarUrl;
     } catch (error: any) {
-      console.error("Failed to fetch avatar: ", error.message);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to get avatar"
       );
@@ -61,7 +60,6 @@ export const uploadAvatar = createAsyncThunk(
       });
       return res.data;
     } catch (error: any) {
-      console.error("Failed to upload avatar: ", error);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to upload avatar"
       );
@@ -80,7 +78,6 @@ export const changeUsername = createAsyncThunk(
       );
       return res.data;
     } catch (error: any) {
-      console.error("Failed to update username: ", error);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to update username"
       );
@@ -108,7 +105,6 @@ export const changeFullname = createAsyncThunk(
       );
       return res.data;
     } catch (error: any) {
-      console.error("Failed to update fullname: ", error);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to update fullname"
       );
@@ -129,7 +125,6 @@ export const changeEmail = createAsyncThunk(
       );
       return res.data;
     } catch (error: any) {
-      console.error("Failed to change email: ", error);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to change email"
       );
@@ -157,7 +152,6 @@ export const changePassword = createAsyncThunk(
       );
       return res.data;
     } catch (error: any) {
-      console.error("Failed to change password: ", error);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to change password"
       );
@@ -178,7 +172,6 @@ export const getBgImage = createAsyncThunk(
       const bgImageUrl = URL.createObjectURL(res.data);
       return bgImageUrl;
     } catch (error: any) {
-      console.error("Failed to fetch bg image: ", error.message);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to get bg image"
       );
@@ -203,9 +196,25 @@ export const uploadBgImage = createAsyncThunk(
       );
       return res.data;
     } catch (error: any) {
-      // console.error("Failed to upload bg image: ", error);
       return thunkAPI.rejectWithValue(
         error.response?.data || "Failed to upload bg image"
+      );
+    }
+  }
+);
+
+//reset bg image
+export const resetBgImage = createAsyncThunk(
+  "user/resetBgImage",
+  async (_, thunkAPI) => {
+    try {
+      const res = await api.put("Account/reset-image/main/background", {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to reset bg image"
       );
     }
   }
@@ -259,6 +268,10 @@ const userSlice = createSlice({
       })
       //upload bg image
       .addCase(uploadBgImage.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.bgImage = action.payload;
+      })
+      .addCase(resetBgImage.fulfilled, (state, action) => {
         state.isLoading = false;
         state.bgImage = action.payload;
       })

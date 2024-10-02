@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { SettingsMenuProps } from "../../../utility/types/types";
 import { AppDispatch } from "../../../redux/store";
 import { useDispatch } from "react-redux";
-import { getBgImage, uploadBgImage } from "../../../redux/slices/userSlice";
+import {
+  getBgImage,
+  resetBgImage,
+  uploadBgImage,
+} from "../../../redux/slices/userSlice";
+import { RxReset } from "react-icons/rx";
 
 const SettingsMenu: React.FC<SettingsMenuProps> = ({
   currentBlur,
@@ -33,6 +38,11 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
         fileInputRef.current.value = "";
       }
     }
+  };
+
+  const handleResetBgImage = async () => {
+    await dispatch(resetBgImage());
+    await dispatch(getBgImage());
   };
 
   //reading blur value from storage and set it as the init value
@@ -103,6 +113,9 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
             >
               Upload
             </button>
+            <button onClick={handleResetBgImage} className="ml-2">
+              <RxReset size={20} />
+            </button>
           </div>
         </div>
 
@@ -119,6 +132,9 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
             />
             <button className="ml-4 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">
               Upload
+            </button>
+            <button className="ml-2">
+              <RxReset size={20} />
             </button>
           </div>
         </div>
