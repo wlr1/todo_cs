@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using todoCS.Data;
 using todoCS.Entities;
 using todoCS.Interfaces;
@@ -110,6 +111,7 @@ builder.Services.AddSwaggerGen(option =>
             new string[]{}
         }
     });
+
 });
 
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
@@ -134,4 +136,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
+
+
 

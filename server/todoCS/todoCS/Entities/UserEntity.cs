@@ -16,3 +16,4 @@ public class UserEntity : IdentityUser<int>
     public ICollection<TodoEntityItem> Todos { get; set; } = new List<TodoEntityItem>();
 
 }
+
