@@ -506,4 +506,37 @@ public class AccountController : ControllerBase
 
         return File(user.UserContentBgImage, "image/jpeg");
     }
+    
+    //set default content bg image
+    [Authorize]
+    [HttpPut("reset-image/content/background")]
+    public async Task<IActionResult> ResetContentBackgroundToDefault()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound("User not found!");
+        }
+
+        var defaultImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images", "contentWallpaper.jpg");
+
+        if (!System.IO.File.Exists(defaultImagePath))
+        {
+            return NotFound("Default background image not found!");
+        }
+
+        var defaultImage = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+
+        user.UserContentBgImage = defaultImage;
+
+        var result = await _userManager.UpdateAsync(user);
+        
+        if (!result.Succeeded)
+        {
+            return BadRequest("Could not reset to default background image.");
+        }
+
+        return Ok("Background image reset to default successfully!");
+    }
+
 }
