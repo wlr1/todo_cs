@@ -12,6 +12,8 @@ const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
   const [description, setDescription] = useState(todo.description);
   const [playbackRate, setPlaybackRate] = React.useState(1.75);
 
+  const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
+
   const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
 
   const dispatch: AppDispatch = useDispatch();
@@ -19,13 +21,17 @@ const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
   const handleSave = () => {
     dispatch(updateTodo({ id: todo.id, todoData: { title, description } }));
     setPlaybackRate(playbackRate);
-    playUI();
+    if (isSoundOn) {
+      playUI();
+    }
     setIsEditing(false);
   };
 
   const handleClose = () => {
     setPlaybackRate(playbackRate);
-    playUI();
+    if (isSoundOn) {
+      playUI();
+    }
     setIsEditing(false);
   };
 

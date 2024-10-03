@@ -22,6 +22,7 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
   const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
   const [contentFile, setContentFile] = useState<File | null>(null);
   const [isFormAnimation, setIsFormAnimation] = useState(false);
+  const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -76,6 +77,19 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
     await dispatch(getContentBgImage());
   };
 
+  //toggle sound
+  const handleToggleSound = () => {
+    setIsSoundOn((prev) => !prev);
+    localStorage.setItem("isSoundOn", JSON.stringify(!isSoundOn));
+  };
+
+  useEffect(() => {
+    const savedSoundSettings = localStorage.getItem("isSoundOn");
+    if (savedSoundSettings !== null) {
+      setIsSoundOn(JSON.parse(savedSoundSettings));
+    }
+  }, []);
+
   //reading blur value from storage and set it as the init value
   useEffect(() => {
     const savedBlur = localStorage.getItem("blurValue");
@@ -121,8 +135,13 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
         {/* Sound Control */}
         <div className="mb-8">
           <label className="block text-lg mb-4">Sound</label>
-          <button className="w-full p-3 rounded-lg text-lg font-medium bg-teal-500 hover:bg-teal-600 focus:outline-none transition-all duration-200 ease-in-out transform hover:scale-105 shadow-md shadow-teal-500">
-            Sound On
+          <button
+            onClick={handleToggleSound}
+            className={`w-full p-3 rounded-lg text-lg font-medium  hover:bg-teal-600 focus:outline-none transition-all duration-200 ease-in-out transform hover:scale-105 shadow-md shadow-teal-500 ${
+              isSoundOn ? "bg-teal-500" : "bg-gray-500"
+            }`}
+          >
+            {isSoundOn ? "Sound On" : "Sound Off"}
           </button>
         </div>
 

@@ -19,7 +19,8 @@ const TodoActions: React.FC<TodoActionsProps> = ({
   onEdit,
 }) => {
   const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
-  
+
+  const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
 
   const [playDelete] = useSound(deleteSfx);
   const [playComplete] = useSound(completeSfx);
@@ -29,7 +30,9 @@ const TodoActions: React.FC<TodoActionsProps> = ({
   //complete todo
   const handleMarkComplete = () => {
     dispatch(isCompletedTodo({ id: todoId, todoData: { isCompleted: true } }));
-    playComplete();
+    if (isSoundOn) {
+      playComplete();
+    }
   };
 
   //delete todo
@@ -39,7 +42,9 @@ const TodoActions: React.FC<TodoActionsProps> = ({
     setIsChildFormAnimation(newValue);
     onDelete(newValue);
 
-    playDelete();
+    if (isSoundOn) {
+      playDelete();
+    }
 
     setTimeout(() => {
       dispatch(deleteTodo(todoId));

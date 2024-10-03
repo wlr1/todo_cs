@@ -12,6 +12,8 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
 
   const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
 
+  const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
+
   const deleteAnimationTodo = (value: boolean) => {
     setIsFormAnimation(value);
   };
@@ -19,7 +21,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const handleEdit = () => {
     setIsEditing(true);
     setPlaybackRate(playbackRate);
-    playUI();
+    if (isSoundOn) {
+      playUI();
+    }
   };
 
   //#FIXME
