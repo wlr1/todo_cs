@@ -6,7 +6,7 @@ import ProfileMenu from "../ProfileMenu/ProfileMenu";
 import SettingsMenu from "../SettingsMenu/SettingsMenu";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getContentBgImage } from "../../../redux/slices/userSlice";
+import { getContentBgImage } from "../../../redux/slices/userSlice/asyncActions";
 
 const MainContent = () => {
   const [show, setIsShow] = useState(false);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RiCheckDoubleLine, RiCloseLine } from "react-icons/ri";
 import { EditFormProps } from "../../../../utility/types/types";
-import { updateTodo } from "../../../../redux/slices/todoSlice";
+import { updateTodo } from "../../../../redux/slices/todoSlice/asyncActions";
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
 import uiClickSfx from "../../../../sounds/click.mp3";

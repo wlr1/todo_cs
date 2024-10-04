@@ -9,7 +9,7 @@ import {
   resetContentBgImage,
   uploadBgImage,
   uploadContentBgImage,
-} from "../../../redux/slices/userSlice";
+} from "../../../redux/slices/userSlice/asyncActions";
 import { RxReset } from "react-icons/rx";
 
 const SettingsMenu: React.FC<SettingsMenuProps> = ({

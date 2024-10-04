@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LuPlus } from "react-icons/lu";
 import { AppDispatch } from "../../../../../redux/store";
 import { useDispatch } from "react-redux";
-import { createTodo } from "../../../../../redux/slices/todoSlice";
+import { createTodo } from "../../../../../redux/slices/todoSlice/asyncActions";
 import { TbChecklist, TbFileDescription } from "react-icons/tb";
 import { MdOutlineAddCircleOutline, MdTitle } from "react-icons/md";
 import { GrSchedules } from "react-icons/gr";

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../../../redux/slices/authSlice";
+import { registerUser } from "../../../redux/slices/authSlice/asyncActions";
 import { AppDispatch, RootState } from "../../../redux/store";
 
 const Signup = () => {

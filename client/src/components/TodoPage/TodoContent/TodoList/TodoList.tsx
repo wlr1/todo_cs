@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import TodoItem from "../TodoItem/TodoItem";
 import { AppDispatch, RootState } from "../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTodos } from "../../../../redux/slices/todoSlice";
+import { fetchTodos } from "../../../../redux/slices/todoSlice/asyncActions";
 import { SearchByIdTodoListProps } from "../../../../utility/types/types";
 
 const TodoList: React.FC<SearchByIdTodoListProps> = ({ searchId }) => {

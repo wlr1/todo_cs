@@ -3,7 +3,7 @@ import TodoList from "./TodoList/TodoList";
 import TodoToolbar from "./TodoToolbar/TodoToolbar";
 import { AppDispatch } from "../../../redux/store";
 import { useDispatch } from "react-redux";
-import { fetchTodos } from "../../../redux/slices/todoSlice";
+import { fetchTodos } from "../../../redux/slices/todoSlice/asyncActions";
 
 const TodoContent = () => {
   const [isFormAnimation, setIsFormAnimation] = useState(false);

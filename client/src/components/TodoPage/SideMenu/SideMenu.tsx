@@ -3,8 +3,11 @@ import "animate.css";
 import { FaCheckCircle, FaUserAlt, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { logoutUser } from "../../../redux/slices/authSlice";
-import { fetchUserInfo, getAvatar } from "../../../redux/slices/userSlice";
+import { logoutUser } from "../../../redux/slices/authSlice/asyncActions";
+import {
+  fetchUserInfo,
+  getAvatar,
+} from "../../../redux/slices/userSlice/asyncActions";
 import { useNavigate } from "react-router-dom";
 import { SidebarProps } from "../../../utility/types/types";
 

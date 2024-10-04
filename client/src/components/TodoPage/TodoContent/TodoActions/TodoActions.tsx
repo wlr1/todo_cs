@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import {
   deleteTodo,
   isCompletedTodo,
-} from "../../../../redux/slices/todoSlice";
+} from "../../../../redux/slices/todoSlice/asyncActions";
 import deleteSfx from "../../../../sounds/delete.mp3";
 import completeSfx from "../../../../sounds/complete.mp3";
 

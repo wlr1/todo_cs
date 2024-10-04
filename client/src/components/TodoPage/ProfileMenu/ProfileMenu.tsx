@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AppDispatch } from "../../../redux/store";
 import { useDispatch } from "react-redux";
-import { deleteUser } from "../../../redux/slices/authSlice";
+import { deleteUser } from "../../../redux/slices/authSlice/asyncActions";
 import { useNavigate } from "react-router-dom";
 import {
   changeEmail,
@@ -11,7 +11,7 @@ import {
   fetchUserInfo,
   getAvatar,
   uploadAvatar,
-} from "../../../redux/slices/userSlice";
+} from "../../../redux/slices/userSlice/asyncActions";
 
 const ProfileMenu = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);

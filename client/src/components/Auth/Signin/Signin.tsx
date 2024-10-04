@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
 
-import { loginUser } from "../../../redux/slices/authSlice";
+import { loginUser } from "../../../redux/slices/authSlice/asyncActions";
 import { AppDispatch, RootState } from "../../../redux/store";
 
 const Signin = () => {

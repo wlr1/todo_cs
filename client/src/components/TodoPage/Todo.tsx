@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import MainContent from "./MainContent/MainContent";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getBgImage } from "../../redux/slices/userSlice";
+import { getBgImage } from "../../redux/slices/userSlice/asyncActions";
 
 const TodoCS = () => {
   const dispatch: AppDispatch = useDispatch();
