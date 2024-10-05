@@ -4,16 +4,27 @@ import { AppDispatch } from "../../../../../redux/store";
 import { useDispatch } from "react-redux";
 import { createTodo } from "../../../../../redux/slices/todoSlice/asyncActions";
 import { TbChecklist, TbFileDescription } from "react-icons/tb";
-import { MdOutlineAddCircleOutline, MdTitle } from "react-icons/md";
+import {
+  MdOutlineAddCircleOutline,
+  MdOutlineReportGmailerrorred,
+  MdTitle,
+} from "react-icons/md";
 import { GrSchedules } from "react-icons/gr";
 import "animate.css";
 
 const AddTodoBtn = () => {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    createdAt: "",
+    isCompleted: "no",
+  });
+  const [errors, setErrors] = useState({
+    title: "",
+    description: "",
+    createdAt: "",
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [createdAt, setCreatedAt] = useState("");
-  const [isCompleted, setIsCompleted] = useState("no");
   const [isFormAnimation, setIsFormAnimation] = useState(false);
 
   const dispatch: AppDispatch = useDispatch();
@@ -27,23 +38,93 @@ const AddTodoBtn = () => {
     }, 300);
   };
 
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { title: "", description: "", createdAt: "" };
+
+    if (formData.title.length > 77) {
+      newErrors.title = "Title cannot exceed 77 characters";
+      valid = false;
+    } else {
+      //checks if empty
+      if (!formData.title) {
+        newErrors.title = "Title cannot be empty";
+        valid = false;
+      }
+    }
+
+    if (formData.description.length > 700) {
+      newErrors.description = "Description cannot exceed 700 characters";
+      valid = false;
+    } else {
+      //checks if empty
+      if (!formData.description) {
+        newErrors.description = "Description cannot be empty";
+        valid = false;
+      }
+    }
+
+    // Check if createdAt is empty
+    if (!formData.createdAt) {
+      newErrors.createdAt = "Time created cannot be empty";
+      valid = false;
+    } else {
+      // Check if createdAt is a valid date
+      if (isNaN(Date.parse(formData.createdAt))) {
+        newErrors.createdAt = "Invalid date and time";
+        valid = false;
+      } else {
+        // Check if createdAt is in the past
+        const currentDate = new Date();
+        if (new Date(formData.createdAt) < currentDate) {
+          newErrors.createdAt = "Time created cannot be in the past";
+          valid = false;
+        }
+      }
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const newTodo = {
-      title,
-      description,
-      createdAt,
-      isCompleted: isCompleted === "yes", //string to bool
-    };
+    if (!validateForm()) return;
 
-    dispatch(createTodo(newTodo));
+    dispatch(
+      createTodo({
+        title: formData.title,
+        description: formData.description,
+        createdAt: formData.createdAt,
+        isCompleted: formData.isCompleted === "yes", //string to bool
+      })
+    );
 
     //after submission, clearing fields
-    // setTitle("");
-    // setDescription("");
-    // setIsCompleted("no");
-    // setCreatedAt("");
+    setFormData({
+      title: "",
+      description: "",
+      createdAt: "",
+      isCompleted: "no",
+    });
+    setErrors({
+      title: "",
+      description: "",
+      createdAt: "",
+    });
   };
 
   return (
@@ -84,11 +165,20 @@ const AddTodoBtn = () => {
                 <input
                   type="text"
                   maxLength={77}
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  value={formData.title}
+                  name="title"
+                  onChange={handleInputChange}
                   placeholder="Enter your title..."
                   className="w-full p-3 text-white bg-[#1c1e22] border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition duration-300 ease-in-out"
                 />
+                {errors.title && (
+                  <div className="flex space-x-2 mt-1">
+                    <MdOutlineReportGmailerrorred size={19} color="red" />
+                    <p className="font-bold text-red-900 text-sm">
+                      {errors.title}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Description Field */}
@@ -101,11 +191,20 @@ const AddTodoBtn = () => {
                 </label>
                 <textarea
                   maxLength={700}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={formData.description}
+                  name="description"
+                  onChange={handleInputChange}
                   placeholder="Enter the task description..."
                   className="w-full p-3 h-28 text-white bg-[#1c1e22] border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition duration-300 ease-in-out"
                 ></textarea>
+                {errors.description && (
+                  <div className="flex space-x-2 mt-1">
+                    <MdOutlineReportGmailerrorred size={19} color="red" />
+                    <p className="font-bold text-red-900 text-sm">
+                      {errors.description}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Is Completed Dropdown */}
@@ -117,8 +216,9 @@ const AddTodoBtn = () => {
                   Is Complete
                 </label>
                 <select
-                  value={isCompleted}
-                  onChange={(e) => setIsCompleted(e.target.value)}
+                  value={formData.isCompleted}
+                  name="isCompleted"
+                  onChange={handleInputChange}
                   className="w-full p-3 text-white bg-[#1c1e22] border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
                 >
                   <option value="no">No</option>
@@ -136,11 +236,20 @@ const AddTodoBtn = () => {
                 </label>
                 <input
                   type="datetime-local"
-                  value={createdAt}
-                  onChange={(e) => setCreatedAt(e.target.value)}
+                  value={formData.createdAt}
+                  name="createdAt"
+                  onChange={handleInputChange}
                   required
                   className="cursor-text w-full p-3 text-white bg-[#1c1e22] border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
                 />
+                {errors.createdAt && (
+                  <div className="flex space-x-2 mt-1">
+                    <MdOutlineReportGmailerrorred size={19} color="red" />
+                    <p className="font-bold text-red-900 text-sm">
+                      {errors.createdAt}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}
