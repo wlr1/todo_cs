@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { LuPlus } from "react-icons/lu";
+import React, { useCallback, useState } from "react";
 import { AppDispatch } from "../../../../../redux/store";
 import { useDispatch } from "react-redux";
 import { createTodo } from "../../../../../redux/slices/todoSlice/asyncActions";
@@ -9,6 +8,7 @@ import {
   MdOutlineReportGmailerrorred,
   MdTitle,
 } from "react-icons/md";
+import { LuPlus } from "react-icons/lu";
 import { GrSchedules } from "react-icons/gr";
 import "animate.css";
 
@@ -29,103 +29,92 @@ const AddTodoBtn = () => {
 
   const dispatch: AppDispatch = useDispatch();
 
-  const OpenModal = () => setIsModalOpen(true);
-  const CloseModal = () => {
+  const OpenModal = useCallback(() => setIsModalOpen(true), []);
+  const CloseModal = useCallback(() => {
     setIsFormAnimation(true);
     setTimeout(() => {
       setIsModalOpen(false);
       setIsFormAnimation(false);
     }, 300);
-  };
+  }, []);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const handleInputChange = useCallback(
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) => {
+      const { name, value } = e.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    },
+    []
+  );
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     let valid = true;
     const newErrors = { title: "", description: "", createdAt: "" };
 
-    if (formData.title.length > 77) {
-      newErrors.title = "Title cannot exceed 77 characters";
+    if (formData.title.length < 3 || formData.title.length > 77) {
+      newErrors.title =
+        formData.title.length > 77
+          ? "Title cannot exceed 77 characters"
+          : "Title must be at least 3 characters";
+
       valid = false;
-    } else {
-      //checks if empty
-      if (!formData.title) {
-        newErrors.title = "Title cannot be empty";
-        valid = false;
-      }
     }
 
-    if (formData.description.length > 700) {
-      newErrors.description = "Description cannot exceed 700 characters";
+    if (formData.description.length < 3 || formData.description.length > 700) {
+      newErrors.description =
+        formData.description.length > 700
+          ? "Description cannot exceed 700 characters"
+          : "Description must be at least 3 characters";
       valid = false;
-    } else {
-      //checks if empty
-      if (!formData.description) {
-        newErrors.description = "Description cannot be empty";
-        valid = false;
-      }
     }
 
-    // Check if createdAt is empty
-    if (!formData.createdAt) {
-      newErrors.createdAt = "Time created cannot be empty";
+    if (
+      !formData.createdAt ||
+      isNaN(Date.parse(formData.createdAt)) ||
+      new Date(formData.createdAt) < new Date()
+    ) {
+      newErrors.createdAt = "Invalid or past date";
       valid = false;
-    } else {
-      // Check if createdAt is a valid date
-      if (isNaN(Date.parse(formData.createdAt))) {
-        newErrors.createdAt = "Invalid date and time";
-        valid = false;
-      } else {
-        // Check if createdAt is in the past
-        const currentDate = new Date();
-        if (new Date(formData.createdAt) < currentDate) {
-          newErrors.createdAt = "Time created cannot be in the past";
-          valid = false;
-        }
-      }
     }
 
     setErrors(newErrors);
     return valid;
-  };
+  }, [formData]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!validateForm()) return;
+      if (!validateForm()) return;
 
-    dispatch(
-      createTodo({
-        title: formData.title,
-        description: formData.description,
-        createdAt: formData.createdAt,
-        isCompleted: formData.isCompleted === "yes", //string to bool
-      })
-    );
+      dispatch(
+        createTodo({
+          ...formData,
+          isCompleted: formData.isCompleted === "yes", //string to bool
+        })
+      );
 
-    //after submission, clearing fields
-    setFormData({
-      title: "",
-      description: "",
-      createdAt: "",
-      isCompleted: "no",
-    });
-    setErrors({
-      title: "",
-      description: "",
-      createdAt: "",
-    });
-  };
+      //after submission, clearing fields
+      setFormData({
+        title: "",
+        description: "",
+        createdAt: "",
+        isCompleted: "no",
+      });
+      setErrors({
+        title: "",
+        description: "",
+        createdAt: "",
+      });
+    },
+    [formData, dispatch, validateForm]
+  );
 
   return (
     <>
@@ -195,8 +184,8 @@ const AddTodoBtn = () => {
                   name="description"
                   onChange={handleInputChange}
                   placeholder="Enter the task description..."
-                  className="w-full p-3 h-28 text-white bg-[#1c1e22] border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition duration-300 ease-in-out"
-                ></textarea>
+                  className="w-full p-3 h-28 text-white bg-[#1c1e22] border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition duration-300 ease-in-out resize-none"
+                />
                 {errors.description && (
                   <div className="flex space-x-2 mt-1">
                     <MdOutlineReportGmailerrorred size={19} color="red" />
