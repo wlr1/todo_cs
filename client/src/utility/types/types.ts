@@ -81,6 +81,7 @@ export interface EditFormProps {
     createdAt: string;
   };
   setIsEditing: (value: boolean) => void;
+  setIsEditLocked: (value: boolean) => void;
 }
 
 //search by id props

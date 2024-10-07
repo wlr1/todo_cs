@@ -9,6 +9,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isFormAnimation, setIsFormAnimation] = useState(false); //delete anim
   const [playbackRate, setPlaybackRate] = React.useState(1.75);
+  const [isEditLocked, setIsEditLocked] = useState(false);
 
   const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
 
@@ -19,7 +20,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   };
 
   const handleEdit = () => {
+    if (isEditLocked) return;
     setIsEditing(true);
+    setIsEditLocked(true);
     setPlaybackRate(playbackRate);
     if (isSoundOn) {
       playUI();
@@ -55,7 +58,11 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
         }`}
       >
         {isEditing ? (
-          <EditForm todo={todo} setIsEditing={setIsEditing} />
+          <EditForm
+            todo={todo}
+            setIsEditing={setIsEditing}
+            setIsEditLocked={setIsEditLocked}
+          />
         ) : (
           <>
             {/* Todo Title and Info */}

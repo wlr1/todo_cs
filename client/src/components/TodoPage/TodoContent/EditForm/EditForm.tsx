@@ -6,11 +6,20 @@ import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
 import uiClickSfx from "../../../../sounds/click.mp3";
 import useSound from "use-sound";
+import { MdOutlineReportGmailerrorred } from "react-icons/md";
 
-const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
+const EditForm: React.FC<EditFormProps> = ({
+  todo,
+  setIsEditing,
+  setIsEditLocked,
+}) => {
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
   const [playbackRate, setPlaybackRate] = React.useState(1.75);
+  const [newErrors, setNewErrors] = React.useState({
+    title: "",
+    description: "",
+  });
 
   const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
 
@@ -18,7 +27,33 @@ const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
 
   const dispatch: AppDispatch = useDispatch();
 
+  const validate = () => {
+    let isValid = true;
+    const errors = { title: "", description: "" };
+
+    if (title.length < 3 || title.length > 77) {
+      errors.title =
+        title.length < 3
+          ? "Title must be at least 3 characters."
+          : "Title cannot exceed 77 characters.";
+      isValid = false;
+    }
+
+    if (description.length < 3 || description.length > 700) {
+      errors.description =
+        title.length < 3
+          ? "Description must be at least 3 characters."
+          : "Description cannot exceed 77 characters.";
+      isValid = false;
+    }
+
+    setNewErrors(errors);
+    return isValid;
+  };
+
   const handleSave = () => {
+    if (!validate()) return;
+
     dispatch(updateTodo({ id: todo.id, todoData: { title, description } }));
     setPlaybackRate(playbackRate);
     if (isSoundOn) {
@@ -32,6 +67,7 @@ const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
     if (isSoundOn) {
       playUI();
     }
+    setIsEditLocked(false);
     setIsEditing(false);
   };
 
@@ -47,7 +83,12 @@ const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
           className="w-full bg-white/10 text-white resize-none placeholder-gray-400 px-3 border border-gray-700 rounded-lg focus:ring-1 focus:ring-cyan-600 focus:border-cyan-600 p-3 outline-none transition-shadow shadow-lg shadow-todoPal"
           placeholder="Enter title..."
         />
-
+        {newErrors.title && (
+          <div className="flex space-x-2 mt-1">
+            <MdOutlineReportGmailerrorred size={19} color="red" />
+            <p className="font-bold text-red-900 text-sm">{newErrors.title}</p>
+          </div>
+        )}
         {/* Description Textarea */}
         <textarea
           value={description}
@@ -56,6 +97,14 @@ const EditForm: React.FC<EditFormProps> = ({ todo, setIsEditing }) => {
           placeholder="Enter description..."
           rows={4}
         />
+        {newErrors.description && (
+          <div className="flex space-x-2 mt-1">
+            <MdOutlineReportGmailerrorred size={19} color="red" />
+            <p className="font-bold text-red-900 text-sm">
+              {newErrors.description}
+            </p>
+          </div>
+        )}
 
         {/* Save Button */}
         <div className="flex justify-end mt-4 space-x-4">
