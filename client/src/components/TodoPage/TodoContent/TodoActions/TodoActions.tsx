@@ -19,6 +19,7 @@ const TodoActions: React.FC<TodoActionsProps> = ({
   onEdit,
 }) => {
   const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
 
@@ -29,6 +30,7 @@ const TodoActions: React.FC<TodoActionsProps> = ({
 
   //complete todo
   const handleMarkComplete = () => {
+    setIsCompleted(true);
     dispatch(isCompletedTodo({ id: todoId, todoData: { isCompleted: true } }));
     if (isSoundOn) {
       playComplete();
@@ -57,6 +59,7 @@ const TodoActions: React.FC<TodoActionsProps> = ({
         <button
           onClick={handleMarkComplete}
           className="text-white hover:text-green-600 transition p-1 "
+          disabled={isCompleted}
         >
           <MdOutlineDoneAll size={16} />
         </button>
@@ -65,7 +68,7 @@ const TodoActions: React.FC<TodoActionsProps> = ({
       <div className="hover:bg-white/20 flex w-8 h-8 items-center justify-center">
         <button
           onClick={onEdit}
-          className="text-white hover:text-yellow-400 transition p-1"
+          className="text-white hover:text-yellow-400 transition p-1 "
         >
           <FaEdit size={14} />
         </button>
