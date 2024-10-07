@@ -12,6 +12,7 @@ import {
   getAvatar,
   uploadAvatar,
 } from "../../../redux/slices/userSlice/asyncActions";
+import { MdOutlineReportGmailerrorred } from "react-icons/md";
 
 const ProfileMenu = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -26,9 +27,87 @@ const ProfileMenu = () => {
     newPassword: "",
     currentPassword: "",
   });
+  const [isErrors, setIsErrors] = useState({
+    newUsername: "",
+    newFirstName: "",
+    newLastName: "",
+    newEmail: "",
+    newPassword: "",
+    currentPassword: "",
+  });
 
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+
+  const validate = (fieldName: string) => {
+    let valid = true;
+    const newErrors = {
+      ...isErrors,
+    };
+
+    // Username validation
+    if (fieldName === "newUsername") {
+      if (
+        formData.newUsername.length < 3 ||
+        formData.newUsername.length > 20 ||
+        formData.newUsername.trim() === ""
+      ) {
+        newErrors.newUsername =
+          formData.newUsername.length < 3
+            ? "Username must be at least 3 characters long"
+            : formData.newUsername.length > 20
+            ? "Username cannot exceed 20 characters"
+            : "Username cannot be empty";
+        valid = false;
+      }
+    }
+
+    //firstname validation
+    if (fieldName === "newFirstName") {
+      if (
+        formData.newFirstName.length < 3 ||
+        formData.newFirstName.length > 20 ||
+        formData.newFirstName.trim() === ""
+      ) {
+        newErrors.newFirstName =
+          formData.newFirstName.length < 3
+            ? "Firstname must be at least 3 characters long"
+            : formData.newFirstName.length > 20
+            ? "Firstname cannot exceed 20 characters"
+            : "Firstname cannot be empty";
+        valid = false;
+      }
+    }
+
+    //lastname validation
+    if (fieldName === "newLastName") {
+      if (
+        formData.newLastName.length < 3 ||
+        formData.newLastName.length > 20 ||
+        formData.newLastName.trim() === ""
+      ) {
+        newErrors.newLastName =
+          formData.newLastName.length < 3
+            ? "Lastname must be at least 3 characters long"
+            : formData.newLastName.length > 20
+            ? "Lastname cannot exceed 20 characters"
+            : "Lastname cannot be empty";
+        valid = false;
+      }
+    }
+
+    //email validation
+    if (fieldName === "newEmail") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.newEmail)) {
+        newErrors.newEmail = "Invalid email format";
+        valid = false;
+      }
+    }
+
+    setIsErrors(newErrors);
+    return valid;
+  };
 
   //onChange
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +115,11 @@ const ProfileMenu = () => {
     setFormData({
       ...formData,
       [name]: value,
+    });
+
+    setIsErrors({
+      ...isErrors,
+      [name]: "",
     });
   };
 
@@ -81,6 +165,8 @@ const ProfileMenu = () => {
 
   //username
   const updateUsername = async () => {
+    if (!validate("newUsername")) return;
+
     if (formData.newUsername.trim()) {
       await dispatch(changeUsername(formData.newUsername));
       await dispatch(fetchUserInfo()); // show updated username without refreshing
@@ -94,6 +180,8 @@ const ProfileMenu = () => {
 
   //fullname
   const updateFullname = async () => {
+    if (!validate("newFirstName") || !validate("newLastName")) return;
+
     if (formData.newFirstName && formData.newLastName) {
       await dispatch(
         changeFullname({
@@ -112,6 +200,8 @@ const ProfileMenu = () => {
 
   //email
   const updateEmail = async () => {
+    if (!validate("newEmail")) return;
+
     if (formData.newEmail) {
       await dispatch(changeEmail(formData.newEmail));
       await dispatch(fetchUserInfo()); // show updated info
@@ -233,6 +323,7 @@ const ProfileMenu = () => {
               onChange={handleInputChange}
               placeholder="Enter new username"
             />
+
             <button
               onClick={updateUsername}
               className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900"
@@ -240,6 +331,14 @@ const ProfileMenu = () => {
               Update
             </button>
           </div>
+          {isErrors.newUsername && (
+            <div className="flex space-x-2 ">
+              <MdOutlineReportGmailerrorred size={19} color="red" />
+              <p className="font-bold text-red-900 text-sm">
+                {isErrors.newUsername}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Email Change */}
@@ -263,6 +362,14 @@ const ProfileMenu = () => {
               Update
             </button>
           </div>
+          {isErrors.newEmail && (
+            <div className="flex space-x-2 ">
+              <MdOutlineReportGmailerrorred size={19} color="red" />
+              <p className="font-bold text-red-900 text-sm">
+                {isErrors.newEmail}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* First and Last Name Change */}
@@ -294,6 +401,22 @@ const ProfileMenu = () => {
               Update
             </button>
           </div>
+          {isErrors.newFirstName && (
+            <div className="flex space-x-2 ">
+              <MdOutlineReportGmailerrorred size={19} color="red" />
+              <p className="font-bold text-red-900 text-sm">
+                {isErrors.newFirstName}
+              </p>
+            </div>
+          )}
+          {isErrors.newLastName && (
+            <div className="flex space-x-2 ">
+              <MdOutlineReportGmailerrorred size={19} color="red" />
+              <p className="font-bold text-red-900 text-sm">
+                {isErrors.newLastName}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Password Change */}

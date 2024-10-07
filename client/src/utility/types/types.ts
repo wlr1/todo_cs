@@ -64,6 +64,7 @@ export interface TodoActionsProps {
   todoId: number;
   onDelete: (value: boolean) => void;
   onEdit: () => void;
+  isDisabled: boolean;
 }
 
 //protectedRoute
@@ -82,6 +83,7 @@ export interface EditFormProps {
   };
   setIsEditing: (value: boolean) => void;
   setIsEditLocked: (value: boolean) => void;
+  setIsDisabled: (value: boolean) => void;
 }
 
 //search by id props

@@ -5,6 +5,7 @@ import { updateTodo } from "../../../../redux/slices/todoSlice/asyncActions";
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
 import uiClickSfx from "../../../../sounds/click.mp3";
+
 import useSound from "use-sound";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
 
@@ -12,6 +13,7 @@ const EditForm: React.FC<EditFormProps> = ({
   todo,
   setIsEditing,
   setIsEditLocked,
+  setIsDisabled,
 }) => {
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
@@ -67,6 +69,7 @@ const EditForm: React.FC<EditFormProps> = ({
     if (isSoundOn) {
       playUI();
     }
+    setIsDisabled(false);
     setIsEditLocked(false);
     setIsEditing(false);
   };

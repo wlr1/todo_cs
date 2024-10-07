@@ -9,14 +9,14 @@ import {
   isCompletedTodo,
 } from "../../../../redux/slices/todoSlice/asyncActions";
 import deleteSfx from "../../../../sounds/delete.mp3";
-import completeSfx from "../../../../sounds/complete.mp3";
-
+import completeSfx from "../../../../sounds/completeSfx.mp3";
 import useSound from "use-sound";
 
 const TodoActions: React.FC<TodoActionsProps> = ({
   todoId,
   onDelete,
   onEdit,
+  isDisabled,
 }) => {
   const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
   const [isCompleted, setIsCompleted] = useState(false);
@@ -58,19 +58,26 @@ const TodoActions: React.FC<TodoActionsProps> = ({
       <div className="hover:bg-white/20 flex w-8 h-8 rounded-t-lg items-center justify-center">
         <button
           onClick={handleMarkComplete}
-          className="text-white hover:text-green-600 transition p-1 "
+          className="text-white hover:text-green-600 transition p-1 disabled:bg-gray-800/60 disabled:w-8 disabled:h-8 disabled:items-center disabled:justify-center disabled:flex disabled:rounded-t-lg"
           disabled={isCompleted}
         >
-          <MdOutlineDoneAll size={16} />
+          <MdOutlineDoneAll
+            size={isCompleted ? 12 : 16}
+            className="transition-all duration-500 ease-in-out "
+          />
         </button>
       </div>
 
       <div className="hover:bg-white/20 flex w-8 h-8 items-center justify-center">
         <button
           onClick={onEdit}
-          className="text-white hover:text-yellow-400 transition p-1 "
+          disabled={isDisabled}
+          className="text-white hover:text-yellow-400 transition p-1 disabled:bg-gray-800/60  disabled:w-8 disabled:h-8 disabled:items-center disabled:justify-center disabled:flex"
         >
-          <FaEdit size={14} />
+          <FaEdit
+            size={isDisabled ? 12 : 14}
+            className="transition-all duration-500 ease-in-out "
+          />
         </button>
       </div>
 

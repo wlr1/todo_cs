@@ -10,6 +10,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isFormAnimation, setIsFormAnimation] = useState(false); //delete anim
   const [playbackRate, setPlaybackRate] = React.useState(1.75);
   const [isEditLocked, setIsEditLocked] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
 
@@ -21,6 +22,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
 
   const handleEdit = () => {
     if (isEditLocked) return;
+    setIsDisabled(true);
     setIsEditing(true);
     setIsEditLocked(true);
     setPlaybackRate(playbackRate);
@@ -49,6 +51,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
         todoId={todo.id}
         onDelete={deleteAnimationTodo}
         onEdit={handleEdit}
+        isDisabled={isDisabled}
       />
 
       {/* Main Todo Card */}
@@ -62,6 +65,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
             todo={todo}
             setIsEditing={setIsEditing}
             setIsEditLocked={setIsEditLocked}
+            setIsDisabled={setIsDisabled}
           />
         ) : (
           <>
