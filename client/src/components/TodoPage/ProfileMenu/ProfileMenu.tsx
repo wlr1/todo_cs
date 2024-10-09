@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AppDispatch } from "../../../redux/store";
-import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteUser } from "../../../redux/slices/authSlice/asyncActions";
 import { useNavigate } from "react-router-dom";
 import {
@@ -38,6 +38,27 @@ const ProfileMenu = () => {
 
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+
+  //password validation
+  const validatePassword = (password: string): string => {
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
+
+    if (!passwordRegex.test(password)) {
+      return "Password must contain at least one uppercase letter, one special character, and be 8-20 characters long.";
+    }
+
+    return "";
+  };
+
+  //validate current password
+  const validateCurrentPassword = (currentPassword: string): string => {
+    if (!currentPassword) {
+      return "Current password cannot be empty";
+    }
+
+    return "";
+  };
 
   const validate = (fieldName: string) => {
     let valid = true;
@@ -101,6 +122,26 @@ const ProfileMenu = () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.newEmail)) {
         newErrors.newEmail = "Invalid email format";
+        valid = false;
+      }
+    }
+
+    //password validation
+    if (fieldName === "newPassword") {
+      const passwordError = validatePassword(formData.newPassword);
+      if (passwordError) {
+        newErrors.newPassword = passwordError;
+        valid = false;
+      }
+    }
+
+    //current password validation
+    if (fieldName === "currentPassword") {
+      const currentPasswordError = validateCurrentPassword(
+        formData.currentPassword
+      );
+      if (currentPasswordError) {
+        newErrors.currentPassword = currentPasswordError;
         valid = false;
       }
     }
@@ -214,22 +255,33 @@ const ProfileMenu = () => {
 
   //password
   const updatePassword = async () => {
+    if (!validate("newPassword") || !validate("currentPassword")) return;
+
     if (
       formData.newPassword &&
       formData.currentPassword !== formData.newPassword
     ) {
-      await dispatch(
+      const resultAction = await dispatch(
         changePassword({
           newPassword: formData.newPassword,
           currentPassword: formData.currentPassword,
         })
       );
-      await dispatch(fetchUserInfo()); // show updated info
-      setFormData((prevData) => ({
-        ...prevData,
-        newPassword: "",
-        currentPassword: "",
-      }));
+
+      if (changePassword.fulfilled.match(resultAction)) {
+        await dispatch(fetchUserInfo()); // show updated info
+        setFormData((prevData) => ({
+          ...prevData,
+          newPassword: "",
+          currentPassword: "",
+        }));
+      } else {
+        // If the password change failed, set error message
+        setIsErrors((prevErrors) => ({
+          ...prevErrors,
+          currentPassword: "Incorrect current password",
+        }));
+      }
     }
   };
   //delete user
@@ -448,6 +500,19 @@ const ProfileMenu = () => {
               Update
             </button>
           </div>
+
+          {isErrors.currentPassword && (
+            <div className="flex items-center mt-2 text-red-500">
+              <MdOutlineReportGmailerrorred size={19} />
+              <p className="ml-2 text-sm">{isErrors.currentPassword}</p>
+            </div>
+          )}
+          {isErrors.newPassword && (
+            <div className="flex text-red-500">
+              <MdOutlineReportGmailerrorred size={37} />
+              <p className="ml-2 text-sm">{isErrors.newPassword}</p>
+            </div>
+          )}
         </div>
         <hr />
         {/* Delete account */}

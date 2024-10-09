@@ -58,7 +58,7 @@ const TodoActions: React.FC<TodoActionsProps> = ({
       <div className="hover:bg-white/20 flex w-8 h-8 rounded-t-lg items-center justify-center">
         <button
           onClick={handleMarkComplete}
-          className="text-white hover:text-green-600 transition p-1 disabled:bg-gray-800/60 disabled:w-8 disabled:h-8 disabled:items-center disabled:justify-center disabled:flex disabled:rounded-t-lg"
+          className="text-white hover:text-green-600 transition p-1 disabled:bg-gray-800/60 disabled:w-8 disabled:h-8 disabled:items-center disabled:justify-center disabled:flex disabled:rounded-t-lg disabled:text-green-600"
           disabled={isCompleted}
         >
           <MdOutlineDoneAll
@@ -72,7 +72,7 @@ const TodoActions: React.FC<TodoActionsProps> = ({
         <button
           onClick={onEdit}
           disabled={isDisabled}
-          className="text-white hover:text-yellow-400 transition p-1 disabled:bg-gray-800/60  disabled:w-8 disabled:h-8 disabled:items-center disabled:justify-center disabled:flex"
+          className="text-white hover:text-yellow-400 transition p-1 disabled:bg-gray-800/60  disabled:w-8 disabled:h-8 disabled:items-center disabled:justify-center disabled:flex disabled:text-yellow-400"
         >
           <FaEdit
             size={isDisabled ? 12 : 14}

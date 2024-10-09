@@ -18,9 +18,9 @@ export interface UserState {
   error: string | null;
   user: any | null;
   isLoading: boolean;
-  avatar: string | undefined;
-  bgImage: string | undefined;
-  contentBgImage: string | undefined;
+  avatar?: string | undefined;
+  bgImage?: string | undefined;
+  contentBgImage?: string | undefined;
 }
 
 //todo redux slice

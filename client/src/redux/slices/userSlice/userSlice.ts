@@ -90,9 +90,9 @@ const userSlice = createSlice({
       //handle all rejected cases
       .addMatcher(
         (action) => action.type.endsWith("/rejected"),
-        (state, action: PayloadAction<string>) => {
+        (state, action: PayloadAction<string | null>) => {
           state.isLoading = false;
-          state.error = action.payload as string;
+          state.error = action.payload;
         }
       );
   },

@@ -123,7 +123,7 @@ export const changeEmail = createAsyncThunk(
 );
 
 export const changePassword = createAsyncThunk(
-  "user/changePasswod",
+  "user/changePassword",
   async (
     {
       currentPassword,
@@ -142,9 +142,11 @@ export const changePassword = createAsyncThunk(
       );
       return res.data;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data || "Failed to change password"
-      );
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to change password";
+      return thunkAPI.rejectWithValue({ message: errorMessage });
     }
   }
 );
