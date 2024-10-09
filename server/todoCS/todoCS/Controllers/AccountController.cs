@@ -320,6 +320,12 @@ public class AccountController : ControllerBase
            return NotFound("User not found!");
        }
 
+       var passwordCheck = await _userManager.CheckPasswordAsync(user, changePasswordDto.CurrentPassword);
+       if (!passwordCheck)
+       {
+           return BadRequest(new {message = "Current password is incorrect!"});
+       }
+       
        var result =
            await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword,
                changePasswordDto.NewPassword);
