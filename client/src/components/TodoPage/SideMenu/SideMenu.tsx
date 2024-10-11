@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import "animate.css";
 import { FaCheckCircle, FaUserAlt, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,19 +23,15 @@ const SideMenu: React.FC<SidebarProps> = ({
   const navigate = useNavigate();
 
   //logout
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await dispatch(logoutUser());
     navigate("/login");
-  };
+  }, [dispatch, navigate]);
 
   //get user info from jwt cookie
   useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(fetchUserInfo());
-      await dispatch(getAvatar());
-    };
-
-    fetchData();
+    dispatch(fetchUserInfo());
+    dispatch(getAvatar());
   }, [dispatch]);
 
   return (
