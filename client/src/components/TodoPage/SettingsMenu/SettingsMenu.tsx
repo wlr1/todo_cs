@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SettingsMenuProps } from "../../../utility/types/types";
 import { AppDispatch } from "../../../redux/store";
 import { useDispatch } from "react-redux";
@@ -26,14 +26,17 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
 
   const dispatch: AppDispatch = useDispatch();
 
-  const handleChangeBgImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setBackgroundFile(selectedFile);
-    }
-  };
+  const handleChangeBgImage = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFile = e.target.files?.[0];
+      if (selectedFile) {
+        setBackgroundFile(selectedFile);
+      }
+    },
+    []
+  );
 
-  const handleUploadBgImage = async () => {
+  const handleUploadBgImage = useCallback(async () => {
     if (backgroundFile) {
       await dispatch(uploadBgImage(backgroundFile));
       await dispatch(getBgImage());
@@ -43,23 +46,24 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
         fileInputRef.current.value = "";
       }
     }
-  };
+  }, [backgroundFile, dispatch]);
 
-  const handleResetBgImage = async () => {
+  const handleResetBgImage = useCallback(async () => {
     await dispatch(resetBgImage());
     await dispatch(getBgImage());
-  };
+  }, [dispatch]);
 
-  const handleChangeContentBgImage = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setContentFile(selectedFile);
-    }
-  };
+  const handleChangeContentBgImage = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFile = e.target.files?.[0];
+      if (selectedFile) {
+        setContentFile(selectedFile);
+      }
+    },
+    []
+  );
 
-  const handleUploadContentBgImage = async () => {
+  const handleUploadContentBgImage = useCallback(async () => {
     if (contentFile) {
       await dispatch(uploadContentBgImage(contentFile));
       await dispatch(getContentBgImage());
@@ -70,18 +74,18 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
         fileInputRef.current.value = "";
       }
     }
-  };
+  }, [contentFile, dispatch]);
 
-  const handleResetContentBgImage = async () => {
+  const handleResetContentBgImage = useCallback(async () => {
     await dispatch(resetContentBgImage());
     await dispatch(getContentBgImage());
-  };
+  }, [dispatch]);
 
   //toggle sound
-  const handleToggleSound = () => {
+  const handleToggleSound = useCallback(() => {
     setIsSoundOn((prev) => !prev);
     localStorage.setItem("isSoundOn", JSON.stringify(!isSoundOn));
-  };
+  }, [isSoundOn]);
 
   useEffect(() => {
     const savedSoundSettings = localStorage.getItem("isSoundOn");
