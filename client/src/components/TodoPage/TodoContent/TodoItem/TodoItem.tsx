@@ -1,44 +1,47 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import TodoActions from "../TodoActions/TodoActions";
 import { TodoItemProps } from "../../../../utility/types/types";
 import uiClickSfx from "../../../../sounds/click.mp3";
 import EditForm from "../EditForm/EditForm";
 import useSound from "use-sound";
 
+const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
+
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isFormAnimation, setIsFormAnimation] = useState(false); //delete anim
-  const [playbackRate, setPlaybackRate] = React.useState(1.75);
+  const [playbackRate, setPlaybackRate] = useState(1.75);
   const [isEditLocked, setIsEditLocked] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
   const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
 
-  const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
-
-  const deleteAnimationTodo = (value: boolean) => {
+  const deleteAnimationTodo = useCallback((value: boolean) => {
     setIsFormAnimation(value);
-  };
+  }, []);
 
-  const handleEdit = () => {
+  //#FIXME works only after restart
+  const handleEdit = useCallback(() => {
     if (isEditLocked) return;
     setIsDisabled(true);
     setIsEditing(true);
     setIsEditLocked(true);
-    setPlaybackRate(playbackRate);
-    if (isSoundOn) {
-      playUI();
-    }
-  };
+    setPlaybackRate((prevRate) => {
+      if (isSoundOn) playUI();
+      return prevRate;
+    });
+  }, [isEditLocked, playUI]);
 
   //#FIXME
-  const formattedDate = new Date(todo.createdAt).toLocaleString("lv-LV", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const formattedDate = useMemo(() => {
+    return new Date(todo.createdAt).toLocaleString("lv-LV", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }, [todo.createdAt]);
 
   return (
     <div

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever, MdOutlineDoneAll } from "react-icons/md";
 import { TodoActionsProps } from "../../../../utility/types/types";
@@ -12,6 +12,8 @@ import deleteSfx from "../../../../sounds/delete.mp3";
 import completeSfx from "../../../../sounds/completeSfx.mp3";
 import useSound from "use-sound";
 
+const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
+
 const TodoActions: React.FC<TodoActionsProps> = ({
   todoId,
   onDelete,
@@ -21,24 +23,22 @@ const TodoActions: React.FC<TodoActionsProps> = ({
   const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
-
   const [playDelete] = useSound(deleteSfx);
   const [playComplete] = useSound(completeSfx);
 
   const dispatch: AppDispatch = useDispatch();
 
   //complete todo
-  const handleMarkComplete = () => {
+  const handleMarkComplete = useCallback(() => {
     setIsCompleted(true);
+
     dispatch(isCompletedTodo({ id: todoId, todoData: { isCompleted: true } }));
-    if (isSoundOn) {
-      playComplete();
-    }
-  };
+
+    if (isSoundOn) playComplete();
+  }, [dispatch, todoId, playComplete]);
 
   //delete todo
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     //animation for delete
     const newValue = !isChildFormAnimation;
     setIsChildFormAnimation(newValue);
@@ -51,7 +51,7 @@ const TodoActions: React.FC<TodoActionsProps> = ({
     setTimeout(() => {
       dispatch(deleteTodo(todoId));
     }, 900);
-  };
+  }, [dispatch, todoId, playDelete, isChildFormAnimation, onDelete]);
 
   return (
     <div className="w-8 h-[88px] bg-white/10  rounded-lg  flex justify-center items-center flex-col">
