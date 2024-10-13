@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,25 +10,27 @@ const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isFormAnimation, setIsFormAnimation] = useState(false);
+
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
 
-  const [isFormAnimation, setIsFormAnimation] = useState(false);
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-  const navigate = useNavigate();
+      try {
+        dispatch(loginUser({ email, password })).unwrap();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      dispatch(loginUser({ email, password })).unwrap();
-
-      navigate("/todo");
-    } catch (error) {
-      console.error("Login failed: ", error);
-    }
-  };
+        navigate("/todo");
+      } catch (error) {
+        console.error("Login failed: ", error);
+      }
+    },
+    [dispatch, email, password, navigate]
+  );
 
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);
@@ -113,7 +115,14 @@ const Signin = () => {
             Sign In
           </button>
         </form>
-        {error && <p>{error}</p>}
+        {/* Error Handling */}
+        {error && (
+          <p className="text-red-500 text-center mt-4">
+            {typeof error === "string"
+              ? error
+              : "An error occurred. Try again."}
+          </p>
+        )}
 
         {/* Sign Up Option */}
         <p className="text-center text-gray-300 mt-6 text-sm">
