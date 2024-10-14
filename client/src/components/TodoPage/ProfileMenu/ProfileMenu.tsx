@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { AppDispatch, RootState } from "../../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/slices/authSlice/asyncActions";
 import { useNavigate } from "react-router-dom";
 import {
@@ -151,36 +151,42 @@ const ProfileMenu = () => {
   };
 
   //onChange
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
 
-    setIsErrors({
-      ...isErrors,
-      [name]: "",
-    });
-  };
+      setIsErrors({
+        ...isErrors,
+        [name]: "",
+      });
+    },
+    [formData, isErrors]
+  );
 
   //avatar input
-  const handleAvatarClick = () => {
+  const handleAvatarClick = useCallback(() => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
-  };
+  }, []);
 
   //choose avatar
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setAvatarFile(selectedFile);
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFile = e.target.files?.[0];
+      if (selectedFile) {
+        setAvatarFile(selectedFile);
 
-      const previewUrl = URL.createObjectURL(selectedFile);
-      setAvatarPreview(previewUrl);
-    }
-  };
+        const previewUrl = URL.createObjectURL(selectedFile);
+        setAvatarPreview(previewUrl);
+      }
+    },
+    []
+  );
 
   //upload avatar
   const handleAvatarUpload = async () => {
@@ -196,13 +202,13 @@ const ProfileMenu = () => {
   };
 
   //cancel avatar upload
-  const handleCancelClick = () => {
+  const handleCancelClick = useCallback(() => {
     setAvatarFile(null);
     setAvatarPreview(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-  };
+  }, []);
 
   //username
   const updateUsername = async () => {
@@ -285,10 +291,10 @@ const ProfileMenu = () => {
     }
   };
   //delete user
-  const handleDeleteClick = () => {
+  const handleDeleteClick = useCallback(() => {
     dispatch(deleteUser());
     navigate("/login");
-  };
+  }, []);
 
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);

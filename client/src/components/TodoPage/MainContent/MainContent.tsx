@@ -1,12 +1,13 @@
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import SideMenu from "../SideMenu/SideMenu";
-import TodoContent from "../TodoContent/TodoContent";
-import { useEffect, useState } from "react";
-import ProfileMenu from "../ProfileMenu/ProfileMenu";
-import SettingsMenu from "../SettingsMenu/SettingsMenu";
+import { useCallback, useEffect, useState } from "react";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getContentBgImage } from "../../../redux/slices/userSlice/asyncActions";
+
+import ProfileMenu from "../ProfileMenu/ProfileMenu";
+import SettingsMenu from "../SettingsMenu/SettingsMenu";
+import SideMenu from "../SideMenu/SideMenu";
+import TodoContent from "../TodoContent/TodoContent";
 
 const MainContent = () => {
   const [show, setIsShow] = useState(false);
@@ -21,19 +22,16 @@ const MainContent = () => {
   const { contentBgImage } = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
 
-  const handleContentChange = (content: string) => {
+  const handleContentChange = useCallback((content: string) => {
     setCurrentContent(content);
-  };
+  }, []);
 
-  const showSidebar = () => {
+  const showSidebar = useCallback(() => {
     setIsShow(!show);
-  };
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(getContentBgImage());
-    };
-    fetchData();
+    dispatch(getContentBgImage());
   }, [dispatch]);
 
   //fix for hide sidebar animation
