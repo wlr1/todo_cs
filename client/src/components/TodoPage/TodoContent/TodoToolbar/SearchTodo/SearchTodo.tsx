@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { SearchByIdProps } from "../../../../../utility/types/types";
 
@@ -8,7 +8,7 @@ const SearchTodo: React.FC<SearchByIdProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const id = parseInt(inputValue);
     if (inputValue.trim() === "") {
       fetchAllTodos(); //if search bar is empty, fetch all todos
@@ -16,7 +16,7 @@ const SearchTodo: React.FC<SearchByIdProps> = ({
     } else {
       setSearchId(isNaN(id) ? null : id);
     }
-  };
+  }, [inputValue, fetchAllTodos, setSearchId]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -35,7 +35,7 @@ const SearchTodo: React.FC<SearchByIdProps> = ({
     <div className="flex space-x-1 ">
       <button
         onClick={handleSearch}
-        className="mx-auto items-center flex justify-center w-10 h-8 rounded-l-full  bg-gray-100/10 "
+        className="mx-auto flex items-center justify-center w-10 h-8 rounded-l-full  bg-gray-100/10 "
       >
         <RiSearch2Line className="text-gray-400" />
       </button>
