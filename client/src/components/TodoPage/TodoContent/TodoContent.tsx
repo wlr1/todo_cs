@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import TodoList from "./TodoList/TodoList";
-import TodoToolbar from "./TodoToolbar/TodoToolbar";
+import { useEffect, useState } from "react";
 import { AppDispatch } from "../../../redux/store";
 import { useDispatch } from "react-redux";
 import { fetchTodos } from "../../../redux/slices/todoSlice/asyncActions";
+
+import TodoList from "./TodoList/TodoList";
+import TodoToolbar from "./TodoToolbar/TodoToolbar";
 
 const TodoContent = () => {
   const [isFormAnimation, setIsFormAnimation] = useState(false);
@@ -11,9 +12,7 @@ const TodoContent = () => {
 
   const dispatch: AppDispatch = useDispatch();
 
-  const fetchAllTodos = () => {
-    dispatch(fetchTodos());
-  };
+  const fetchAllTodos = () => dispatch(fetchTodos());
 
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);

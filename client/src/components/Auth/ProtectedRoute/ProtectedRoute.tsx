@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import api from "../../../redux/api";
@@ -11,38 +11,29 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   useEffect(() => {
     const validateToken = async () => {
-      //white screen(bcs of cookie delay) fix
-      setTimeout(async () => {
-        try {
-          await api.get("/Account/validate-token", { withCredentials: true });
-          setIsValid(true);
-        } catch (error: any) {
-          setIsValid(false);
-        }
-      }, 3000);
+      try {
+        await api.get("/Account/validate-token", { withCredentials: true });
+        setIsValid(true); // Token good
+      } catch {
+        setIsValid(false); // Token bad
+      }
     };
-    validateToken();
+
+    // white screen problem(need check if it works)
+    const timeoutId = setTimeout(validateToken, 3000);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   useEffect(() => {
-    if (isValid === false) {
+    if (isValid === true) {
       navigate("/todo");
     }
   }, [isValid, navigate]);
 
-  if (isValid === null) {
-    return (
-      <>
-        <Spinner />
-      </>
-    );
-  }
+  if (isValid === null) return <Spinner />; // loading spinner when content is loading
 
-  if (!isValid) {
-    return null;
-  }
-
-  return <>{children}</>;
+  return <>{isValid ? children : null}</>; // validate(good) render content
 };
 
 export default ProtectedRoute;
