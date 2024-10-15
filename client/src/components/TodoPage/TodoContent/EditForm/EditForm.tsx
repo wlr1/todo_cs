@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { RiCheckDoubleLine, RiCloseLine } from "react-icons/ri";
+import { MdOutlineReportGmailerrorred } from "react-icons/md";
 import { EditFormProps } from "../../../../utility/types/types";
 import { updateTodo } from "../../../../redux/slices/todoSlice/asyncActions";
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
 import uiClickSfx from "../../../../sounds/click.mp3";
-
 import useSound from "use-sound";
-import { MdOutlineReportGmailerrorred } from "react-icons/md";
 
 const EditForm: React.FC<EditFormProps> = ({
   todo,
@@ -23,13 +22,14 @@ const EditForm: React.FC<EditFormProps> = ({
     description: "",
   });
 
-  const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
-
+  const isSoundOn = useMemo(
+    () => JSON.parse(localStorage.getItem("isSoundOn") || "true"),
+    []
+  );
   const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
-
   const dispatch: AppDispatch = useDispatch();
 
-  const validate = () => {
+  const validate = useCallback(() => {
     let isValid = true;
     const errors = { title: "", description: "" };
 
@@ -51,24 +51,20 @@ const EditForm: React.FC<EditFormProps> = ({
 
     setNewErrors(errors);
     return isValid;
-  };
+  }, [title, description]);
 
   const handleSave = () => {
     if (!validate()) return;
 
     dispatch(updateTodo({ id: todo.id, todoData: { title, description } }));
     setPlaybackRate(playbackRate);
-    if (isSoundOn) {
-      playUI();
-    }
+    if (isSoundOn) playUI();
     setIsEditing(false);
   };
 
   const handleClose = () => {
     setPlaybackRate(playbackRate);
-    if (isSoundOn) {
-      playUI();
-    }
+    if (isSoundOn) playUI();
     setIsDisabled(false);
     setIsEditLocked(false);
     setIsEditing(false);
