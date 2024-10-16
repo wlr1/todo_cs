@@ -9,6 +9,9 @@ import SettingsMenu from "../SettingsMenu/SettingsMenu";
 import SideMenu from "../SideMenu/SideMenu";
 import TodoContent from "../TodoContent/TodoContent";
 
+import useSound from "use-sound";
+import menuclick from "./../../../sounds/menuclick.mp3";
+
 const MainContent = () => {
   const [show, setIsShow] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -19,12 +22,26 @@ const MainContent = () => {
   const [isUsernameHide, setIsUsernameHide] = useState("no");
   const [currentContent, setCurrentContent] = useState("todo");
 
+  const [playbackRate] = useState(1.75);
+
+  const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
+
+  const [playUI] = useSound(menuclick, {
+    playbackRate,
+    interrupt: true,
+    volume: 0.1,
+  });
+
   const { contentBgImage } = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
 
-  const handleContentChange = useCallback((content: string) => {
-    setCurrentContent(content);
-  }, []);
+  const handleContentChange = useCallback(
+    (content: string) => {
+      setCurrentContent(content);
+      if (isSoundOn) playUI();
+    },
+    [playUI, isSoundOn]
+  );
 
   const showSidebar = useCallback(() => {
     setIsShow(!show);

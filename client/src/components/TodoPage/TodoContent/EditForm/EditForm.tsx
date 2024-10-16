@@ -16,8 +16,8 @@ const EditForm: React.FC<EditFormProps> = ({
 }) => {
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
-  const [playbackRate, setPlaybackRate] = React.useState(1.75);
-  const [newErrors, setNewErrors] = React.useState({
+  const [playbackRate, setPlaybackRate] = useState(1.75);
+  const [newErrors, setNewErrors] = useState({
     title: "",
     description: "",
   });
