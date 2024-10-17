@@ -432,7 +432,13 @@ public class AccountController : ControllerBase
             return NotFound("User or Main image not found!");
         }
 
-        return File(user.UserBgImage, "image/jpeg");
+        var fileResult = File(user.UserBgImage, "image/jpeg");
+
+        //Cache control image
+        Response.Headers.Add("ETag", Convert.ToBase64String(user.UserBgImage.Take(8).ToArray()));
+        Response.Headers.Add("Cache-Control", "public, max-age=86400");
+
+        return fileResult;
     }
     
     //set default main bg image
@@ -510,7 +516,13 @@ public class AccountController : ControllerBase
             return NotFound("User or Content image not found!");
         }
 
-        return File(user.UserContentBgImage, "image/jpeg");
+        var fileResult = File(user.UserContentBgImage, "image/jpeg");
+        
+        //Cache control image
+        Response.Headers.Add("ETag", Convert.ToBase64String(user.UserContentBgImage.Take(8).ToArray()));
+        Response.Headers.Add("Cache-Control", "public, max-age=86400");
+
+        return fileResult;
     }
     
     //set default content bg image
