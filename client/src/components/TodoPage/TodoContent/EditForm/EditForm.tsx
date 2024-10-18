@@ -1,11 +1,14 @@
 import React, { useCallback, useMemo, useState } from "react";
+
 import { RiCheckDoubleLine, RiCloseLine } from "react-icons/ri";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
+
 import { EditFormProps } from "../../../../utility/types/types";
 import { updateTodo } from "../../../../redux/slices/todoSlice/asyncActions";
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
-import uiClickSfx from "../../../../sounds/click.mp3";
+
+import { sounds } from "../../../../sounds/sounds";
 import useSound from "use-sound";
 
 const EditForm: React.FC<EditFormProps> = ({
@@ -26,7 +29,11 @@ const EditForm: React.FC<EditFormProps> = ({
     () => JSON.parse(localStorage.getItem("isSoundOn") || "true"),
     []
   );
-  const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
+  const [playUI] = useSound(sounds.uiClickSfx, {
+    playbackRate,
+    interrupt: true,
+    soundEnabled: isSoundOn,
+  });
   const dispatch: AppDispatch = useDispatch();
 
   const validate = useCallback(() => {
@@ -58,13 +65,13 @@ const EditForm: React.FC<EditFormProps> = ({
 
     dispatch(updateTodo({ id: todo.id, todoData: { title, description } }));
     setPlaybackRate(playbackRate);
-    if (isSoundOn) playUI();
+    playUI();
     setIsEditing(false);
   };
 
   const handleClose = () => {
     setPlaybackRate(playbackRate);
-    if (isSoundOn) playUI();
+    playUI();
     setIsDisabled(false);
     setIsEditLocked(false);
     setIsEditing(false);

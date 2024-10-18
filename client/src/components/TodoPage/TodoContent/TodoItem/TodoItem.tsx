@@ -1,11 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
 import TodoActions from "../TodoActions/TodoActions";
 import { TodoItemProps } from "../../../../utility/types/types";
-import uiClickSfx from "../../../../sounds/click.mp3";
+// import uiClickSfx from "../../../../sounds/click.mp3";
+import { sounds } from "../../../../sounds/sounds";
 import EditForm from "../EditForm/EditForm";
 import useSound from "use-sound";
-
-const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -14,7 +13,16 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isEditLocked, setIsEditLocked] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
-  const [playUI] = useSound(uiClickSfx, { playbackRate, interrupt: true });
+  const isSoundOn = useMemo(
+    () => JSON.parse(localStorage.getItem("isSoundOn") || "true"),
+    []
+  );
+
+  const [playUI] = useSound(sounds.uiClickSfx, {
+    playbackRate,
+    interrupt: true,
+    soundEnabled: isSoundOn,
+  });
 
   const deleteAnimationTodo = useCallback((value: boolean) => {
     setIsFormAnimation(value);
@@ -27,7 +35,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
     setIsEditing(true);
     setIsEditLocked(true);
     setPlaybackRate((prevRate) => {
-      if (isSoundOn) playUI();
+      playUI();
       return prevRate;
     });
   }, [isEditLocked, playUI]);

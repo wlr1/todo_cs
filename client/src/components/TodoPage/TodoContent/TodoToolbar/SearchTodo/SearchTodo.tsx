@@ -1,22 +1,23 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { SearchByIdProps } from "../../../../../utility/types/types";
+import { AppDispatch } from "../../../../../redux/store";
+import { useDispatch } from "react-redux";
+import { fetchTodos } from "../../../../../redux/slices/todoSlice/asyncActions";
 
-const SearchTodo: React.FC<SearchByIdProps> = ({
-  setSearchId,
-  fetchAllTodos,
-}) => {
+const SearchTodo: React.FC<SearchByIdProps> = ({ setSearchId }) => {
   const [inputValue, setInputValue] = useState("");
+  const dispatch: AppDispatch = useDispatch();
 
   const handleSearch = useCallback(() => {
     const id = parseInt(inputValue);
     if (inputValue.trim() === "") {
-      fetchAllTodos(); //if search bar is empty, fetch all todos
+      dispatch(fetchTodos()); //if search bar is empty, fetch all todos
       setSearchId(null); //search id null
     } else {
       setSearchId(isNaN(id) ? null : id);
     }
-  }, [inputValue, fetchAllTodos, setSearchId]);
+  }, [dispatch, inputValue, setSearchId]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -26,10 +27,10 @@ const SearchTodo: React.FC<SearchByIdProps> = ({
 
   useEffect(() => {
     if (inputValue.trim() === "") {
-      fetchAllTodos();
+      dispatch(fetchTodos());
       setSearchId(null);
     }
-  }, [inputValue, fetchAllTodos, setSearchId]);
+  }, [dispatch, inputValue, setSearchId]);
 
   return (
     <div className="flex space-x-1 ">

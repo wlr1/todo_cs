@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { AppDispatch } from "../../../redux/store";
-import { useDispatch } from "react-redux";
+
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchTodos } from "../../../redux/slices/todoSlice/asyncActions";
 
 import TodoList from "./TodoList/TodoList";
@@ -10,9 +11,14 @@ const TodoContent = () => {
   const [isFormAnimation, setIsFormAnimation] = useState(false);
   const [searchId, setSearchId] = useState<number | null>(null);
 
+  const { todos } = useSelector((state: RootState) => state.todos);
   const dispatch: AppDispatch = useDispatch();
 
-  const fetchAllTodos = () => dispatch(fetchTodos());
+  useEffect(() => {
+    if (todos.length === 0) {
+      dispatch(fetchTodos());
+    }
+  }, [dispatch, todos.length]);
 
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);
@@ -28,10 +34,7 @@ const TodoContent = () => {
         >
           {/* Todo add btn and search bar */}
           <div className="">
-            <TodoToolbar
-              setSearchId={setSearchId}
-              fetchAllTodos={fetchAllTodos}
-            />
+            <TodoToolbar setSearchId={setSearchId} />
           </div>
 
           {/* Todo list */}

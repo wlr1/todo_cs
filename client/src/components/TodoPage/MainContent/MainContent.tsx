@@ -1,5 +1,5 @@
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getContentBgImage } from "../../../redux/slices/userSlice/asyncActions";
@@ -10,7 +10,7 @@ import SideMenu from "../SideMenu/SideMenu";
 import TodoContent from "../TodoContent/TodoContent";
 
 import useSound from "use-sound";
-import menuclick from "./../../../sounds/menuclick.mp3";
+import { sounds } from "../../../sounds/sounds";
 
 const MainContent = () => {
   const [show, setIsShow] = useState(false);
@@ -24,12 +24,16 @@ const MainContent = () => {
 
   const [playbackRate] = useState(1.75);
 
-  const isSoundOn = JSON.parse(localStorage.getItem("isSoundOn") || "true");
+  const isSoundOn = useMemo(
+    () => JSON.parse(localStorage.getItem("isSoundOn") || "true"),
+    []
+  );
 
-  const [playUI] = useSound(menuclick, {
+  const [playUI] = useSound(sounds.menuclick, {
     playbackRate,
     interrupt: true,
     volume: 0.1,
+    soundEnabled: isSoundOn,
   });
 
   const { contentBgImage } = useSelector((state: RootState) => state.user);
@@ -38,9 +42,9 @@ const MainContent = () => {
   const handleContentChange = useCallback(
     (content: string) => {
       setCurrentContent(content);
-      if (isSoundOn) playUI();
+      playUI();
     },
-    [playUI, isSoundOn]
+    [playUI]
   );
 
   const showSidebar = useCallback(() => {
@@ -51,7 +55,6 @@ const MainContent = () => {
     dispatch(getContentBgImage());
   }, [dispatch]);
 
-  //fix for hide sidebar animation
   useEffect(() => {
     if (!show) {
       setTimeout(() => {

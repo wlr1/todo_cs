@@ -89,7 +89,6 @@ export interface EditFormProps {
 //search by id props
 export interface SearchByIdProps {
   setSearchId: (id: number | null) => void;
-  fetchAllTodos: () => void;
 }
 
 //SearchByIdTodoListProps

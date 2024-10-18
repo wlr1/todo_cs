@@ -1,6 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
+
 import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever, MdOutlineDoneAll } from "react-icons/md";
+
 import { TodoActionsProps } from "../../../../utility/types/types";
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch } from "react-redux";
@@ -8,8 +10,8 @@ import {
   deleteTodo,
   isCompletedTodo,
 } from "../../../../redux/slices/todoSlice/asyncActions";
-import deleteSfx from "../../../../sounds/delete.mp3";
-import completeSfx from "../../../../sounds/completeSfx.mp3";
+
+import { sounds } from "../../../../sounds/sounds";
 import useSound from "use-sound";
 
 const TodoActions: React.FC<TodoActionsProps> = ({
@@ -21,39 +23,39 @@ const TodoActions: React.FC<TodoActionsProps> = ({
   const [isChildFormAnimation, setIsChildFormAnimation] = useState(false); //delete anim
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const [playDelete] = useSound(deleteSfx);
-  const [playComplete] = useSound(completeSfx);
-
   const dispatch: AppDispatch = useDispatch();
   const isSoundOn = useMemo(
     () => JSON.parse(localStorage.getItem("isSoundOn") || "true"),
     []
   );
 
+  const [playDelete] = useSound(sounds.deleteSfx, { soundEnabled: isSoundOn });
+  const [playComplete] = useSound(sounds.completeSfx, {
+    soundEnabled: isSoundOn,
+  });
+
   //complete todo
   const handleMarkComplete = useCallback(() => {
+    if (isCompleted) return;
     setIsCompleted(true);
 
     dispatch(isCompletedTodo({ id: todoId, todoData: { isCompleted: true } }));
 
-    if (isSoundOn) playComplete();
-  }, [dispatch, todoId, playComplete, isSoundOn]);
+    playComplete();
+  }, [dispatch, todoId, playComplete, isCompleted]);
 
   //delete todo
   const handleDelete = useCallback(() => {
     //animation for delete
-    const newValue = !isChildFormAnimation;
-    setIsChildFormAnimation(newValue);
-    onDelete(newValue);
-
-    if (isSoundOn) {
-      playDelete();
-    }
+    if (isChildFormAnimation) return;
+    setIsChildFormAnimation(true);
+    onDelete(true);
+    playDelete();
 
     setTimeout(() => {
       dispatch(deleteTodo(todoId));
     }, 900);
-  }, [dispatch, todoId, playDelete, isChildFormAnimation, onDelete, isSoundOn]);
+  }, [dispatch, todoId, playDelete, isChildFormAnimation, onDelete]);
 
   return (
     <div className="w-8 h-[88px] bg-white/10  rounded-lg  flex justify-center items-center flex-col">
