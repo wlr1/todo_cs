@@ -45,7 +45,7 @@ const MainContent = () => {
 
   const showSidebar = useCallback(() => {
     setIsShow(!show);
-  }, []);
+  }, [show]);
 
   useEffect(() => {
     dispatch(getContentBgImage());
