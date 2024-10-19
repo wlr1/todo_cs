@@ -39,6 +39,9 @@ namespace todoCS.Controllers;
             var todoItems = await _todoRepo.GetTodoByUserAsync(user.Id); //get only this users todo
 
             var todoDto = todoItems.Select(x => x.ToTodoDto());
+            
+            //cache control for todo item
+            Response.Headers.Add("Cache-Control", "public, max-age=600"); // 10 min
 
             return Ok(todoDto);
 
