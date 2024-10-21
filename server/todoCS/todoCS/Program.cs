@@ -116,6 +116,9 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddScoped<JwtService>();
 
+//email confirmation service
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 var app = builder.Build();
 
 
