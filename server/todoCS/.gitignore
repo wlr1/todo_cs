@@ -36,6 +36,7 @@ artifacts/
 
 # Konfigurācijas faili
 appsettings.*.json
+appsettings.json
 
 # MacOS specifiskie faili
 .DS_Store
