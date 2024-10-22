@@ -4,6 +4,7 @@ import "animate.css";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../../redux/slices/authSlice/asyncActions";
 import { AppDispatch, RootState } from "../../../redux/store";
+import EmailModal from "../EmailModal/EmailModal";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -14,23 +15,44 @@ const Signup = () => {
     password: "",
   });
 
+  const [isEmailValid, setIsEmailValid] = useState(false);
+
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  //check if email
+  const validateEmail = (email: string) => {
+    return emailRegex.test(email);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+
+    if (id === "email") {
+      setIsEmailValid(validateEmail(value));
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
   };
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      dispatch(registerUser(formData));
-      navigate("/login");
+      if (isEmailValid) {
+        dispatch(registerUser(formData));
+        if (!error) {
+          navigate("/login");
+        }
+      }
     },
-    [dispatch, formData, navigate]
+    [dispatch, formData, navigate, error, isEmailValid]
   );
 
   const [isFormAnimation, setIsFormAnimation] = useState(false);
@@ -69,9 +91,18 @@ const Signup = () => {
                   id={field}
                   value={formData[field as keyof typeof formData]}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  className={`w-full px-4 py-2 mt-2 bg-white/20 text-white placeholder-gray-400 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none ${
+                    !isEmailValid && field === "email"
+                      ? "border border-red-500"
+                      : ""
+                  }`}
                   placeholder={`Enter your ${field}`}
                 />
+                {!isEmailValid && field === "email" && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Please enter a valid email address.
+                  </p>
+                )}
               </div>
             )
           )}
@@ -100,6 +131,7 @@ const Signup = () => {
           </Link>
         </p>
       </div>
+      <EmailModal />
     </div>
   );
 };
