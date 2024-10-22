@@ -462,10 +462,6 @@ public class AccountController : ControllerBase
 
         var fileResult = File(user.UserBgImage, "image/jpeg");
 
-        //Cache control image
-        Response.Headers.Add("ETag", Convert.ToBase64String(user.UserBgImage.Take(8).ToArray()));
-        Response.Headers.Add("Cache-Control", "public, max-age=86400");
-
         return fileResult;
     }
     
@@ -545,10 +541,6 @@ public class AccountController : ControllerBase
         }
 
         var fileResult = File(user.UserContentBgImage, "image/jpeg");
-        
-        //Cache control image
-        Response.Headers.Add("ETag", Convert.ToBase64String(user.UserContentBgImage.Take(8).ToArray()));
-        Response.Headers.Add("Cache-Control", "public, max-age=86400");
 
         return fileResult;
     }
