@@ -15,14 +15,16 @@ public class AccountController : ControllerBase
     private readonly UserManager<UserEntity> _userManager;
     private readonly SignInManager<UserEntity> _signInManager;
     private readonly JwtService _jwtService;
+    private readonly IEmailService _emailService;
 
     public AccountController(UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager,
-        JwtService jwtService)
+        JwtService jwtService, IEmailService emailService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _jwtService = jwtService;
-        
+        _emailService = emailService;
+
     }
 
     [HttpGet("validate-token")]
@@ -72,7 +74,34 @@ public class AccountController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        return Ok("User registered successfully!");
+        //confirmation token
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var confirmationLink =
+            Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, token }, Request.Scheme);
+        
+        //send confirmation email
+        await _emailService.SendEmailAsync(user.Email, "Confirm your email",
+            $"Please confirm your email by clicking this link: {confirmationLink}");
+        
+        return Ok("User registered successfully! Please check your email to confirm");
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(int userId, string token)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            return NotFound("User not found!");
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+        {
+            return BadRequest("Email confirmation failed!");
+        }
+
+        return Ok("Email confirmed successfully");
     }
     
     //login

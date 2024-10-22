@@ -19,24 +19,42 @@ public class EmailService : IEmailService
 
     public async Task SendEmailAsync(string toEmail, string subject, string message)
     {
-        var smtpClient = new SmtpClient
-        {
-            Host = _configuration["EmailSettings:Host"],
-            Port = int.Parse(_configuration["EmailSettings:Port"]),
-            Credentials = new NetworkCredential(_configuration["EmailSettings:Username"],
-                _configuration["EmailSettings:Password"]),
-            EnableSsl = true
-        };
-        using var mailMessage = new MailMessage
-        {
-            From = new MailAddress(_configuration["EmailSettings:FromEmail"]),
-            Subject = subject,
-            Body = message,
-            IsBodyHtml = true
-        };
-        
-        mailMessage.To.Add(toEmail);
 
-        await smtpClient.SendMailAsync(mailMessage);
+        try
+        {
+            var smtpClient = new SmtpClient()
+            {
+                Host = _configuration["EmailSettings:Host"],
+                Port = int.Parse(_configuration["EmailSettings:Port"]),
+                Credentials = new NetworkCredential(_configuration["EmailSettings:Username"],
+                    _configuration["EmailSettings:Password"]),
+                EnableSsl = true
+            };
+            using var mailMessage = new MailMessage
+            {
+                From = new MailAddress(_configuration["EmailSettings:FromEmail"]),
+                Subject = subject,
+                Body = message,
+                IsBodyHtml = true
+            };
+        
+            mailMessage.To.Add(toEmail);
+
+        
+            await smtpClient.SendMailAsync(mailMessage);
+            Console.WriteLine("Email sent successfully");
+        }
+        catch (SmtpException smtpEx)
+        {
+            Console.WriteLine($"SMTP Error: {smtpEx.Message}");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"General Error: {ex.Message}");
+            throw;
+        }
+
+
     }
 }
