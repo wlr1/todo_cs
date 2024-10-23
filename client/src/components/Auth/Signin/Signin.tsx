@@ -7,8 +7,13 @@ import { loginUser } from "../../../redux/slices/authSlice/asyncActions";
 import { AppDispatch, RootState } from "../../../redux/store";
 
 const Signin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(() => localStorage.getItem("email") || "");
+  const [password, setPassword] = useState(
+    () => localStorage.getItem("password") || ""
+  );
+  const [rememberMe, setRememberMe] = useState(
+    () => !localStorage.getItem("rememberMe")
+  );
 
   const [isFormAnimation, setIsFormAnimation] = useState(false);
 
@@ -24,12 +29,22 @@ const Signin = () => {
       try {
         dispatch(loginUser({ email, password })).unwrap();
 
+        if (rememberMe) {
+          localStorage.setItem("email", email);
+          localStorage.setItem("password", password);
+          localStorage.setItem("rememberMe", "true");
+        } else {
+          localStorage.removeItem("email");
+          localStorage.removeItem("password");
+          localStorage.removeItem("rememberMe");
+        }
+
         navigate("/todo");
       } catch (error) {
         console.error("Login failed: ", error);
       }
     },
-    [dispatch, email, password, navigate]
+    [dispatch, email, password, navigate, rememberMe]
   );
 
   useEffect(() => {
@@ -94,6 +109,8 @@ const Signin = () => {
               <input
                 type="checkbox"
                 id="remember"
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
                 className="h-4 w-4 text-indigo-600 bg-white/20 border-gray-600 rounded focus:ring-indigo-500"
               />
               <label htmlFor="remember" className="ml-2 text-gray-300 text-sm">

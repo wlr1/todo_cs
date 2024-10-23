@@ -13,6 +13,7 @@ import {
   uploadAvatar,
 } from "../../../redux/slices/userSlice/asyncActions";
 import { MdOutlineReportGmailerrorred } from "react-icons/md";
+import { resetUserState } from "../../../redux/slices/userSlice/userSlice";
 
 const ProfileMenu = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -293,8 +294,9 @@ const ProfileMenu = () => {
   //delete user
   const handleDeleteClick = useCallback(() => {
     dispatch(deleteUser());
+    dispatch(resetUserState());
     navigate("/login");
-  }, []);
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);

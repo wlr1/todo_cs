@@ -16,11 +16,15 @@ const TodoCS = () => {
     fetchData();
   }, [dispatch]);
 
+  const defaultBgImage = "/utility/img/wallpaper3.jpg";
+
   return (
     <>
       <div
         className=" h-screen bg-cover bg-center"
-        style={{ backgroundImage: `url(${bgImage})` }}
+        style={{
+          backgroundImage: `url(${bgImage || defaultBgImage})`,
+        }}
       >
         <div className="">
           <MainContent />

@@ -131,7 +131,7 @@ const Signup = () => {
           </Link>
         </p>
       </div>
-      <EmailModal />
+      {/* <EmailModal /> */}
     </div>
   );
 };
