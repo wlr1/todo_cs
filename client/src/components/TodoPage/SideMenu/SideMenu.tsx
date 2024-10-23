@@ -10,6 +10,7 @@ import {
 } from "../../../redux/slices/userSlice/asyncActions";
 import { useNavigate } from "react-router-dom";
 import { SidebarProps } from "../../../utility/types/types";
+import { resetUserState } from "../../../redux/slices/userSlice/userSlice";
 
 const SideMenu: React.FC<SidebarProps> = ({
   isVisible,
@@ -25,6 +26,7 @@ const SideMenu: React.FC<SidebarProps> = ({
   //logout
   const handleLogout = useCallback(async () => {
     await dispatch(logoutUser());
+    await dispatch(resetUserState());
     navigate("/login");
   }, [dispatch, navigate]);
 
@@ -43,23 +45,25 @@ const SideMenu: React.FC<SidebarProps> = ({
           }`}
         >
           {/* User Avatar */}
-          <div className="flex flex-col items-center space-y-1 text-center">
-            <img
-              src={avatar}
-              alt="User Avatar"
-              className="rounded-full w-20 h-20 border-2 border-gray-300 shadow-sm "
-            />
-            <div className="text-white text-lg">
-              {isUsernameHide === "yes" ? (
-                <div>
-                  <h2 className="font-semibold text-xl">{user.firstName}</h2>
-                  <p className="text-gray-400 text-sm">{user.lastName}</p>
-                </div>
-              ) : (
-                <h2 className="font-semibold text-xl">{user.userName}</h2>
-              )}
+          {user && (
+            <div className="flex flex-col items-center space-y-1 text-center">
+              <img
+                src={avatar ? avatar : "/utility/img/notfound.png"}
+                alt="User Avatar"
+                className="rounded-full w-20 h-20 border-2 border-gray-300 shadow-sm "
+              />
+              <div className="text-white text-lg">
+                {isUsernameHide === "yes" ? (
+                  <div>
+                    <h2 className="font-semibold text-xl">{user.firstName}</h2>
+                    <p className="text-gray-400 text-sm">{user.lastName}</p>
+                  </div>
+                ) : (
+                  <h2 className="font-semibold text-xl">{user.userName}</h2>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Menu Items */}
           <nav className="flex flex-col space-y-4">

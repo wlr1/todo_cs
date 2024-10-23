@@ -37,7 +37,14 @@ const handleFulfilledState = (
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    resetUserState: (state) => {
+      state.user = null;
+      state.avatar = undefined;
+      state.bgImage = undefined;
+      state.contentBgImage = undefined;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserInfo.fulfilled, (state, action) => {
@@ -98,4 +105,5 @@ const userSlice = createSlice({
   },
 });
 
+export const { resetUserState } = userSlice.actions;
 export default userSlice.reducer;
