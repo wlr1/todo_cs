@@ -55,12 +55,28 @@ public class AccountController : ControllerBase
             return BadRequest(ModelState);
         }
 
+        var defaultBgImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images", "wallpaper3.jpg");
+        var defaultContentBgImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images", "contentWallpaper.jpg");
+        var defaultUserAvatarPath = Path.Combine(Directory.GetCurrentDirectory(), "Images", "user.png");
+
+        if (!System.IO.File.Exists(defaultBgImagePath) || !System.IO.File.Exists(defaultContentBgImagePath) || !System.IO.File.Exists(defaultUserAvatarPath))
+        {
+            return BadRequest("Default images not found");
+        }
+
+        var defaultBgImage = await System.IO.File.ReadAllBytesAsync(defaultBgImagePath);
+        var defaultContentBgImage = await System.IO.File.ReadAllBytesAsync(defaultContentBgImagePath);
+        var defaultUserAvatar = await System.IO.File.ReadAllBytesAsync(defaultUserAvatarPath);
+
         var user = new UserEntity
         {
             UserName = registerDto.Username,
             Email = registerDto.Email,
             FirstName = registerDto.FirstName,
-            LastName = registerDto.LastName
+            LastName = registerDto.LastName,
+            UserBgImage = defaultBgImage,
+            UserContentBgImage = defaultContentBgImage,
+            UserAvatar = defaultUserAvatar
         };
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);
