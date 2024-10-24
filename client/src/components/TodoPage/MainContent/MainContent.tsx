@@ -36,8 +36,6 @@ const MainContent = () => {
     soundEnabled: isSoundOn,
   });
 
-  const defaultContentBgImage = "/utility/img/contentWallpaper.jpg";
-
   const { contentBgImage } = useSelector((state: RootState) => state.user);
   const dispatch: AppDispatch = useDispatch();
 
@@ -81,7 +79,7 @@ const MainContent = () => {
       <div
         className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black  bg-no-repeat bg-cover"
         style={{
-          backgroundImage: `url(${contentBgImage || defaultContentBgImage})`,
+          backgroundImage: `url(${contentBgImage})`,
         }}
       >
         <div

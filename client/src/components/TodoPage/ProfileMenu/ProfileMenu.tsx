@@ -330,7 +330,7 @@ const ProfileMenu = () => {
                   className="h-full w-full rounded-full object-cover"
                 />
               ) : (
-                <span className="text-gray-400">Avatar</span>
+                <span className="text-gray-400">Choose</span>
               )}
             </div>
             <input

@@ -48,7 +48,7 @@ const SideMenu: React.FC<SidebarProps> = ({
           {user && (
             <div className="flex flex-col items-center space-y-1 text-center">
               <img
-                src={avatar ? avatar : "/utility/img/notfound.png"}
+                src={avatar}
                 alt="User Avatar"
                 className="rounded-full w-20 h-20 border-2 border-gray-300 shadow-sm "
               />
