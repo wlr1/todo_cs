@@ -1,7 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Webp;
+using SixLabors.ImageSharp.PixelFormats;
 using todoCS.Dtos;
 using todoCS.Entities;
 using todoCS.Services;
@@ -450,13 +454,28 @@ public class AccountController : ControllerBase
         {
             return NotFound("User not found!");
         }
-
+        
         using (var memoryStream = new MemoryStream())
         {
+            //copy uploaded image to  memory
             await backgroundFile.CopyToAsync(memoryStream);
-            user.UserBgImage = memoryStream.ToArray();
+            //return a flow back to the start
+            memoryStream.Position = 0;
+    
+            //open image with imagesharp and convert to webp
+            using (var image = Image.Load<Rgba32>(memoryStream))
+            {
+                using (var outputMemoryStream = new MemoryStream())
+                {   
+                    //saving image to webp
+                   await image.SaveAsync(outputMemoryStream, new WebpEncoder());
+                    //saving to db converted image
+                    user.UserBgImage = outputMemoryStream.ToArray();
+                }
+            }
         }
 
+     
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
@@ -476,7 +495,7 @@ public class AccountController : ControllerBase
             return NotFound("User or Main image not found!");
         }
 
-        var fileResult = File(user.UserBgImage, "image/jpeg");
+        var fileResult = File(user.UserBgImage, "image/webp");
 
         return fileResult;
     }
@@ -499,9 +518,19 @@ public class AccountController : ControllerBase
             return NotFound("Default background image not found!");
         }
 
-        var defaultImage = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+        using (var image = Image.Load<Rgba32>(defaultImagePath))
+        {
+            using (var outputMemoryStream = new MemoryStream())
+            {
+                await image.SaveAsync(outputMemoryStream, new WebpEncoder());
 
-        user.UserBgImage = defaultImage;
+                user.UserBgImage = outputMemoryStream.ToArray();
+            }
+        }
+
+        // var defaultImage = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+        //
+        // user.UserBgImage = defaultImage;
 
         var result = await _userManager.UpdateAsync(user);
         
@@ -532,8 +561,22 @@ public class AccountController : ControllerBase
 
         using (var memoryStream = new MemoryStream())
         {
+            //copy uploaded image to  memory
             await contentFile.CopyToAsync(memoryStream);
-            user.UserContentBgImage = memoryStream.ToArray();
+            //return a flow back to the start
+            memoryStream.Position = 0;
+    
+            //open image with imagesharp and convert to webp
+            using (var image = Image.Load<Rgba32>(memoryStream))
+            {
+                using (var outputMemoryStream = new MemoryStream())
+                {   
+                    //saving image to webp
+                   await image.SaveAsync(outputMemoryStream, new WebpEncoder());
+                    //saving to db converted image
+                    user.UserContentBgImage = outputMemoryStream.ToArray();
+                }
+            }
         }
 
         var result = await _userManager.UpdateAsync(user);
@@ -556,7 +599,7 @@ public class AccountController : ControllerBase
             return NotFound("User or Content image not found!");
         }
 
-        var fileResult = File(user.UserContentBgImage, "image/jpeg");
+        var fileResult = File(user.UserContentBgImage, "image/webp");
 
         return fileResult;
     }
@@ -579,9 +622,15 @@ public class AccountController : ControllerBase
             return NotFound("Default background image not found!");
         }
 
-        var defaultImage = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
+        using (var image = Image.Load<Rgba32>(defaultImagePath))
+        {
+            using (var outputMemoryStream = new MemoryStream())
+            {
+                await image.SaveAsync(outputMemoryStream, new WebpEncoder());
 
-        user.UserContentBgImage = defaultImage;
+                user.UserContentBgImage = outputMemoryStream.ToArray();
+            }
+        }
 
         var result = await _userManager.UpdateAsync(user);
         
