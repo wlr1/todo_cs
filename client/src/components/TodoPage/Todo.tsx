@@ -19,7 +19,7 @@ const TodoCS = () => {
   return (
     <>
       <div
-        className=" h-screen bg-cover bg-center"
+        className="min-h-screen w-full bg-cover bg-center"
         style={{
           backgroundImage: `url(${bgImage})`,
         }}
