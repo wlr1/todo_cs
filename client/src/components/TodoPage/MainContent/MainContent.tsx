@@ -17,7 +17,7 @@ const MainContent = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentBlur, setCurrentBlur] = useState<number>(() => {
     const savedBlur = localStorage.getItem("blurValue");
-    return savedBlur ? Number(savedBlur) : 11;
+    return savedBlur ? Number(savedBlur) : 6;
   });
   const [isUsernameHide, setIsUsernameHide] = useState("no");
   const [currentContent, setCurrentContent] = useState("todo");

@@ -57,6 +57,8 @@ export interface TodoItemProps {
     isCompleted: boolean;
     createdAt: string;
   };
+  index: number;
+  moveTodo: (dragIndex: number, hoverIndex: number) => void;
 }
 
 //todoActions props

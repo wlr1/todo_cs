@@ -19,7 +19,11 @@ const initialState: TodoState = {
 const todoSlice = createSlice({
   name: "todos",
   initialState,
-  reducers: {},
+  reducers: {
+    reorderTodos: (state, action) => {
+      state.todos = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       //fetch todos
@@ -85,4 +89,5 @@ const todoSlice = createSlice({
   },
 });
 
+export const { reorderTodos } = todoSlice.actions;
 export default todoSlice.reducer;
