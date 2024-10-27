@@ -17,4 +17,6 @@ public interface ITodoRepository
     Task<List<TodoEntityItem>> GetTodoByUserAsync(int userId);
 
     Task<TodoEntityItem?> isCompletedTodo(long id, TodoEntityItem todoModel);
+
+    Task<int> SaveChangesAsync();
 }

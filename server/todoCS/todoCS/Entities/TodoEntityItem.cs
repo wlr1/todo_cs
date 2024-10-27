@@ -14,4 +14,5 @@ public class TodoEntityItem
     
     public int UserId { get; set; }
     public UserEntity User { get; set; }
+    public int Order { get; set; }
 }
