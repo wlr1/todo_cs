@@ -37,6 +37,8 @@ namespace todoCS.Controllers;
             if (user == null) return Unauthorized("User not found!");
 
             var todoItems = await _todoRepo.GetTodoByUserAsync(user.Id); //get only this users todo
+            
+          
 
             var todoDto = todoItems.Select(x => x.ToTodoDto());
 
@@ -100,10 +102,8 @@ namespace todoCS.Controllers;
 
             todo.Title = todoDto.Title;
             todo.Description = todoDto.Description;
-       
 
-            var updatedTodo = await _todoRepo.UpdateTodoAsync(id, todo); 
-        
+            var updatedTodo = await _todoRepo.UpdateTodoAsync(id, todo);
 
             return Ok(updatedTodo.ToTodoDto());
 
@@ -151,6 +151,39 @@ namespace todoCS.Controllers;
             var updatedTodo = await _todoRepo.isCompletedTodo(id, todoModel);
             
             return Ok(updatedTodo.ToTodoDto());
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("update-order")]
+        public async Task<IActionResult> UpdateTodoOrder([FromBody] List<long> todoIds)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized("User not found!");
+
+            // get all user todo
+            var todoItems = await _todoRepo.GetTodoByUserAsync(user.Id);
+
+            // check if all ids ir good
+            var validTodos = todoItems.Where(todo => todoIds.Contains(todo.Id)).ToList();
+
+            if (validTodos.Count != todoIds.Count)
+            {
+                return BadRequest("One or more Todo IDs are invalid or do not belong to the user.");
+            }
+
+            // refresh order
+            for (int i = 0; i < todoIds.Count; i++)
+            {
+                var todoToUpdate = validTodos.FirstOrDefault(todo => todo.Id == todoIds[i]);
+                if (todoToUpdate != null)
+                {
+                    todoToUpdate.Order = i; // refresh order
+                    await _todoRepo.UpdateTodoAsync(todoToUpdate.Id, todoToUpdate);
+                }
+            }
+
+            return Ok("Order updated successfully.");
         }
         
 

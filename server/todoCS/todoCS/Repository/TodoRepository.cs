@@ -84,7 +84,15 @@ public class TodoRepository : ITodoRepository
     
     public async Task<List<TodoEntityItem>> GetTodoByUserAsync(int userId)
     {
-        return await _context.TodoItems.Where(todo => todo.UserId == userId).ToListAsync();
+        return await _context.TodoItems
+            .Where(todo => todo.UserId == userId)
+            .OrderBy(todo => todo.Order) // order by order id
+            .ToListAsync();
         
+    }
+    
+    public async Task<int> SaveChangesAsync()
+    {
+        return await _context.SaveChangesAsync();
     }
 }
