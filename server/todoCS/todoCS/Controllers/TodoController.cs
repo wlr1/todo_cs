@@ -37,12 +37,10 @@ namespace todoCS.Controllers;
             if (user == null) return Unauthorized("User not found!");
 
             var todoItems = await _todoRepo.GetTodoByUserAsync(user.Id); //get only this users todo
-            
-          
 
-            var todoDto = todoItems.Select(x => x.ToTodoDto());
+            var sortedTodoItems = todoItems.OrderBy(x => x.Order).Select(x => x.ToTodoDto());
 
-            return Ok(todoDto);
+            return Ok(sortedTodoItems);
 
          
         }
@@ -156,35 +154,24 @@ namespace todoCS.Controllers;
         [Authorize]
         [HttpPut]
         [Route("update-order")]
-        public async Task<IActionResult> UpdateTodoOrder([FromBody] List<long> todoIds)
+        public async Task<IActionResult> UpdateOrder([FromBody] List<TodoOrderUpdateDto> orderDtos)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized("User not found!");
 
-            // get all user todo
-            var todoItems = await _todoRepo.GetTodoByUserAsync(user.Id);
+            var userTodos = await _todoRepo.GetTodoByUserAsync(user.Id);
+            var todosToUpdate = userTodos.ToDictionary(todo => todo.Id);
 
-            // check if all ids ir good
-            var validTodos = todoItems.Where(todo => todoIds.Contains(todo.Id)).ToList();
-
-            if (validTodos.Count != todoIds.Count)
+            foreach (var orderDto in orderDtos)
             {
-                return BadRequest("One or more Todo IDs are invalid or do not belong to the user.");
-            }
-
-            // refresh order
-            for (int i = 0; i < todoIds.Count; i++)
-            {
-                var todoToUpdate = validTodos.FirstOrDefault(todo => todo.Id == todoIds[i]);
-                if (todoToUpdate != null)
+                if (todosToUpdate.TryGetValue(orderDto.Id, out var todo))
                 {
-                    todoToUpdate.Order = i; // refresh order
-                    await _todoRepo.UpdateTodoAsync(todoToUpdate.Id, todoToUpdate);
+                    todo.Order = orderDto.Order;
                 }
             }
 
-            return Ok("Order updated successfully.");
+            await _todoRepo.SaveChangesAsync();
+            return Ok("Order updated successfully");
         }
-        
 
     }
