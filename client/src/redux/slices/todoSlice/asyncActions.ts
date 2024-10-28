@@ -115,3 +115,18 @@ export const deleteTodo = createAsyncThunk(
     }
   }
 );
+
+export const updateTodoOrder = createAsyncThunk(
+  "todos/updateTodoOrder",
+  async (orderedTodos: { id: number; order: number }[], thunkAPI) => {
+    try {
+      await api.put("/api/Todo/update-order", orderedTodos);
+      return orderedTodos;
+    } catch (error: any) {
+      console.error("Failed to update todo order: ", error);
+      return thunkAPI.rejectWithValue(
+        error.response?.data || "Failed to update todo order"
+      );
+    }
+  }
+);
