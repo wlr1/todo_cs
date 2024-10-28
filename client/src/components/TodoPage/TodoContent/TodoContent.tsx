@@ -36,8 +36,7 @@ const TodoContent = () => {
           <div className="">
             <TodoToolbar setSearchId={setSearchId} />
           </div>
-
-          {/* Todo list */}
+          {/* Todo list */}{" "}
           <div className="overflow-y-scroll max-h-[75vh] custom-scrollbar">
             <TodoList searchId={searchId} />
           </div>

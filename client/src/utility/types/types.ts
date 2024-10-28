@@ -31,6 +31,7 @@ export interface Todo {
   description: string;
   isCompleted: boolean;
   createdAt: string;
+  order: number;
 }
 //todos
 export interface TodoState {
@@ -57,8 +58,6 @@ export interface TodoItemProps {
     isCompleted: boolean;
     createdAt: string;
   };
-  index: number;
-  moveTodo: (dragIndex: number, hoverIndex: number) => void;
 }
 
 //todoActions props

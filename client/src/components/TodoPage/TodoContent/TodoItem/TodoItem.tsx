@@ -1,41 +1,23 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import TodoActions from "../TodoActions/TodoActions";
 import { TodoItemProps } from "../../../../utility/types/types";
-// import uiClickSfx from "../../../../sounds/click.mp3";
+
 import { sounds } from "../../../../sounds/sounds";
 import EditForm from "../EditForm/EditForm";
 import useSound from "use-sound";
-import { useDrag, useDrop } from "react-dnd";
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, index, moveTodo }) => {
+import { useSortable } from "@dnd-kit/sortable";
+
+const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isFormAnimation, setIsFormAnimation] = useState(false); //delete anim
   const [playbackRate, setPlaybackRate] = useState(1.75);
   const [isEditLocked, setIsEditLocked] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
 
-  const ref = useRef(null);
-  //react dnd
-  const [{ isDragging }, drag] = useDrag({
-    type: "TODO",
-    item: { index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
+  const { attributes, listeners, setNodeRef, isDragging } = useSortable({
+    id: todo.id,
   });
-  //react dnd
-  const [, drop] = useDrop({
-    accept: "TODO",
-    hover(item: { index: number }) {
-      if (!ref.current || item.index === index) {
-        return;
-      }
-      moveTodo(item.index, index);
-      item.index = index;
-    },
-  });
-
-  drag(drop(ref));
 
   const isSoundOn = useMemo(
     () => JSON.parse(localStorage.getItem("isSoundOn") || "true"),
@@ -79,21 +61,17 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index, moveTodo }) => {
     <div
       className={`flex items-center space-x-2 animate__animated  ${
         isFormAnimation ? "animate__backOutLeft" : ""
-      } ${isDragging ? " shadow-2xl transform scale-105  blur-sm" : ""}`}
-      ref={ref}
-      style={{
-        opacity: isDragging ? 0.85 : 1,
-        cursor: "grab",
-        transition: "all 0.3s ease",
-      }}
+      } `}
     >
       {/* Block on the left side */}
-      <TodoActions
-        todoId={todo.id}
-        onDelete={deleteAnimationTodo}
-        onEdit={handleEdit}
-        isDisabled={isDisabled}
-      />
+      <div style={{ pointerEvents: isDragging ? "none" : "auto" }}>
+        <TodoActions
+          todoId={todo.id}
+          onDelete={deleteAnimationTodo}
+          onEdit={handleEdit}
+          isDisabled={isDisabled}
+        />
+      </div>
 
       {/* Main Todo Card */}
       <div
@@ -109,7 +87,19 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index, moveTodo }) => {
             setIsDisabled={setIsDisabled}
           />
         ) : (
-          <>
+          <div
+            ref={setNodeRef}
+            {...attributes}
+            {...listeners}
+            style={{
+              opacity: isDragging ? 0.85 : 1,
+              cursor: "grab",
+              transition: "all 0.3s ease",
+            }}
+            className={`${
+              isDragging ? " shadow-2xl transform   blur-sm" : ""
+            } `}
+          >
             {/* Todo Title and Info */}
             <div className="flex justify-between items-center mb-2">
               <span className="text-white text-xl font-semibold">
@@ -127,7 +117,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index, moveTodo }) => {
             <p className="text-gray-300 text-sm drop-shadow-lg z-10 break-words leading-relaxed">
               {todo.description}
             </p>
-          </>
+          </div>
         )}
       </div>
     </div>

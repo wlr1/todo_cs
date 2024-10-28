@@ -7,6 +7,7 @@ import {
   findByIdTodo,
   isCompletedTodo,
   updateTodo,
+  updateTodoOrder,
 } from "./asyncActions";
 
 const initialState: TodoState = {
@@ -19,11 +20,7 @@ const initialState: TodoState = {
 const todoSlice = createSlice({
   name: "todos",
   initialState,
-  reducers: {
-    reorderTodos: (state, action) => {
-      state.todos = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       //fetch todos
@@ -72,6 +69,20 @@ const todoSlice = createSlice({
         state.isLoading = false;
         state.todos = state.todos.filter((todo) => todo.id !== action.payload);
       })
+      // update order
+      .addCase(updateTodoOrder.fulfilled, (state, action) => {
+        state.isLoading = false;
+        action.payload.forEach((orderedTodo) => {
+          //Searches for the given todo object in the state 'todos' array by id
+          const todo = state.todos.find((t) => t.id === orderedTodo.id);
+          //If a todo is found, restore its 'order' field
+          if (todo) {
+            todo.order = orderedTodo.order;
+          }
+        });
+        //Sorts the 'todos' array by the 'order' field so that they are displayed in the correct order
+        state.todos.sort((a, b) => a.order - b.order);
+      })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
         (state) => {
@@ -89,5 +100,4 @@ const todoSlice = createSlice({
   },
 });
 
-export const { reorderTodos } = todoSlice.actions;
 export default todoSlice.reducer;
