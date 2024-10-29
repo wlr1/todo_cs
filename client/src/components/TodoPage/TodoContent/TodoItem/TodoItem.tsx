@@ -1,12 +1,13 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import TodoActions from "../TodoActions/TodoActions";
 import { TodoItemProps } from "../../../../utility/types/types";
 
 import { sounds } from "../../../../sounds/sounds";
-import EditForm from "../EditForm/EditForm";
 import useSound from "use-sound";
 
 import { useSortable } from "@dnd-kit/sortable";
+
+const EditForm = lazy(() => import("../EditForm/EditForm"));
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -80,12 +81,14 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
         }`}
       >
         {isEditing ? (
-          <EditForm
-            todo={todo}
-            setIsEditing={setIsEditing}
-            setIsEditLocked={setIsEditLocked}
-            setIsDisabled={setIsDisabled}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <EditForm
+              todo={todo}
+              setIsEditing={setIsEditing}
+              setIsEditLocked={setIsEditLocked}
+              setIsDisabled={setIsDisabled}
+            />
+          </Suspense>
         ) : (
           <div
             ref={setNodeRef}
@@ -114,7 +117,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
             </div>
 
             {/* Todo Description */}
-            <p className="text-gray-300 text-sm drop-shadow-lg z-10 break-words leading-relaxed">
+            <p className="text-gray-300 text-sm drop-shadow-lg  break-words leading-relaxed">
               {todo.description}
             </p>
           </div>
