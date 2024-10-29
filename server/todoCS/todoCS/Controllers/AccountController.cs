@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using todoCS.Dtos;
 using todoCS.Entities;
 using todoCS.Services;
@@ -409,10 +410,18 @@ public class AccountController : ControllerBase
             return NotFound("User not Found!");
         }
 
-        using (var memoryStream = new MemoryStream())
+        using (var inputStream = avatarFile.OpenReadStream())
+        using (var image = Image.Load<Rgba32>(inputStream))
         {
-            await avatarFile.CopyToAsync(memoryStream);
-            user.UserAvatar = memoryStream.ToArray();
+            //resize image to 80x80
+            image.Mutate((x => x.Resize(80,80)));
+
+            //save as webp format
+            using (var outputStream = new MemoryStream())
+            {
+                await image.SaveAsync(outputStream, new WebpEncoder());
+                user.UserAvatar = outputStream.ToArray();
+            }
         }
 
         var result = await _userManager.UpdateAsync(user);
