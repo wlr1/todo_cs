@@ -8,7 +8,8 @@ export default {
         btnTodo: "#91d2cd",
       },
       backgroundImage: {
-        bgMain: 'url("/utility/img/wallpaper3.jpg")',
+        bgMain:
+          'url("https://images.unsplash.com/photo-1515127320803-6cffa067f881?q=80&w=2078&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
         bgAuth:
           'url("https://images.unsplash.com/photo-1527766833261-b09c3163a791?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
         bgNotFound:

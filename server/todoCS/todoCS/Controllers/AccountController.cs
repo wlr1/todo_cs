@@ -474,6 +474,7 @@ public class AccountController : ControllerBase
             //open image with imagesharp and convert to webp
             using (var image = Image.Load<Rgba32>(memoryStream))
             {
+                image.Mutate(x => x.Resize(1920, 1080));
                 using (var outputMemoryStream = new MemoryStream())
                 {   
                     //saving image to webp
@@ -537,10 +538,6 @@ public class AccountController : ControllerBase
             }
         }
 
-        // var defaultImage = await System.IO.File.ReadAllBytesAsync(defaultImagePath);
-        //
-        // user.UserBgImage = defaultImage;
-
         var result = await _userManager.UpdateAsync(user);
         
         if (!result.Succeeded)
@@ -578,6 +575,7 @@ public class AccountController : ControllerBase
             //open image with imagesharp and convert to webp
             using (var image = Image.Load<Rgba32>(memoryStream))
             {
+                image.Mutate(x => x.Resize(1400, 800));
                 using (var outputMemoryStream = new MemoryStream())
                 {   
                     //saving image to webp

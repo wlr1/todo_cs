@@ -4,11 +4,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import Signin from "./components/Auth/Signin/Signin";
-import Signup from "./components/Auth/Signup/Signup";
 import TodoCS from "./components/TodoPage/Todo";
 import ProtectedRoute from "./components/Auth/ProtectedRoute/ProtectedRoute";
-import NotFound from "./components/NotFound/NotFound";
+
+import { lazy, Suspense } from "react";
+
+const Signin = lazy(() => import("./components/Auth/Signin/Signin"));
+const Signup = lazy(() => import("./components/Auth/Signup/Signup"));
+const NotFound = lazy(() => import("./components/NotFound/NotFound"));
 
 const router = createBrowserRouter([
   {
@@ -25,15 +28,27 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Signin />,
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Signin />
+      </Suspense>
+    ),
   },
   {
     path: "/register",
-    element: <Signup />,
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Signup />
+      </Suspense>
+    ),
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: (
+      <Suspense fallback={<div>Loading...</div>}>
+        <NotFound />
+      </Suspense>
+    ),
   },
 ]);
 

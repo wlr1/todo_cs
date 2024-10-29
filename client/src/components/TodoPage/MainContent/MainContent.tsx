@@ -1,16 +1,23 @@
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getContentBgImage } from "../../../redux/slices/userSlice/asyncActions";
 
-import ProfileMenu from "../ProfileMenu/ProfileMenu";
-import SettingsMenu from "../SettingsMenu/SettingsMenu";
-import SideMenu from "../SideMenu/SideMenu";
-import TodoContent from "../TodoContent/TodoContent";
-
 import useSound from "use-sound";
 import { sounds } from "../../../sounds/sounds";
+
+const TodoContent = lazy(() => import("../TodoContent/TodoContent"));
+const SettingsMenu = lazy(() => import("../SettingsMenu/SettingsMenu"));
+const ProfileMenu = lazy(() => import("../ProfileMenu/ProfileMenu"));
+const SideMenu = lazy(() => import("../SideMenu/SideMenu"));
 
 const MainContent = () => {
   const [show, setIsShow] = useState(false);
@@ -21,6 +28,26 @@ const MainContent = () => {
   });
   const [isUsernameHide, setIsUsernameHide] = useState("no");
   const [currentContent, setCurrentContent] = useState("todo");
+
+  const renderContent = () => {
+    switch (currentContent) {
+      case "todo":
+        return <TodoContent />;
+      case "profile":
+        return <ProfileMenu />;
+      case "settings":
+        return (
+          <SettingsMenu
+            currentBlur={currentBlur}
+            setCurrentBlur={setCurrentBlur}
+            setIsUsernameHide={setIsUsernameHide}
+            isUsernameHide={isUsernameHide}
+          />
+        );
+      default:
+        return <TodoContent />;
+    }
+  };
 
   const [playbackRate] = useState(1.75);
 
@@ -68,12 +95,14 @@ const MainContent = () => {
   return (
     <div className="flex justify-center items-center h-screen relative">
       <div className="">
-        <SideMenu
-          isVisible={isVisible}
-          show={show}
-          handleContentChange={handleContentChange}
-          isUsernameHide={isUsernameHide}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <SideMenu
+            isVisible={isVisible}
+            show={show}
+            handleContentChange={handleContentChange}
+            isUsernameHide={isUsernameHide}
+          />
+        </Suspense>
       </div>
 
       <div
@@ -102,16 +131,9 @@ const MainContent = () => {
 
           {/* Main content */}
           <div className="h-full w-full">
-            {currentContent == "todo" && <TodoContent />}
-            {currentContent == "profile" && <ProfileMenu />}
-            {currentContent == "settings" && (
-              <SettingsMenu
-                currentBlur={currentBlur}
-                setCurrentBlur={setCurrentBlur}
-                setIsUsernameHide={setIsUsernameHide}
-                isUsernameHide={isUsernameHide}
-              />
-            )}
+            <Suspense fallback={<div>Loading...</div>}>
+              {renderContent()}
+            </Suspense>
           </div>
         </div>
       </div>
