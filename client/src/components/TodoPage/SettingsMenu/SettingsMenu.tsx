@@ -150,7 +150,7 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
         </div>
 
         {/* Background Image Control */}
-        <div>
+        <>
           <label className="block text-lg mb-4">Change Background Image</label>
           <div className="flex items-center">
             <input
@@ -171,10 +171,10 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
               <RxReset size={20} />
             </button>
           </div>
-        </div>
+        </>
 
         {/* Content Background Image Control */}
-        <div>
+        <>
           <label className="block text-lg my-4">
             Change Content Background Image
           </label>
@@ -197,9 +197,9 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
               <RxReset size={20} />
             </button>
           </div>
-        </div>
+        </>
 
-        <div className="">
+        <>
           <label className="block text-lg my-4">
             Show Fullname instead of Username?
           </label>
@@ -211,7 +211,7 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
             <option value="no">No</option>
             <option value="yes">Yes</option>
           </select>
-        </div>
+        </>
       </div>
     </div>
   );

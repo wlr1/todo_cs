@@ -24,9 +24,9 @@ const TodoCS = () => {
           backgroundImage: `url(${bgImage})`,
         }}
       >
-        <div className="">
+        <>
           <MainContent />
-        </div>
+        </>
       </div>
     </>
   );

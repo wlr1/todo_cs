@@ -33,9 +33,9 @@ const TodoContent = () => {
           }`}
         >
           {/* Todo add btn and search bar */}
-          <div className="">
+          <>
             <TodoToolbar setSearchId={setSearchId} />
-          </div>
+          </>
           {/* Todo list */}{" "}
           <div className="overflow-y-scroll max-h-[75vh] custom-scrollbar">
             <TodoList searchId={searchId} />

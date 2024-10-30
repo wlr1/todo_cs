@@ -29,6 +29,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
     playbackRate,
     interrupt: true,
     soundEnabled: isSoundOn,
+    prelaod: true,
   });
 
   const deleteAnimationTodo = useCallback((value: boolean) => {
