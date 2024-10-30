@@ -29,7 +29,10 @@ const TodoActions: React.FC<TodoActionsProps> = ({
     []
   );
 
-  const [playDelete] = useSound(sounds.deleteSfx, { soundEnabled: isSoundOn });
+  const [playDelete] = useSound(sounds.deleteSfx, {
+    soundEnabled: isSoundOn,
+    preload: true,
+  });
   const [playComplete] = useSound(sounds.completeSfx, {
     soundEnabled: isSoundOn,
   });

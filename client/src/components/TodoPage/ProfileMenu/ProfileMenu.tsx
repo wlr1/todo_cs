@@ -342,7 +342,7 @@ const ProfileMenu = () => {
               className="hidden"
             />
             {avatarFile ? (
-              <div>
+              <>
                 <button
                   onClick={handleCancelClick}
                   className="ml-4 px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-900"
@@ -355,16 +355,16 @@ const ProfileMenu = () => {
                 >
                   Upload
                 </button>
-              </div>
+              </>
             ) : (
-              <div>
+              <>
                 <button
                   onClick={handleAvatarUpload}
                   className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-900"
                 >
                   Upload
                 </button>
-              </div>
+              </>
             )}
           </div>
         </div>

@@ -94,7 +94,7 @@ const MainContent = () => {
 
   return (
     <div className="flex justify-center items-center h-screen relative">
-      <div className="">
+      <>
         <Suspense fallback={<div>Loading...</div>}>
           <SideMenu
             isVisible={isVisible}
@@ -103,7 +103,7 @@ const MainContent = () => {
             isUsernameHide={isUsernameHide}
           />
         </Suspense>
-      </div>
+      </>
 
       <div
         className="relative w-[1400px] h-[800px] flex rounded-lg shadow-2xl shadow-black  bg-no-repeat bg-cover"
