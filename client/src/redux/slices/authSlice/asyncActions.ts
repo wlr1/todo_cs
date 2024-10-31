@@ -8,7 +8,10 @@ export const loginUser = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const res = await api.post("/Account/login", { email, password });
+      const res = await api.post("/Account/login", {
+        email,
+        password,
+      });
       return res.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data || "Login Failed");

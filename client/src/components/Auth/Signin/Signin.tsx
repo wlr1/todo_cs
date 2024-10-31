@@ -9,13 +9,9 @@ import { AppDispatch, RootState } from "../../../redux/store";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 
 const Signin = () => {
-  const [email, setEmail] = useState(() => localStorage.getItem("email") || "");
-  const [password, setPassword] = useState(
-    () => localStorage.getItem("password") || ""
-  );
-  const [rememberMe, setRememberMe] = useState(
-    () => !localStorage.getItem("rememberMe")
-  );
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [isVisible, setIsVisible] = useState(false);
   const [isFormAnimation, setIsFormAnimation] = useState(false);
@@ -34,12 +30,8 @@ const Signin = () => {
 
         if (rememberMe) {
           localStorage.setItem("email", email);
-          localStorage.setItem("password", password);
-          localStorage.setItem("rememberMe", "true");
         } else {
           localStorage.removeItem("email");
-          localStorage.removeItem("password");
-          localStorage.removeItem("rememberMe");
         }
 
         navigate("/todo");
@@ -47,7 +39,7 @@ const Signin = () => {
         console.error("Login failed: ", error);
       }
     },
-    [dispatch, email, password, navigate, rememberMe]
+    [dispatch, email, password, navigate]
   );
 
   const togglePassword = () => {
@@ -56,6 +48,15 @@ const Signin = () => {
 
   useEffect(() => {
     setIsFormAnimation(!isFormAnimation);
+  }, []);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email");
+
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
   }, []);
 
   return (
