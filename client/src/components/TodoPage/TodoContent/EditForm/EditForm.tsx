@@ -66,6 +66,8 @@ const EditForm: React.FC<EditFormProps> = ({
     dispatch(updateTodo({ id: todo.id, todoData: { title, description } }));
     setPlaybackRate(playbackRate);
     playUI();
+    setIsDisabled(false);
+    setIsEditLocked(false);
     setIsEditing(false);
   };
 
