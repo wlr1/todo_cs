@@ -29,7 +29,7 @@ public class JwtService
                 new Claim("firstname", user.FirstName ?? ""),
                 new Claim("lastname", user.LastName ?? "")
             }),
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(_configuration["Jwt:ExpireMinutes"])),
+            Expires =  DateTime.UtcNow.AddMinutes(double.Parse(_configuration["Jwt:ExpireMinutes"])),
             Issuer = _configuration["Jwt:Issuer"],
             Audience = _configuration["Jwt:Audience"],
             SigningCredentials =
