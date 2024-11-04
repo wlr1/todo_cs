@@ -115,6 +115,7 @@ builder.Services.AddSwaggerGen(option =>
 
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
 //email confirmation service
 builder.Services.AddTransient<IEmailService, EmailService>();

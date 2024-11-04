@@ -589,7 +589,7 @@ public class AccountController : ControllerBase
             {
                 if (image.Width > 1920 || image.Height > 1080)
                 {
-                    return BadRequest("Main bg image dimensions must not exceed 1920x1080 pixels");
+                    return BadRequest("Content bg image dimensions must not exceed 1920x1080 pixels");
                 }
                 
                 image.Mutate(x => x.Resize(1400, 800));

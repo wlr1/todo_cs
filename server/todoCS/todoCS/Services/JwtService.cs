@@ -40,6 +40,11 @@ public class JwtService
         return tokenHandler.WriteToken(token);
     }
 
+    public string GenerateRefreshToken()
+    {
+        return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+    }
+
     //validate user
     public bool ValidateToken(string token)
     {
