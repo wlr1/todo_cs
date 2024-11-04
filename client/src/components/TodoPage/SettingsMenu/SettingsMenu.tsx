@@ -30,6 +30,20 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFile = e.target.files?.[0];
       if (selectedFile) {
+        const img = new Image();
+        img.src = URL.createObjectURL(selectedFile);
+
+        img.onload = () => {
+          if (img.width > 1920 || img.height > 1080) {
+            alert("Image size must not exceed 1920x1080 pixels");
+            setBackgroundFile(null);
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+            return;
+          }
+        };
+
         setBackgroundFile(selectedFile);
       }
     },
@@ -57,6 +71,20 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFile = e.target.files?.[0];
       if (selectedFile) {
+        const img = new Image();
+        img.src = URL.createObjectURL(selectedFile);
+
+        img.onload = () => {
+          if (img.width > 1920 || img.height > 1080) {
+            alert("Image size must not exceed 1920x1080 pixels");
+            setContentFile(null);
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+            return;
+          }
+        };
+
         setContentFile(selectedFile);
       }
     },
@@ -154,9 +182,9 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({
           <label className="block text-lg mb-4">Change Background Image</label>
           <div className="flex items-center">
             <input
-              type="file"
-              id="fileInput"
               ref={fileInputRef}
+              id="fileInput"
+              type="file"
               accept="image/*"
               className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600 transition-all duration-200 ease-in-out file:cursor-pointer"
               onChange={handleChangeBgImage}

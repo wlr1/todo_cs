@@ -180,6 +180,21 @@ const ProfileMenu = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFile = e.target.files?.[0];
       if (selectedFile) {
+        const img = new Image();
+        img.src = URL.createObjectURL(selectedFile);
+
+        img.onload = () => {
+          if (img.width > 900 || img.height > 900) {
+            alert("Image size must not exceed 900x900 pixels");
+            setAvatarFile(null);
+            setAvatarPreview(null);
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+            return;
+          }
+        };
+
         setAvatarFile(selectedFile);
 
         const previewUrl = URL.createObjectURL(selectedFile);
