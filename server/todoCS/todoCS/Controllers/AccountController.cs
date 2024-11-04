@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -372,27 +371,28 @@ public class AccountController : ControllerBase
        var passwordCheck = await _userManager.CheckPasswordAsync(user, changePasswordDto.CurrentPassword);
        if (!passwordCheck)
        {
-           return BadRequest(new {message = "Current password is incorrect!"});
+           return BadRequest(new { message = "Current password is incorrect!" });
        }
-       
+
        var result =
            await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword,
                changePasswordDto.NewPassword);
-       
+
        if (!result.Succeeded)
        {
            foreach (var error in result.Errors)
            {
                ModelState.AddModelError(string.Empty, error.Description);
            }
+
            return BadRequest(ModelState);
        }
 
        return Ok("Password changed successfully!");
-       
+
    }
 
-    //upload avatar
+   //upload avatar
     [Authorize]
     [HttpPost("upload-avatar")]
     [Consumes("multipart/form-data")] 
@@ -413,6 +413,13 @@ public class AccountController : ControllerBase
         using (var inputStream = avatarFile.OpenReadStream())
         using (var image = Image.Load<Rgba32>(inputStream))
         {
+
+            //upload restrictions
+            if (image.Width > 900 || image.Height > 900)
+            {
+                return BadRequest("Avatar image dimensions must not exceed 900x900 pixels");
+            }
+            
             //resize image to 80x80
             image.Mutate((x => x.Resize(80,80)));
 
@@ -474,6 +481,11 @@ public class AccountController : ControllerBase
             //open image with imagesharp and convert to webp
             using (var image = Image.Load<Rgba32>(memoryStream))
             {
+                if (image.Width > 1920 || image.Height > 1080)
+                {
+                    return BadRequest("Main bg image dimensions must not exceed 1920x1080 pixels");
+                }
+                
                 image.Mutate(x => x.Resize(1920, 1080));
                 using (var outputMemoryStream = new MemoryStream())
                 {   
@@ -575,6 +587,11 @@ public class AccountController : ControllerBase
             //open image with imagesharp and convert to webp
             using (var image = Image.Load<Rgba32>(memoryStream))
             {
+                if (image.Width > 1920 || image.Height > 1080)
+                {
+                    return BadRequest("Main bg image dimensions must not exceed 1920x1080 pixels");
+                }
+                
                 image.Mutate(x => x.Resize(1400, 800));
                 using (var outputMemoryStream = new MemoryStream())
                 {   
