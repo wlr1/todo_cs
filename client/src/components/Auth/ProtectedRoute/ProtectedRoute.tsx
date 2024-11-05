@@ -26,9 +26,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }, []);
 
   useEffect(() => {
-    if (isValid === true) {
-      navigate("/todo");
-    }
+    if (isValid === true) navigate("/todo");
+
+    if (isValid === false) navigate("/login");
   }, [isValid, navigate]);
 
   if (isValid === null) return <Spinner />; // loading spinner when content is loading
