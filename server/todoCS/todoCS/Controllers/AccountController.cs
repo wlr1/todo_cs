@@ -20,6 +20,7 @@ public class AccountController : ControllerBase
     private readonly SignInManager<UserEntity> _signInManager;
     private readonly JwtService _jwtService;
     private readonly IEmailService _emailService;
+  
 
     public AccountController(UserManager<UserEntity> userManager, SignInManager<UserEntity> signInManager,
         JwtService jwtService, IEmailService emailService)
@@ -28,6 +29,7 @@ public class AccountController : ControllerBase
         _signInManager = signInManager;
         _jwtService = jwtService;
         _emailService = emailService;
+       
 
     }
 
@@ -156,7 +158,7 @@ public class AccountController : ControllerBase
             Expires = DateTime.UtcNow.AddMinutes(60)
         });
         
-        return Ok(new { Token = token });
+        return Ok(new { Token = token});
     }
     
     //logout
