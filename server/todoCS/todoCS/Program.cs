@@ -76,7 +76,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.ExpireTimeSpan = TimeSpan.FromDays(1);
     options.LoginPath = "/Account/Login";
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.SlidingExpiration = true;
@@ -115,7 +115,7 @@ builder.Services.AddSwaggerGen(option =>
 
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
 
 //email confirmation service
 builder.Services.AddTransient<IEmailService, EmailService>();

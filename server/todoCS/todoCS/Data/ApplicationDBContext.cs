@@ -13,7 +13,7 @@ public class ApplicationDBContext : IdentityDbContext<UserEntity, IdentityRole<i
     }
 
     public DbSet<TodoEntityItem> TodoItems { get; set; } = null!;
-    public DbSet<RefreshTokenEntity> RefreshTokens { get; set; } = null!;
+  
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
